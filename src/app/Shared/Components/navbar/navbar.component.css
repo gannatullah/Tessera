@@ -1,0 +1,43 @@
+.navbar {
+  background: rgba(255, 255, 255, 0.1) !important;
+  /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);}
+
+.navbar .navbar-nav .nav-link {
+  color: white;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.navbar .navbar-nav .nav-link:hover {
+  color: #e5383b;
+}
+
+.navbar .navbar-nav .nav-link.active {
+  color: #e5383b;
+  font-weight: 600;
+}
+
+.navbar .icons i {
+  color: white;
+  margin: 0 5px;
+  transition: color 0.3s ease;
+}
+
+.navbar .icons i:hover {
+  color: #007bff;
+}
+
+.nav-link.active {
+    color: var(--main-color) !important;
+}
+
+.nav-link.position-relative .badge {
+    font-size: 0.65rem;
+    padding: 0.25em 0.5em;
+}

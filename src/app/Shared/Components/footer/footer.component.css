@@ -1,0 +1,28 @@
+footer{
+    background-color: var(--main-color);
+    color: white;
+}
+.btn {
+    background-color: var(--button);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+.btn:hover {
+    background-color: var(--btn-hover);
+    cursor: pointer;
+}
+h3{
+    color: var(--btn-hover);
+}
+.fa-brands:hover {
+    color: var(--btn-hover);
+    cursor: pointer;
+}
+a{
+    text-decoration: none;
+    color: white;
+    cursor: pointer;
+}
