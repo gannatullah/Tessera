@@ -1,39 +1,86 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <div class="container d-flex">
+      <img
+        src="logo2.png"
+        alt="Logo"
+        style="width: 70px; height: auto; margin-right: 10px"
+      />
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              routerLink="/home"
+              [routerLinkActiveOptions]="{ exact: true }"
+              routerLinkActive="active"
+              >Home</a
+            >
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link position-relative"
+              routerLink="/events"
+              [routerLinkActiveOptions]="{ exact: true }"
+              routerLinkActive="active"
+            >
+              Events
+            </a>
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              routerLink="/mybookings"
+              [routerLinkActiveOptions]="{ exact: true }"
+              routerLinkActive="active"
+              >My Bookings</a
+            >
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              routerLink="/profile"
+              [routerLinkActiveOptions]="{ exact: true }"
+              routerLinkActive="active"
+              >Profile</a
+            >
+          </li>
 
-
-    <div class="container-fluid ">
-        <div class="container d-flex">
-            <img src="logo2.png" alt="Logo" style="width: 70px; height: auto; margin-right: 10px;">
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item ">
-                        <a class="nav-link" routerLink="/home" [routerLinkActiveOptions]="{exact:true}"
-                            routerLinkActive="active">Home</a>
-                    </li>
-                    <li class="nav-item ">
-                        <a class="nav-link position-relative" routerLink="/events" [routerLinkActiveOptions]="{exact:true}"
-                            routerLinkActive="active">
-                            Events
-                        </a>
-                    </li>
-                <li class="nav-item ">
-                        <a class="nav-link" routerLink="/mybookings" [routerLinkActiveOptions]="{exact:true}"
-                            routerLinkActive="active">My Bookings</a>
-                    </li> 
-                    <li class="nav-item ">
-                        <a class="nav-link" routerLink="/profile" [routerLinkActiveOptions]="{exact:true}"
-                            routerLinkActive="active">Profile</a>
-                    </li>
- 
-                        <a class="nav-link" routerLink="/signout" [routerLinkActiveOptions]="{exact:true}"
-                            routerLinkActive="active" >SignOut</a>
-                        <a class="nav-link" routerLink="/login" [routerLinkActiveOptions]="{exact:true}"
-                            routerLinkActive="active">Login</a>
-                        <a class="nav-link" routerLink="/register" [routerLinkActiveOptions]="{exact:true}"
-                            routerLinkActive="active">Register</a>
-                </ul>
-               <div class="d-flex ">
-                    <!--  <div class="icons gap-2 d-flex justify-content-center align-items-center">
+          <a
+            class="nav-link"
+            routerLink="/signout"
+            [routerLinkActiveOptions]="{ exact: true }"
+            routerLinkActive="active"
+            >SignOut</a
+          >
+          <a
+            class="nav-link"
+            routerLink="/login"
+            [routerLinkActiveOptions]="{ exact: true }"
+            routerLinkActive="active"
+            >Login</a
+          >
+          <a
+            class="nav-link"
+            routerLink="/register"
+            [routerLinkActiveOptions]="{ exact: true }"
+            routerLinkActive="active"
+            >Register</a
+          >
+        </ul>
+        <div class="d-flex">
+          <!--  <div class="icons gap-2 d-flex justify-content-center align-items-center">
                         <i class="fa-brands fa-instagram"></i>
                         <i class="fa-brands fa-facebook"></i>
                         <i class="fa-brands fa-tiktok"></i>
@@ -41,7 +88,7 @@
                         <i class="fa-brands fa-linkedin"></i>
                         <i class="fa-brands fa-youtube"></i>
                     </div> -->
-                    <!-- <div class="val mx-2 gap-2 d-flex justify-content-center align-items-center">
+          <!-- <div class="val mx-2 gap-2 d-flex justify-content-center align-items-center">
                         @if(islogged)
                         {
                         <a class="nav-link" routerLink="/signout" [routerLinkActiveOptions]="{exact:true}"
@@ -53,10 +100,8 @@
                             routerLinkActive="active">Register</a>
                         }
                     </div> -->
-                </div>
-
-            </div>
         </div>
-
+      </div>
     </div>
+  </div>
 </nav>
