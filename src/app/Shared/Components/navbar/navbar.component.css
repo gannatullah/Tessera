@@ -9,7 +9,7 @@
   backdrop-filter: blur(10px);}
 
 .navbar .navbar-nav .nav-link {
-  color: white;
+  color: rgb(109, 106, 106);
   font-weight: 500;
   transition: color 0.3s ease;
 }
