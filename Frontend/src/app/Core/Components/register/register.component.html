@@ -10,71 +10,178 @@
         <div class="row" id="name-row">
 
             <div class="form-group col-md-6">
+            @let firstNameControl= registerForm.get('firstName');
             <label for="inputFirstName">First Name</label>
             <input formControlName="firstName" type="text" class="form-control" id="inputFirstName" placeholder="First Name" />
             </div>
+            @if(firstNameControl?.errors && firstNameControl?.touched){
+                <div role="alert">
+                    <ul class="errors-list">
+                        @if(firstNameControl?.getError('required')){
+                            <li> First Name is required.</li>
+                         }          
+                    </ul>
+                </div>
+            }
             
             <div class="form-group col-md-6">
-            <label for="inputLastName">Last Name</label>
+                @let lastNameControl= registerForm.get('lastName');
+            <label for="lastLastName">Last Name</label>
             <input formControlName="lastName" type="text" class="form-control" id="inputLastName" placeholder="Last Name" />
             </div>
+            @if(lastNameControl?.errors && lastNameControl?.touched){
+                <div role="alert">
+                    <ul class="errors-list">
+                        @if(lastNameControl?.getError('required')){
+                            <li> Last Name is required.</li>
+                         }          
+                    </ul>
+                </div>
+            }
 
         </div>
      
         <!-- email  -->
         <div class="form-group">
+             @let emailControl= registerForm.get('email');
           <label for="inputEmail">Email</label>
           <input formControlName="email" type="email" class="form-control" id="inputEmail" placeholder="Email" />
         </div>
+        @if(emailControl?.errors && emailControl?.touched){
+                <div role="alert">
+                    <ul class="errors-list">
+                        @if(emailControl?.getError('required')){
+                            <li> Email is required.</li>
+                         }
+                         @else if (emailControl?.getError('email')) {
+                            <li> Invalid email.</li>
+                         }          
+                    </ul>
+                </div>
+            }
 
 
         <!-- password  -->
         <div class="form-group">
+             @let passwordControl= registerForm.get('password');
           <label for="inputPassword">Password</label>
           <input formControlName="password" type="password" class="form-control" id="inputPassword" placeholder="Password" />
         </div>
+        @if(passwordControl?.errors && passwordControl?.touched){
+                <div role="alert">
+                    <ul class="errors-list">
+                        @if(passwordControl?.getError('required')){
+                            <li> Password is required.</li>
+                         }          
+                    </ul>
+                </div>
+            }
 
         <!-- confirm password  -->
         <div class="form-group">
+             @let confirmPasswordControl= registerForm.get('confirmPassword');
           <label for="inputConfirmPassword">Confirm Password</label>
           <input formControlName="confirmPassword" type="password" class="form-control" id="inputConfirmPassword" placeholder="Password" />
         </div>
+         @if(confirmPasswordControl?.touched && (confirmPasswordControl?.errors || registerForm.getError('passwordMismatch'))){
+                <div role="alert">
+                    <ul class="errors-list">
+                        @if(confirmPasswordControl?.getError('required')){
+                            <li> Please re-enter your password.</li>
+                         }
+                         @else if(registerForm.getError('passwordMismatch')){
+                            <li> Passwords do not match.</li>
+                         }
+                    </ul>
+                </div>
+            }
+       
 
         <!--Mobile number-->
         <div class="form-group">
+             @let mobileControl= registerForm.get('mobileNumber');
           <label for="inputMobile">Mobile Number</label>
           <input formControlName="mobileNumber" type="tel" class="form-control" id="inputMobile" placeholder="Mobile Number" />
         </div>
+        @if(mobileControl?.errors && mobileControl?.touched){
+                <div role="alert">
+                    <ul class="errors-list">
+                        @if(mobileControl?.getError('required')){
+                            <li> Mobile number is required.</li>
+                         }          
+                    </ul>
+                </div>
+            }
 
         <!-- date of birth  -->
         <div class="form-group">
+             @let DOBControl= registerForm.get('dateOfBirth');
           <label for="DOB">Date Of Birth</label>
           <input formControlName="dateOfBirth" type="date" class="form-control" id="inputDOB" />
         </div>
+        @if(DOBControl?.errors && DOBControl?.touched){
+                <div role="alert">
+                    <ul class="errors-list">
+                        @if(DOBControl?.getError('required')){
+                            <li> Date of birth is required.</li>
+                         }          
+                    </ul>
+                </div>
+            }
 
         <!-- country  -->
         <div class="form-group">
+             @let countryControl= registerForm.get('country');
             <label for="inputCountry">Country</label>
             <select formControlName="country" id="inputCountry" class="form-control">
                 <option selected>Choose...</option>
                 <option>...</option>
             </select>
         </div>
+        @if(countryControl?.errors && countryControl?.touched){
+                <div role="alert">
+                    <ul class="errors-list">
+                        @if(countryControl?.getError('required')){
+                            <li>Choose your country</li>
+                         }          
+                    </ul>
+                </div>
+            }
 
         <!-- city  -->
         <div class="form-group">
+             @let cityControl= registerForm.get('city');
           <label for="inputCity">City</label>
           <input formControlName="city" type="text" class="form-control" id="inputCity" />
         </div>
+        @if(cityControl?.errors && cityControl?.touched){
+                <div role="alert">
+                    <ul class="errors-list">
+                        @if(cityControl?.getError('required')){
+                            <li> City is required.</li>
+                         }          
+                    </ul>
+                </div>
+            }
 
          <!-- Nationality  -->
         <div class="form-group">
+             @let nationalityControl= registerForm.get('nationality');
             <label for="inputNationality">Nationality</label>
             <select formControlName="nationality" id="inputNationality" class="form-control">
                 <option selected>Choose...</option>
                 <option>...</option>
             </select>
         </div>
+        @if(nationalityControl?.errors && nationalityControl?.touched){
+                <div role="alert">
+                    <ul class="errors-list">
+                        @if(nationalityControl?.getError('required')){
+                            <li> Choose your nationality.</li>
+                         }          
+                    </ul>
+                </div>
+            }
 
         
         
