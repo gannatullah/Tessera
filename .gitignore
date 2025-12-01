@@ -6,6 +6,10 @@
 /out-tsc
 /bazel-out
 
+# .NET
+bin/
+obj/
+
 # Node
 /Frontend/node_modules
 */node_modules
