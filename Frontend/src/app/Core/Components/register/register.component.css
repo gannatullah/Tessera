@@ -1,0 +1,29 @@
+body {
+  background: linear-gradient(135deg, #6a11cb, #2575fc);
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+.reg-image{
+    height: 100%;
+    object-fit: cover;
+}
+
+.btn-signUp{
+    background-color: var(--main-color); 
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+.errors-list {
+    color: red;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
