@@ -22,6 +22,22 @@ namespace Tessera.API.DTOs
 
         [Required]
         public int OrganizerID { get; set; }
+        
+        public List<CreateTicketTypeDto>? TicketTypes { get; set; }
+    }
+
+    public class CreateTicketTypeDto
+    {
+        [Required]
+        public string Name { get; set; } = string.Empty;
+
+        [Required]
+        [Range(0, double.MaxValue)]
+        public decimal Price { get; set; }
+
+        [Required]
+        [Range(1, int.MaxValue)]
+        public int Quantity { get; set; }
     }
 
     public class UpdateEventDto
@@ -47,5 +63,7 @@ namespace Tessera.API.DTOs
         public int? Capacity { get; set; }
         public int? Countdown { get; set; }
         public int OrganizerID { get; set; }
+        public OrganizerDto? Organizer { get; set; }
+        public List<TicketTypeDto>? TicketTypes { get; set; }
     }
 }

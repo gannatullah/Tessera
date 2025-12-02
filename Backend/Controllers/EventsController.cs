@@ -33,7 +33,34 @@ namespace Tessera.API.Controllers
                     Location = e.Location,
                     Capacity = e.Capacity,
                     Countdown = e.Countdown,
-                    OrganizerID = e.OrganizerID
+                    OrganizerID = e.OrganizerID,
+                    Organizer = new OrganizerDto
+                    {
+                        UserID = e.Organizer.UserID,
+                        IsVerified = e.Organizer.IsVerified,
+                        User = new UserDto
+                        {
+                            ID = e.Organizer.User.ID,
+                            Name = e.Organizer.User.Name,
+                            First_Name = e.Organizer.User.First_Name,
+                            Last_Name = e.Organizer.User.Last_Name,
+                            Email = e.Organizer.User.Email,
+                            Phone_No = e.Organizer.User.Phone_No,
+                            DOB = e.Organizer.User.DOB
+                        }
+                    },
+                    //=============================================
+                    TicketTypes = e.Tickets
+                        .Select(t => new TicketTypeDto
+                        {
+                            ID = t.TicketType.ID,
+                            Name = t.TicketType.Name,
+                            Price = t.TicketType.Price,
+                            Quantity_Total = t.TicketType.Quantity_Total,
+                            Quantity_Sold = t.TicketType.Quantity_Sold
+                        })
+                        .Distinct()
+                        .ToList()
                 })
                 .ToListAsync();
 
@@ -44,7 +71,10 @@ namespace Tessera.API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<EventDto>> GetEvent(int id)
         {
-            var eventItem = await _context.Events.FindAsync(id);
+            var eventItem = await _context.Events
+                .Include(e => e.Organizer)
+                .ThenInclude(o => o.User)
+                .FirstOrDefaultAsync(e => e.Event_ID == id);
 
             if (eventItem == null)
             {
@@ -62,7 +92,22 @@ namespace Tessera.API.Controllers
                 Location = eventItem.Location,
                 Capacity = eventItem.Capacity,
                 Countdown = eventItem.Countdown,
-                OrganizerID = eventItem.OrganizerID
+                OrganizerID = eventItem.OrganizerID,
+                Organizer = new OrganizerDto
+                {
+                    UserID = eventItem.Organizer.UserID,
+                    IsVerified = eventItem.Organizer.IsVerified,
+                    User = new UserDto
+                    {
+                        ID = eventItem.Organizer.User.ID,
+                        Name = eventItem.Organizer.User.Name,
+                        First_Name = eventItem.Organizer.User.First_Name,
+                        Last_Name = eventItem.Organizer.User.Last_Name,
+                        Email = eventItem.Organizer.User.Email,
+                        Phone_No = eventItem.Organizer.User.Phone_No,
+                        DOB = eventItem.Organizer.User.DOB
+                    }
+                }
             };
 
             return Ok(eventDto);
@@ -93,6 +138,43 @@ namespace Tessera.API.Controllers
             _context.Events.Add(eventItem);
             await _context.SaveChangesAsync();
 
+            // Create ticket types: use provided ones or defaults
+            List<TicketType> ticketTypesToCreate;
+            if (createEventDto.TicketTypes != null && createEventDto.TicketTypes.Any())
+            {
+                ticketTypesToCreate = createEventDto.TicketTypes.Select(tt => new TicketType
+                {
+                    Name = tt.Name,
+                    Price = tt.Price,
+                    Quantity_Total = tt.Quantity,
+                    Quantity_Sold = 0
+                }).ToList();
+            }
+            else
+            {
+                // Default ticket types
+                ticketTypesToCreate = new List<TicketType>
+                {
+                    new TicketType
+                    {
+                        Name = "VIP",
+                        Price = 100.00m,
+                        Quantity_Total = 50,
+                        Quantity_Sold = 0
+                    },
+                    new TicketType
+                    {
+                        Name = "Regular",
+                        Price = 50.00m,
+                        Quantity_Total = 200,
+                        Quantity_Sold = 0
+                    }
+                };
+            }
+
+            _context.TicketTypes.AddRange(ticketTypesToCreate);
+            await _context.SaveChangesAsync();
+
             var eventDto = new EventDto
             {
                 Event_ID = eventItem.Event_ID,
@@ -104,7 +186,15 @@ namespace Tessera.API.Controllers
                 Location = eventItem.Location,
                 Capacity = eventItem.Capacity,
                 Countdown = eventItem.Countdown,
-                OrganizerID = eventItem.OrganizerID
+                OrganizerID = eventItem.OrganizerID,
+                TicketTypes = ticketTypesToCreate.Select(tt => new TicketTypeDto
+                {
+                    ID = tt.ID,
+                    Name = tt.Name,
+                    Price = tt.Price,
+                    Quantity_Total = tt.Quantity_Total,
+                    Quantity_Sold = tt.Quantity_Sold
+                }).ToList()
             };
 
             return CreatedAtAction(nameof(GetEvent), new { id = eventItem.Event_ID }, eventDto);
