@@ -1,8 +1,13 @@
-<div class="container mt-5 d-flex">
-  <div class="image">
+<div class="container d-flex justify-content-center align-items-center  mt-5" >
+    <div class="reg-card card shadow-lg border-2 overflow-hidden w-100">
+        <div class="row g-0">
+
+    
+  <div class="reg-image col-md-6 d-none d-md-block">
+    <img src="movieTicket.jpg" alt="ticket image" class="img-fluid w-100 h-100" />
 
   </div>
-  <div class="bg-light p-5">
+  <div class="col-md-6 bg-light p-4">
     <h2>Registration</h2>
     <form [formGroup]="registerForm" class="d-flex flex-column gap-3" (ngSubmit)="register()">
 
@@ -195,5 +200,7 @@
       </div>
       <button type="submit" class="btn btn-signUp">Sign Up</button>
     </form>
+  </div>
+  </div>
   </div>
 </div>
