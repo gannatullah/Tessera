@@ -1,3 +1,14 @@
+body {
+  background: linear-gradient(135deg, #6a11cb, #2575fc);
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+.reg-image{
+    height: 100%;
+    object-fit: cover;
+}
+
 .btn-signUp{
     background-color: var(--main-color); 
     border: none;

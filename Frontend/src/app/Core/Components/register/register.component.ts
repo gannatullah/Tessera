@@ -27,6 +27,12 @@ export class RegisterComponent {
 
   register(){
     console.log(this.registerForm);
+    if(this.registerForm.invalid){
+      this.registerForm.markAllAsTouched();
+    }
+    else{
+      this.registerForm.reset();
+    }
   }
 
   validateConfirmPassword(form:AbstractControl){
