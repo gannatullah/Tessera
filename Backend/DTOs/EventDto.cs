@@ -37,7 +37,7 @@ namespace Tessera.API.DTOs
 
         [Required]
         [Range(1, int.MaxValue)]
-        public int Quantity { get; set; }
+        public int Quantity_Total { get; set; }
     }
 
     public class UpdateEventDto
@@ -61,7 +61,6 @@ namespace Tessera.API.DTOs
         public string? City { get; set; }
         public string? Location { get; set; }
         public int? Capacity { get; set; }
-        public int? Countdown { get; set; }
         public int OrganizerID { get; set; }
         public OrganizerDto? Organizer { get; set; }
         public List<TicketTypeDto>? TicketTypes { get; set; }

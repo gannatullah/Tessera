@@ -49,7 +49,8 @@ namespace Tessera.API.Controllers
                         Price = t.TicketType.Price,
                         Quantity_Total = t.TicketType.Quantity_Total,
                         Quantity_Sold = t.TicketType.Quantity_Sold
-                    }
+                    },
+                    UserID = t.UserID
                 })
                 .ToListAsync();
 
@@ -88,7 +89,8 @@ namespace Tessera.API.Controllers
                     Price = ticket.TicketType.Price,
                     Quantity_Total = ticket.TicketType.Quantity_Total,
                     Quantity_Sold = ticket.TicketType.Quantity_Sold
-                }
+                },
+                UserID = ticket.UserID
             };
 
             return Ok(ticketDto);
@@ -128,7 +130,8 @@ namespace Tessera.API.Controllers
             {
                 Status = createTicketDto.Status ?? "Available",
                 TicketTypeID = createTicketDto.TicketTypeID,
-                EventID = createTicketDto.EventID
+                EventID = createTicketDto.EventID,
+                UserID = createTicketDto.UserID
             };
 
             _context.Tickets.Add(ticket);
@@ -152,7 +155,8 @@ namespace Tessera.API.Controllers
                     Price = ticketType.Price,
                     Quantity_Total = ticketType.Quantity_Total,
                     Quantity_Sold = ticketType.Quantity_Sold
-                }
+                },
+                UserID = ticket.UserID
             };
 
             return CreatedAtAction(nameof(GetTicket), new { id = ticket.Ticket_ID }, ticketDto);

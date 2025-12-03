@@ -21,11 +21,16 @@ namespace Tessera.API.Models
         [Required]
         public int EventID { get; set; }
 
+        public int? UserID { get; set; }
+
         [ForeignKey("TicketTypeID")]
         public TicketType TicketType { get; set; } = null!;
 
         [ForeignKey("EventID")]
         public Event Event { get; set; } = null!;
+
+        [ForeignKey("UserID")]
+        public Buyer? Buyer { get; set; }
 
         public ICollection<Order> Orders { get; set; } = new List<Order>();
     }
@@ -46,6 +51,12 @@ namespace Tessera.API.Models
         public int Quantity_Total { get; set; }
 
         public int Quantity_Sold { get; set; } = 0;
+
+        [Required]
+        public int Event_ID { get; set; }
+
+        [ForeignKey("Event_ID")]
+        public Event Event { get; set; } = null!;
 
         public ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
     }

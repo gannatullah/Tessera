@@ -30,8 +30,6 @@ namespace Tessera.API.Models
 
         public int? Capacity { get; set; }
 
-        public int? Countdown { get; set; }
-
         [Required]
         public int OrganizerID { get; set; }
 
@@ -39,5 +37,6 @@ namespace Tessera.API.Models
         public Organizer Organizer { get; set; } = null!;
 
         public ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
+        public ICollection<TicketType> TicketTypes { get; set; } = new List<TicketType>();
     }
 }

@@ -32,7 +32,6 @@ namespace Tessera.API.Controllers
                     City = e.City,
                     Location = e.Location,
                     Capacity = e.Capacity,
-                    Countdown = e.Countdown,
                     OrganizerID = e.OrganizerID,
                     Organizer = new OrganizerDto
                     {
@@ -50,17 +49,15 @@ namespace Tessera.API.Controllers
                         }
                     },
                     //=============================================
-                    TicketTypes = e.Tickets
-                        .Select(t => new TicketTypeDto
-                        {
-                            ID = t.TicketType.ID,
-                            Name = t.TicketType.Name,
-                            Price = t.TicketType.Price,
-                            Quantity_Total = t.TicketType.Quantity_Total,
-                            Quantity_Sold = t.TicketType.Quantity_Sold
-                        })
-                        .Distinct()
-                        .ToList()
+                    TicketTypes = e.TicketTypes.Select(tt => new TicketTypeDto
+                    {
+                        ID = tt.ID,
+                        Name = tt.Name,
+                        Price = tt.Price,
+                        Quantity_Total = tt.Quantity_Total,
+                        Quantity_Sold = tt.Quantity_Sold,
+                        EventID = tt.Event_ID
+                    }).ToList()
                 })
                 .ToListAsync();
 
@@ -91,7 +88,6 @@ namespace Tessera.API.Controllers
                 City = eventItem.City,
                 Location = eventItem.Location,
                 Capacity = eventItem.Capacity,
-                Countdown = eventItem.Countdown,
                 OrganizerID = eventItem.OrganizerID,
                 Organizer = new OrganizerDto
                 {
@@ -146,8 +142,9 @@ namespace Tessera.API.Controllers
                 {
                     Name = tt.Name,
                     Price = tt.Price,
-                    Quantity_Total = tt.Quantity,
-                    Quantity_Sold = 0
+                    Quantity_Total = tt.Quantity_Total,
+                    Quantity_Sold = 0,
+                    Event_ID = eventItem.Event_ID
                 }).ToList();
             }
             else
@@ -160,14 +157,16 @@ namespace Tessera.API.Controllers
                         Name = "VIP",
                         Price = 100.00m,
                         Quantity_Total = 50,
-                        Quantity_Sold = 0
+                        Quantity_Sold = 0,
+                        Event_ID = eventItem.Event_ID
                     },
                     new TicketType
                     {
                         Name = "Regular",
                         Price = 50.00m,
                         Quantity_Total = 200,
-                        Quantity_Sold = 0
+                        Quantity_Sold = 0,
+                        Event_ID = eventItem.Event_ID
                     }
                 };
             }
@@ -185,7 +184,6 @@ namespace Tessera.API.Controllers
                 City = eventItem.City,
                 Location = eventItem.Location,
                 Capacity = eventItem.Capacity,
-                Countdown = eventItem.Countdown,
                 OrganizerID = eventItem.OrganizerID,
                 TicketTypes = ticketTypesToCreate.Select(tt => new TicketTypeDto
                 {
@@ -193,7 +191,8 @@ namespace Tessera.API.Controllers
                     Name = tt.Name,
                     Price = tt.Price,
                     Quantity_Total = tt.Quantity_Total,
-                    Quantity_Sold = tt.Quantity_Sold
+                    Quantity_Sold = tt.Quantity_Sold,
+                    EventID = tt.Event_ID
                 }).ToList()
             };
 

@@ -11,6 +11,7 @@ namespace Tessera.API.DTOs
         public int EventID { get; set; }
 
         public string? Status { get; set; } = "Available";
+        public int ? UserID { get; set; }
     }
 
     public class UpdateTicketDto
@@ -26,6 +27,7 @@ namespace Tessera.API.DTOs
         public string? QR_Code { get; set; }
         public int TicketTypeID { get; set; }
         public int EventID { get; set; }
+        public int? UserID { get; set; }
         public TicketTypeDto? TicketType { get; set; }
     }
 
@@ -36,5 +38,6 @@ namespace Tessera.API.DTOs
         public decimal Price { get; set; }
         public int Quantity_Total { get; set; }
         public int Quantity_Sold { get; set; }
+        public int EventID { get; set; }
     }
 }

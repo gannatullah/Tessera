@@ -47,13 +47,29 @@ namespace Tessera.API.Data
             modelBuilder.Entity<Ticket>()
                 .HasOne(t => t.Event)
                 .WithMany(e => e.Tickets)
-                .HasForeignKey(t => t.EventID);
+                .HasForeignKey(t => t.EventID)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Event -> TicketType (One-to-Many)
+            modelBuilder.Entity<TicketType>()
+                .HasOne(tt => tt.Event)
+                .WithMany(e => e.TicketTypes)
+                .HasForeignKey(tt => tt.Event_ID)
+                .OnDelete(DeleteBehavior.Cascade);
 
             // TicketType -> Ticket (One-to-Many)
             modelBuilder.Entity<Ticket>()
                 .HasOne(t => t.TicketType)
                 .WithMany(tt => tt.Tickets)
-                .HasForeignKey(t => t.TicketTypeID);
+                .HasForeignKey(t => t.TicketTypeID)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Buyer -> Ticket (One-to-Many, optional)
+            modelBuilder.Entity<Ticket>()
+                .HasOne(t => t.Buyer)
+                .WithMany()
+                .HasForeignKey(t => t.UserID)
+                .OnDelete(DeleteBehavior.SetNull);
 
             // User -> Order (One-to-Many)
             modelBuilder.Entity<Order>()
