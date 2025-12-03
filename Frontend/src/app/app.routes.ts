@@ -32,6 +32,13 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'account-type',
+    loadComponent: () =>
+      import('./Core/Components/account-type/account-type.component').then(
+        (c) => c.AccountTypeComponent
+      ),
+  },
+  {
     path: 'login',
     loadComponent: () =>
       import('./Core/Components/login/login.component').then(
