@@ -61,6 +61,31 @@ namespace Tessera.API.Controllers
 
             return Ok(userDto);
         }
+        // GET: api/Users/email/{email}
+        //get by email (login purpose)
+        [HttpGet("email/{email}")]
+        public async Task<ActionResult<UserDto>> GetUserByEmail(string email)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+
+            if (user == null)
+            {
+                return NotFound(new { message = "User not found" });
+            }
+
+            var userDto = new UserDto
+            {
+                ID = user.ID,
+                Name = user.Name,
+                First_Name = user.First_Name,
+                Last_Name = user.Last_Name,
+                Email = user.Email,
+                Phone_No = user.Phone_No,
+                DOB = user.DOB
+            };
+
+            return Ok(userDto);
+        }
 
         // POST: api/Users
         [HttpPost]
