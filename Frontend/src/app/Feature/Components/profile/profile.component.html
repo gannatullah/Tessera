@@ -3,10 +3,34 @@
         <!-- Profile Header -->
         <div class="profile-header text-center mb-5">
             <div class="profile-pic-wrapper">
-                <img src="mm.jpg" alt="Profile Picture" class="profile-pic">
+                <!-- View Mode -->
+                <img *ngIf="!isEditing" [src]="profile.profilePicture" alt="Profile Picture" class="profile-pic">
+
+                <!-- Edit Mode -->
+                <div *ngIf="isEditing" class="profile-pic-edit">
+                    <img [src]="imagePreview || profile.profilePicture" alt="Profile Picture" class="profile-pic">
+                    <div class="upload-overlay">
+                        <label for="profilePictureInput" class="upload-btn">
+                            <i class="fas fa-camera"></i>
+                            <span>Change Photo</span>
+                        </label>
+                        <input
+                            type="file"
+                            id="profilePictureInput"
+                            accept="image/*"
+                            (change)="onFileSelected($event)"
+                            style="display: none;">
+                    </div>
+                </div>
             </div>
-            <h1 class="profile-name mt-4">John Doe</h1>
-            <p class="profile-tagline">Event Enthusiast | Music Lover | Adventure Seeker</p>
+            <!-- View Mode -->
+            <h1 *ngIf="!isEditing" class="profile-name mt-4">{{ profile.name }}</h1>
+
+            <!-- Edit Mode -->
+            <div *ngIf="isEditing" class="mt-4">
+                <input type="text" class="form-control form-control-lg text-center mx-auto" style="max-width: 400px;" [(ngModel)]="editProfile.name" placeholder="Enter your name">
+            </div>
+            <!-- <p class="profile-tagline">Event Enthusiast | Music Lover | Adventure Seeker</p>
             <div class="profile-stats mt-3">
                 <div class="stat-item">
                     <span class="stat-number">24</span>
@@ -20,7 +44,7 @@
                     <span class="stat-number">2023</span>
                     <span class="stat-label">Member Since</span>
                 </div>
-            </div>
+            </div> -->
         </div>
 
         <!-- Profile Content -->
@@ -32,25 +56,52 @@
                         <h3><i class="fas fa-user me-2"></i>About Me</h3>
                     </div>
                     <div class="card-body">
-                        <div class="info-item">
-                            <i class="fas fa-envelope"></i>
-                            <span>gannaamgadqwe&#64;gmail.com</span>
+                        <!-- View Mode -->
+                        <div *ngIf="!isEditing">
+                            <div class="info-item">
+                                <i class="fas fa-envelope"></i>
+                                <span>{{ profile.email }}</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-phone"></i>
+                                <span>{{ profile.phone }}</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>{{ profile.location }}</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-birthday-cake"></i>
+                                <span>{{ profile.birthday }}</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-heart"></i>
+                                <span>{{ profile.interests }}</span>
+                            </div>
                         </div>
-                        <div class="info-item">
-                            <i class="fas fa-phone"></i>
-                            <span>+1 (123) 456-7890</span>
-                        </div>
-                        <div class="info-item">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>New York, USA</span>
-                        </div>
-                        <div class="info-item">
-                            <i class="fas fa-birthday-cake"></i>
-                            <span>January 1, 1990</span>
-                        </div>
-                        <div class="info-item">
-                            <i class="fas fa-heart"></i>
-                            <span>Music, Theater, Sports</span>
+
+                        <!-- Edit Mode -->
+                        <div *ngIf="isEditing">
+                            <div class="mb-3">
+                                <label class="form-label text-muted">Email</label>
+                                <input type="email" class="form-control" [(ngModel)]="editProfile.email">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-muted">Phone</label>
+                                <input type="tel" class="form-control" [(ngModel)]="editProfile.phone">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-muted">Location</label>
+                                <input type="text" class="form-control" [(ngModel)]="editProfile.location">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-muted">Birthday</label>
+                                <input type="text" class="form-control" [(ngModel)]="editProfile.birthday">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-muted">Interests</label>
+                                <input type="text" class="form-control" [(ngModel)]="editProfile.interests">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -63,7 +114,13 @@
                         <h3><i class="fas fa-quote-left me-2"></i>Bio</h3>
                     </div>
                     <div class="card-body">
-                        <p class="bio-text">Passionate about events and connecting people through amazing experiences. Love discovering new events and meeting like-minded individuals.</p>
+                        <!-- View Mode -->
+                        <p *ngIf="!isEditing" class="bio-text">{{ profile.bio }}</p>
+
+                        <!-- Edit Mode -->
+                        <div *ngIf="isEditing">
+                            <textarea class="form-control" rows="4" [(ngModel)]="editProfile.bio" placeholder="Tell us about yourself..."></textarea>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -80,21 +137,21 @@
                                 <i class="fas fa-music booking-icon"></i>
                                 <div class="booking-details">
                                     <h5>Music Festival</h5>
-                                    <p>July 2024</p>
+                                    <p>July 2025</p>
                                 </div>
                             </div>
                             <div class="booking-item">
                                 <i class="fas fa-theater-masks booking-icon"></i>
                                 <div class="booking-details">
                                     <h5>Theater Show</h5>
-                                    <p>June 2024</p>
+                                    <p>June 2025</p>
                                 </div>
                             </div>
                             <div class="booking-item">
                                 <i class="fas fa-football-ball booking-icon"></i>
                                 <div class="booking-details">
                                     <h5>Sports Event</h5>
-                                    <p>May 2024</p>
+                                    <p>May 2025</p>
                                 </div>
                             </div>
                         </div>
@@ -105,12 +162,18 @@
 
         <!-- Action Buttons -->
         <div class="text-center mt-5">
-            <button class="profile-btn primary-btn me-3">
+            <button *ngIf="!isEditing" class="profile-btn primary-btn me-3" (click)="toggleEditMode()">
                 <i class="fas fa-edit me-2"></i>Edit Profile
             </button>
-            <button class="profile-btn secondary-btn">
-                <i class="fas fa-calendar-alt me-2"></i>View All Bookings
+            <button *ngIf="isEditing" class="profile-btn primary-btn me-3" (click)="saveProfile()">
+                <i class="fas fa-save me-2"></i>Save Changes
             </button>
+            <button *ngIf="isEditing" class="profile-btn secondary-btn me-3" (click)="cancelEdit()">
+                <i class="fas fa-times me-2"></i>Cancel
+            </button>
+            <!-- <button class="profile-btn secondary-btn" (click)="viewAllBookings()">
+                <i class="fas fa-calendar-alt me-2"></i>View All Bookings
+            </button> -->
         </div>
     </div>
 </section>

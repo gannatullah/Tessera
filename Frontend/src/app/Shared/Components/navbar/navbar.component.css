@@ -23,6 +23,45 @@
   font-weight: 600;
 }
 
+/* Button styling to match nav links */
+.nav-link-btn {
+  background-color: var(--button);
+  color: #fff;
+  border: 1px solid var(--button);
+  border-radius: 25px;
+  padding: 0.6rem 1.2rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  font-size: 0.9rem;
+}
+
+.nav-link-btn:hover {
+  background-color: var(--btn-hover);
+  border-color: var(--btn-hover);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.login-btn{
+  
+  white-space: nowrap;
+  font-weight: 600;
+  padding: 0.6rem 1.2rem;
+  border-radius: 25px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.login-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+
 .navbar .icons i {
   color: white;
   margin: 0 5px;
@@ -40,4 +79,25 @@
 .nav-link.position-relative .badge {
     font-size: 0.65rem;
     padding: 0.25em 0.5em;
+}
+
+/* Scrolled Navbar Styles */
+.navbar.scrolled {
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(20px) !important;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.navbar.scrolled .navbar-nav .nav-link {
+  color: #333 !important;
+}
+
+.navbar.scrolled .navbar-nav .nav-link:hover {
+  color: #e5383b !important;
+}
+
+.navbar.scrolled .navbar-nav .nav-link.active {
+  color: #e5383b !important;
+  font-weight: 600;
 }

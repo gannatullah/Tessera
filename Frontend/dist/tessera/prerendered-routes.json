@@ -1,0 +1,13 @@
+{
+  "routes": [
+    "/account-type",
+    "/create-event",
+    "/events",
+    "/home",
+    "/login",
+    "/mybookings",
+    "/myevents",
+    "/profile",
+    "/register"
+  ]
+}

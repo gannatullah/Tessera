@@ -6,7 +6,7 @@ export const routes: Routes = [
   {
     path: 'home',
     loadComponent: () =>
-      import('./Feature/Components/home/home.component').then(
+      import('./Feature/Components/customer/home/home.component').then(
         (c) => c.HomeComponent
       ),
   },
@@ -20,8 +20,21 @@ export const routes: Routes = [
   {
     path: 'mybookings',
     loadComponent: () =>
-      import('./Feature/Components/mybookings/mybookings.component').then(
+      import('./Feature/Components/customer/mybookings/mybookings.component').then(
         (c) => c.MybookingsComponent
+      ),
+  },
+  {path: 'myevents',
+    loadComponent: () =>
+      import('./Feature/Components/organizer/myevents/myevents.component').then(
+        (c) => c.MyeventsComponent
+      ),
+  },
+  {
+    path: 'create-event',
+    loadComponent: () =>
+      import('./Feature/Components/organizer/createevent/createevent.component').then(
+        (c) => c.CreateeventComponent
       ),
   },
   {

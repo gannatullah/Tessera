@@ -1,0 +1,33 @@
+.home {
+  background: linear-gradient(rgba(125, 4, 4, 0.3),  rgba(125,4,4,.3)), url('/bg2.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.a {
+  text-decoration: none;
+  color: #ffc908;
+}
+
+.a:hover {
+  color: #edcc57;
+}
+
+
+.card-img {
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.card-img:hover {
+  transform: scale(1.1);
+}
+
+.card-overlay {
+  pointer-events: none;
+}

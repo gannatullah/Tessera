@@ -1,0 +1,259 @@
+<div class="create-event-container">
+  <div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="mb-4">
+      <div class="d-flex justify-content-start mb-3">
+        <button class="btn btn-link text-decoration-none p-0" (click)="onCancel()">
+          <i class="bi bi-arrow-left me-2"></i>Back to My Events
+        </button>
+      </div>
+      <div class="text-center">
+        <h1 class="create-event-title mb-2">Create New Event</h1>
+        <p class="create-event-subtitle text-muted mb-0">Fill in the details to create your event</p>
+      </div>
+    </div>
+
+    <!-- Form Card -->
+    <div class="form-card card shadow-lg border-0">
+      <div class="card-body p-4 p-md-5">
+        <form [formGroup]="eventForm" (ngSubmit)="onSubmit()" class="row g-4">
+          <!-- Event Basic Information -->
+          <div class="col-12">
+            <h4 class="section-title mb-3">
+              <i class="bi bi-info-circle me-2"></i>Event Information
+            </h4>
+          </div>
+
+          <!-- Event Name -->
+          <div class="col-12">
+            @let nameControl = eventForm.get('name');
+            <label class="form-label fw-semibold">Event Name *</label>
+            <input formControlName="name" type="text" class="form-control" placeholder="Enter event name">
+            @if(nameControl?.errors && nameControl?.touched){
+              <small class="text-danger">Event name is required</small>
+            }
+          </div>
+
+          <!-- Event Description -->
+          <div class="col-12">
+            @let descriptionControl = eventForm.get('description');
+            <label class="form-label fw-semibold">Event Description *</label>
+            <textarea formControlName="description" class="form-control" rows="4" placeholder="Describe your event..."></textarea>
+            @if(descriptionControl?.errors && descriptionControl?.touched){
+              <small class="text-danger">Event description is required</small>
+            }
+          </div>
+
+          <!-- Event Category -->
+          <div class="col-md-6">
+            @let categoryControl = eventForm.get('category');
+            <label class="form-label fw-semibold">Event Category *</label>
+            <select formControlName="category" class="form-select">
+              <option value="">Select category</option>
+              <option value="conference">Conference</option>
+              <option value="concert">Concert</option>
+              <option value="workshop">Workshop</option>
+              <option value="festival">Festival</option>
+              <option value="sports">Sports</option>
+              <option value="theater">Theater</option>
+              <option value="exhibition">Exhibition</option>
+              <option value="other">Other</option>
+            </select>
+            @if(categoryControl?.errors && categoryControl?.touched){
+              <small class="text-danger">Please select a category</small>
+            }
+          </div>
+
+          <!-- Event Type -->
+          <div class="col-md-6">
+            @let eventTypeControl = eventForm.get('eventType');
+            <label class="form-label fw-semibold">Event Type *</label>
+            <select formControlName="eventType" class="form-select">
+              <option value="">Select type</option>
+              <option value="public">Public Event</option>
+              <option value="private">Private Event</option>
+              <option value="vip">VIP Event</option>
+            </select>
+            @if(eventTypeControl?.errors && eventTypeControl?.touched){
+              <small class="text-danger">Please select event type</small>
+            }
+          </div>
+
+          <!-- Date and Time Section -->
+          <div class="col-12 mt-4">
+            <h4 class="section-title mb-3">
+              <i class="bi bi-calendar-event me-2"></i>Date & Time
+            </h4>
+          </div>
+
+          <!-- Event Date -->
+          <div class="col-md-6">
+            @let dateControl = eventForm.get('eventDate');
+            <label class="form-label fw-semibold">Event Date *</label>
+            <input formControlName="eventDate" type="date" class="form-control">
+            @if(dateControl?.errors && dateControl?.touched){
+              <small class="text-danger">Event date is required</small>
+            }
+          </div>
+
+          <!-- Start Time -->
+          <div class="col-md-3">
+            @let startTimeControl = eventForm.get('startTime');
+            <label class="form-label fw-semibold">Start Time *</label>
+            <input formControlName="startTime" type="time" class="form-control">
+            @if(startTimeControl?.errors && startTimeControl?.touched){
+              <small class="text-danger">Start time is required</small>
+            }
+          </div>
+
+          <!-- End Time -->
+          <div class="col-md-3">
+            @let endTimeControl = eventForm.get('endTime');
+            <label class="form-label fw-semibold">End Time *</label>
+            <input formControlName="endTime" type="time" class="form-control">
+            @if(endTimeControl?.errors && endTimeControl?.touched){
+              <small class="text-danger">End time is required</small>
+            }
+          </div>
+
+          <!-- Location Section -->
+          <div class="col-12 mt-4">
+            <h4 class="section-title mb-3">
+              <i class="bi bi-geo-alt me-2"></i>Location
+            </h4>
+          </div>
+
+          <!-- Venue -->
+          <div class="col-12">
+            @let venueControl = eventForm.get('venue');
+            <label class="form-label fw-semibold">Venue Name *</label>
+            <input formControlName="venue" type="text" class="form-control" placeholder="Enter venue name">
+            @if(venueControl?.errors && venueControl?.touched){
+              <small class="text-danger">Venue name is required</small>
+            }
+          </div>
+
+          <!-- Address -->
+          <div class="col-12">
+            @let addressControl = eventForm.get('address');
+            <label class="form-label fw-semibold">Full Address *</label>
+            <input formControlName="address" type="text" class="form-control" placeholder="Enter complete address">
+            @if(addressControl?.errors && addressControl?.touched){
+              <small class="text-danger">Address is required</small>
+            }
+          </div>
+
+          <!-- City and Country -->
+          <div class="col-md-6">
+            @let cityControl = eventForm.get('city');
+            <label class="form-label fw-semibold">City *</label>
+            <input formControlName="city" type="text" class="form-control" placeholder="Enter city">
+            @if(cityControl?.errors && cityControl?.touched){
+              <small class="text-danger">City is required</small>
+            }
+          </div>
+
+          <div class="col-md-6">
+            @let countryControl = eventForm.get('country');
+            <label class="form-label fw-semibold">Country *</label>
+            <select formControlName="country" class="form-select">
+              <option value="">Select country</option>
+              <option value="egypt">Egypt</option>
+              <option value="uae">United Arab Emirates</option>
+              <option value="saudi">Saudi Arabia</option>
+              <option value="qatar">Qatar</option>
+              <option value="kuwait">Kuwait</option>
+              <option value="other">Other</option>
+            </select>
+            @if(countryControl?.errors && countryControl?.touched){
+              <small class="text-danger">Please select country</small>
+            }
+          </div>
+
+          <!-- Ticket Information Section -->
+          <div class="col-12 mt-4">
+            <h4 class="section-title mb-3">
+              <i class="bi bi-ticket-perforated me-2"></i>Ticket Information
+            </h4>
+          </div>
+
+          <!-- Ticket Price -->
+          <div class="col-md-6">
+            @let ticketPriceControl = eventForm.get('ticketPrice');
+            <label class="form-label fw-semibold">Ticket Price (EGP) *</label>
+            <input formControlName="ticketPrice" type="number" class="form-control" placeholder="0" min="0">
+            @if(ticketPriceControl?.errors && ticketPriceControl?.touched){
+              <small class="text-danger">
+                @if(ticketPriceControl?.getError('required')){Ticket price is required}
+                @else if(ticketPriceControl?.getError('min')){Price must be 0 or greater}
+              </small>
+            }
+          </div>
+
+          <!-- Total Tickets -->
+          <div class="col-md-6">
+            @let totalTicketsControl = eventForm.get('totalTickets');
+            <label class="form-label fw-semibold">Total Tickets Available *</label>
+            <input formControlName="totalTickets" type="number" class="form-control" placeholder="100" min="1">
+            @if(totalTicketsControl?.errors && totalTicketsControl?.touched){
+              <small class="text-danger">
+                @if(totalTicketsControl?.getError('required')){Total tickets is required}
+                @else if(totalTicketsControl?.getError('min')){Must have at least 1 ticket}
+              </small>
+            }
+          </div>
+
+          <!-- Event Image -->
+          <div class="col-12 mt-4">
+            <h4 class="section-title mb-3">
+              <i class="bi bi-image me-2"></i>Event Image
+            </h4>
+          </div>
+
+          <div class="col-12">
+            <label class="form-label fw-semibold">Event Poster/Image</label>
+            <input formControlName="image" type="file" class="form-control" accept="image/*">
+            <small class="text-muted">Upload a high-quality image for your event (JPG, PNG, max 5MB)</small>
+          </div>
+
+          <!-- Additional Information -->
+          <div class="col-12 mt-4">
+            <h4 class="section-title mb-3">
+              <i class="bi bi-info-square me-2"></i>Additional Information
+            </h4>
+          </div>
+
+          <!-- Organizer Contact -->
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Organizer Name</label>
+            <input formControlName="organizerName" type="text" class="form-control" placeholder="Your name or organization">
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Organizer Email</label>
+            <input formControlName="organizerEmail" type="email" class="form-control" placeholder="contact@example.com">
+          </div>
+
+          <!-- Terms and Submit -->
+          <div class="col-12 mt-4">
+            <div class="form-check mb-4">
+              <input class="form-check-input" type="checkbox" id="termsCheck" formControlName="acceptTerms">
+              <label class="form-check-label" for="termsCheck">
+                I agree to the <a href="#" class="text-decoration-none">Terms & Conditions</a> and confirm that all information provided is accurate.
+              </label>
+            </div>
+
+            <div class="d-flex gap-3 justify-content-end">
+              <button type="button" class="btn btn-outline-secondary px-4" (click)="onCancel()">
+                <i class="bi bi-x-circle me-2"></i>Cancel
+              </button>
+              <button type="submit" class="btn create-event-btn px-5" [disabled]="eventForm.invalid">
+                <i class="bi bi-plus-circle me-2"></i>Create Event
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

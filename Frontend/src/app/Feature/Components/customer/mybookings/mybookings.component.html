@@ -1,0 +1,187 @@
+<div class="my-bookings-page container py-4 my-5">
+  <!-- Header -->
+  <div
+    class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4 gap-3"
+  >
+    <div>
+      <h2 class="mb-1 my-bookings-title">My Bookings</h2>
+      <p class="mb-0 text-muted">
+        View and manage all your event tickets in one place.
+      </p>
+    </div>
+
+    <!-- Filter Pills -->
+    <div
+      class="btn-group my-bookings-filters"
+      role="group"
+      aria-label="Booking filters"
+    >
+      <button
+        type="button"
+        class="btn btn-sm"
+        [class.my-filter-active]="activeFilter === 'All'"
+        (click)="setFilter('All')"
+      >
+        All
+      </button>
+      <button
+        type="button"
+        class="btn btn-sm"
+        [class.my-filter-active]="activeFilter === 'Upcoming'"
+        (click)="setFilter('Upcoming')"
+      >
+        Upcoming
+      </button>
+      <button
+        type="button"
+        class="btn btn-sm"
+        [class.my-filter-active]="activeFilter === 'Completed'"
+        (click)="setFilter('Completed')"
+      >
+        Completed
+      </button>
+      <button
+        type="button"
+        class="btn btn-sm"
+        [class.my-filter-active]="activeFilter === 'Cancelled'"
+        (click)="setFilter('Cancelled')"
+      >
+        Cancelled
+      </button>
+    </div>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="row g-3 mb-4">
+    <div class="col-12 col-md-4">
+      <div class="summary-card card shadow-sm border-0">
+        <div class="card-body d-flex flex-column">
+          <span class="summary-label">Total Bookings</span>
+          <span class="summary-value">{{ bookings.length }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-md-4">
+      <div class="summary-card card shadow-sm border-0">
+        <div class="card-body d-flex flex-column">
+          <span class="summary-label">Upcoming</span>
+          <span class="summary-value">
+            {{ getStatusCount("Upcoming") }}
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-md-4">
+      <div class="summary-card card shadow-sm border-0">
+        <div class="card-body d-flex flex-column">
+          <span class="summary-label">Completed</span>
+          <span class="summary-value">
+            {{ getStatusCount("Completed") }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bookings List -->
+  <div *ngIf="filteredBookings.length > 0; else noBookings">
+    <div
+      class="booking-card card mb-3"
+      *ngFor="let booking of filteredBookings"
+    >
+      <div class="card-body">
+        <div
+          class="d-flex flex-column flex-lg-row justify-content-between gap-3"
+        >
+          <!-- Left: Event details -->
+          <div class="d-flex flex-column flex-md-row gap-3 flex-grow-1">
+            <div class="booking-date text-center px-3 py-2">
+              <div class="booking-day">
+                {{ booking.eventDate | date : "dd" }}
+              </div>
+              <div class="booking-month">
+                {{ booking.eventDate | date : "MMM" }}
+              </div>
+              <div class="booking-time">
+                {{ booking.eventTime }}
+              </div>
+            </div>
+
+            <div>
+              <h5 class="mb-1 booking-event-name">
+                {{ booking.eventName }}
+              </h5>
+              <p class="mb-1 text-muted booking-venue">
+                {{ booking.venue }} · {{ booking.city }}
+              </p>
+              <p class="mb-1 booking-ticket-info">
+                {{ booking.ticketType }} · {{ booking.quantity }} ticket(s)
+              </p>
+              <p class="mb-0 booking-code text-muted small">
+                Booking code: <strong>{{ booking.bookingCode }}</strong>
+              </p>
+            </div>
+          </div>
+
+          <!-- Right: Status + actions -->
+          <div
+            class="d-flex flex-column align-items-lg-end justify-content-between flex-shrink-0"
+          >
+            <div class="mb-2">
+              <span
+                class="badge booking-status-badge"
+                [ngClass]="{
+                  'status-upcoming': booking.status === 'Upcoming',
+                  'status-completed': booking.status === 'Completed',
+                  'status-cancelled': booking.status === 'Cancelled'
+                }"
+              >
+                {{ booking.status }}
+              </span>
+            </div>
+
+            <div class="text-lg-end">
+              <div class="booking-price mb-2">
+                <span class="price-label">Total Paid</span>
+                <span class="price-value">
+                  {{
+                    booking.totalPrice | currency : "EGP" : "symbol" : "1.0-0"
+                  }}
+                </span>
+              </div>
+
+              <div class="btn-group">
+                <button
+                  class="btn btn-sm my-btn-primary"
+                  (click)="onViewTicket(booking)"
+                >
+                  View Tickets
+                </button>
+                <button
+                  *ngIf="booking.status === 'Upcoming'"
+                  class="btn btn-sm btn-outline-danger"
+                  (click)="onCancelBooking(booking)"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- No bookings state -->
+  <ng-template #noBookings>
+    <div class="no-bookings card border-0 text-center p-4">
+      <div class="card-body">
+        <h5 class="mb-2">No bookings yet</h5>
+        <p class="text-muted mb-3">
+          You don’t have any {{ activeFilter | lowercase }} bookings right now.
+        </p>
+        <a routerLink="/events" class="btn my-btn-primary"> Browse Events </a>
+      </div>
+    </div>
+  </ng-template>
+</div>

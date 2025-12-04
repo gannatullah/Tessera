@@ -1,0 +1,242 @@
+.my-events-page {
+  min-height: 100vh;
+}
+
+.my-events-title {
+  color: var(--main-color);
+  font-weight: 700;
+}
+
+/* Create Event Button */
+.create-event-btn {
+  white-space: nowrap;
+  font-weight: 600;
+  padding: 0.6rem 1.2rem;
+  border-radius: 25px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.create-event-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Filter buttons */
+.my-events-filters .btn {
+  border-radius: 999px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  padding-inline: 1rem;
+  font-weight: 500;
+  color: #555;
+  margin-right: 0.5rem;
+}
+
+.my-events-filters .btn:hover {
+  background-color: var(--light-color);
+}
+
+.my-events-filters .my-filter-active {
+  background-color: var(--main-color);
+  color: #fff;
+  border-color: var(--main-color);
+}
+
+/* Summary cards */
+.summary-card {
+  background-color: #fffdf8;
+  box-shadow: var(--shadow);
+  border-radius: 12px;
+}
+
+.summary-label {
+  font-size: 0.85rem;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.summary-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--main-color);
+}
+
+/* Event cards */
+.event-card {
+  border: none;
+  box-shadow: var(--shadow);
+  border-radius: 1rem;
+  transition: all 0.3s ease;
+}
+
+.event-card:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.event-date {
+  border-radius: 0.75rem;
+  background: linear-gradient(135deg, var(--main-color), var(--button));
+  color: white;
+  min-width: 80px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.event-day {
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.event-month {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  opacity: 0.9;
+}
+
+.event-year {
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+
+.event-name {
+  color: #222;
+  font-weight: 600;
+}
+
+.event-venue {
+  font-size: 0.9rem;
+}
+
+.event-time {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.event-stats .badge {
+  font-size: 0.75rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+}
+
+/* Status badges */
+.event-status-badge {
+  padding: 0.4rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.status-upcoming {
+  background-color: rgba(164, 22, 26, 0.1);
+  color: var(--main-color);
+}
+
+.status-ongoing {
+  background-color: rgba(33, 150, 243, 0.1);
+  color: #1976d2;
+}
+
+.status-completed {
+  background-color: rgba(76, 175, 80, 0.1);
+  color: #2e7d32;
+}
+
+.status-cancelled {
+  background-color: rgba(244, 67, 54, 0.08);
+  color: #b71c1c;
+}
+
+/* Price */
+.event-price .price-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: #888;
+  margin-right: 0.25rem;
+}
+
+.event-price .price-value {
+  font-weight: 700;
+  color: var(--main-color);
+}
+
+/* Buttons using palette */
+.my-btn-primary {
+  background-color: var(--button);
+  color: #fff;
+  border-color: var(--button);
+}
+
+.my-btn-primary:hover {
+  background-color: var(--btn-hover);
+  border-color: var(--btn-hover);
+  color: #fff;
+}
+
+/* Button group spacing */
+.btn-group .btn {
+  margin-right: 0.25rem;
+}
+
+.btn-group .btn:last-child {
+  margin-right: 0;
+}
+
+/* Empty state */
+.no-events {
+  background-color: #fff;
+  box-shadow: var(--shadow);
+  border-radius: 1rem;
+}
+
+.no-events .display-1 {
+  opacity: 0.3;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .create-event-btn {
+    width: 100%;
+    margin-top: 1rem;
+  }
+
+  .my-events-filters {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .my-events-filters .btn {
+    margin-right: 0;
+    margin-bottom: 0.25rem;
+  }
+
+  .event-stats {
+    flex-direction: column;
+    align-items: flex-start !important;
+  }
+
+  .event-stats .badge {
+    margin-bottom: 0.25rem;
+    margin-right: 0;
+  }
+}
+
+@media (max-width: 576px) {
+  .summary-card .card-body {
+    padding: 1rem;
+  }
+
+  .summary-value {
+    font-size: 1.2rem;
+  }
+
+  .event-date {
+    min-width: 70px;
+    padding: 0.5rem;
+  }
+
+  .event-day {
+    font-size: 1.4rem;
+  }
+}

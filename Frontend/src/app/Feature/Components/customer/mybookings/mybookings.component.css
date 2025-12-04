@@ -1,0 +1,152 @@
+.my-bookings-page {
+  min-height: 100vh;
+}
+
+.my-bookings-title {
+  color: var(--main-color);
+  font-weight: 700;
+}
+
+/* Filter buttons */
+.my-bookings-filters .btn {
+  border-radius: 999px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  padding-inline: 1rem;
+  font-weight: 500;
+  color: #555;
+}
+
+.my-bookings-filters .btn:hover {
+  background-color: var(--light-color);
+}
+
+.my-bookings-filters .my-filter-active {
+  background-color: var(--main-color);
+  color: #fff;
+  border-color: var(--main-color);
+}
+
+/* Summary cards */
+.summary-card {
+  background-color: #fffdf8;
+  box-shadow: var(--shadow);
+}
+
+.summary-label {
+  font-size: 0.85rem;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.summary-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--main-color);
+}
+
+/* Booking cards */
+.booking-card {
+  border: none;
+  box-shadow: var(--shadow);
+  border-radius: 1rem;
+}
+
+.booking-date {
+  border-radius: 0.75rem;
+  background-color: var(--light-color);
+  min-width: 80px;
+}
+
+.booking-day {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--main-color);
+}
+
+.booking-month {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  color: #555;
+}
+
+.booking-time {
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.booking-event-name {
+  color: #222;
+  font-weight: 600;
+}
+
+.booking-venue {
+  font-size: 0.9rem;
+}
+
+.booking-ticket-info {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.booking-code {
+  font-size: 0.8rem;
+}
+
+/* Status badges */
+.booking-status-badge {
+  padding: 0.4rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.status-upcoming {
+  background-color: rgba(164, 22, 26, 0.1);
+  color: var(--main-color);
+}
+
+.status-completed {
+  background-color: rgba(76, 175, 80, 0.1);
+  color: #2e7d32;
+}
+
+.status-cancelled {
+  background-color: rgba(244, 67, 54, 0.08);
+  color: #b71c1c;
+}
+
+/* Price */
+.booking-price .price-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: #888;
+  margin-right: 0.25rem;
+}
+
+.booking-price .price-value {
+  font-weight: 700;
+  color: var(--main-color);
+}
+
+/* Buttons using palette */
+.my-btn-primary {
+  background-color: var(--button);
+  color: #fff;
+  border-color: var(--button);
+}
+
+.my-btn-primary:hover {
+  background-color: var(--btn-hover);
+  border-color: var(--btn-hover);
+  color: #fff;
+}
+
+/* Empty state */
+.no-bookings {
+  background-color: #fff;
+  box-shadow: var(--shadow);
+  border-radius: 1rem;
+}
+
