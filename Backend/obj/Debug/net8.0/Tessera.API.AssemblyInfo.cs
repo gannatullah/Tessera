@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Tessera.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1c82d57e62609222c9d6de58bb3be9826953fc0e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2eb360d32e8dd265b98c0ccb4e97585a8c684cbf")]
 [assembly: System.Reflection.AssemblyProductAttribute("Tessera.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Tessera.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
