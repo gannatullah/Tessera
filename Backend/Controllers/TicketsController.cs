@@ -3,32 +3,21 @@ using Microsoft.EntityFrameworkCore;
 using Tessera.API.Data;
 using Tessera.API.Models;
 using Tessera.API.DTOs;
+using Tessera.API.Controllers;
 
 namespace Tessera.API.Controllers
 {
-    /// <summary>
-    /// Controller for managing tickets in the system.
-    /// Handles ticket creation, retrieval, updates, and deletion with inventory management.
-    /// </summary>
+
     [Route("api/[controller]")]
     [ApiController]
     public class TicketsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-
-        /// <summary>
-        /// Initializes a new instance of the TicketsController.
-        /// </summary>
-        /// <param name="context">The database context for accessing ticket data.</param>
         public TicketsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        /// <summary>
-        /// Retrieves a list of all tickets with their ticket type details.
-        /// </summary>
-        /// <returns>A list of TicketDto objects containing ticket and ticket type information.</returns>
         // GET: api/Tickets
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TicketDto>>> GetTickets()
@@ -56,12 +45,6 @@ namespace Tessera.API.Controllers
 
             return Ok(tickets);
         }
-
-        /// <summary>
-        /// Retrieves a specific ticket by its ID.
-        /// </summary>
-        /// <param name="id">The ID of the ticket to retrieve.</param>
-        /// <returns>A TicketDto object if found, or NotFound if the ticket doesn't exist.</returns>
         // GET: api/Tickets/5
         [HttpGet("{id}")]
         public async Task<ActionResult<TicketDto>> GetTicket(int id)
@@ -96,12 +79,56 @@ namespace Tessera.API.Controllers
             return Ok(ticketDto);
         }
 
-        /// <summary>
-        /// Creates a new ticket for an event with a specific ticket type.
-        /// Automatically manages ticket inventory by incrementing quantity sold.
-        /// </summary>
-        /// <param name="createTicketDto">The data transfer object containing ticket type ID, event ID, and optional status.</param>
-        /// <returns>The created TicketDto, or BadRequest if validations fail (ticket type not found, event not found, or sold out).</returns>
+        // GET: api/Tickets/usertickets/5
+        [HttpGet("usertickets/{userid}")]
+        public async Task<ActionResult<IEnumerable<TicketDto>>> GetUserTickets(int userid)
+        {
+            var tickets = await _context.Tickets
+                .Include(t => t.TicketType) // Include ticket type details
+                .Include(t => t.Event) // Include event details
+                .Where(t => t.UserID == userid)
+                .Select(t => new TicketDto
+                {
+                    Ticket_ID = t.Ticket_ID,
+                    Status = t.Status,
+                    QR_Code = t.QR_Code,
+                    TicketTypeID = t.TicketTypeID,
+                    EventID = t.EventID,
+                    TicketType = new TicketTypeDto
+                    {
+                        ID = t.TicketType.ID,
+                        Name = t.TicketType.Name,
+                        Price = t.TicketType.Price,
+                        Quantity_Total = t.TicketType.Quantity_Total,
+                        Quantity_Sold = t.TicketType.Quantity_Sold,
+                        EventID = t.TicketType.Event_ID
+                    },
+                    Event = new EventDto
+                    {
+                        Event_ID = t.Event.Event_ID,
+                        Category = t.Event.Category,
+                        Date = t.Event.Date,
+                        St_Date = t.Event.St_Date,
+                        E_Date = t.Event.E_Date,
+                        City = t.Event.City,
+                        Location = t.Event.Location,
+                        Capacity = t.Event.Capacity,
+                        OrganizerID = t.Event.OrganizerID
+                    },
+                    UserID = t.UserID
+                })
+                .ToListAsync();
+
+            if (!tickets.Any())
+            {
+                return NotFound(new { message = "No tickets found for this user" });
+            }
+
+            return Ok(tickets);
+        }
+
+
+
         // POST: api/Tickets
         [HttpPost]
         public async Task<ActionResult<TicketDto>> CreateTicket(CreateTicketDto createTicketDto)
@@ -162,11 +189,7 @@ namespace Tessera.API.Controllers
             return CreatedAtAction(nameof(GetTicket), new { id = ticket.Ticket_ID }, ticketDto);
         }
 
-        /// <summary>
         /// Updates an existing ticket's status or QR code.
-        /// </summary>
-        /// <param name="id">The ID of the ticket to update.</param>
-        /// <param name="updateTicketDto">The data transfer object containing updated fields.</param>
         /// <returns>NoContent if successful, or NotFound if the ticket doesn't exist.</returns>
         // PUT: api/Tickets/5
         [HttpPut("{id}")]
@@ -190,12 +213,6 @@ namespace Tessera.API.Controllers
             return NoContent();
         }
 
-        /// <summary>
-        /// Deletes a ticket from the system.
-        /// Automatically manages ticket inventory by decrementing quantity sold.
-        /// </summary>
-        /// <param name="id">The ID of the ticket to delete.</param>
-        /// <returns>NoContent if successful, or NotFound if the ticket doesn't exist.</returns>
         // DELETE: api/Tickets/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTicket(int id)

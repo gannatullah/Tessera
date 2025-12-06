@@ -29,6 +29,7 @@ namespace Tessera.API.DTOs
         public int EventID { get; set; }
         public int? UserID { get; set; }
         public TicketTypeDto? TicketType { get; set; }
+        public EventDto? Event { get; set; }
     }
 
     public class TicketTypeDto

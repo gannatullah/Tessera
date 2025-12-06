@@ -105,7 +105,7 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.auth.getallusers('','').subscribe({
+    this.auth.getallusers().subscribe({
       next: (data: any) => {
         console.log(data);
       },
