@@ -8,7 +8,7 @@ import { Usersinterface } from '../../interfaces/usersinterface';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:5048/api';
+  private apiUrl = 'http://localhost:5000/api';
 
   constructor(private _httpClient: HttpClient) { }
 

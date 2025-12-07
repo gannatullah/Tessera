@@ -109,6 +109,69 @@ namespace Tessera.API.Controllers
             return Ok(eventDto);
         }
 
+        [HttpGet("filter")]
+        public async Task<ActionResult<IEnumerable<EventDto>>> FilterEvents(
+    [FromQuery] string? city,
+    [FromQuery] string? category)
+        {
+            var query = _context.Events
+                .Include(e => e.Organizer)
+                    .ThenInclude(o => o.User)
+                .Include(e => e.TicketTypes)
+                .AsQueryable();
+
+            // Apply filters ONLY if values are provided
+            if (!string.IsNullOrWhiteSpace(city))
+                query = query.Where(e => e.City!.ToLower() == city.ToLower());
+
+            if (!string.IsNullOrWhiteSpace(category))
+                query = query.Where(e => e.Category.ToLower() == category.ToLower());
+
+            var events = await query.ToListAsync();
+
+            if (events.Count == 0)
+                return NotFound(new { message = "No events found matching filters." });
+
+            // Map to DTO
+            var eventDtos = events.Select(e => new EventDto
+            {
+                Event_ID = e.Event_ID,
+                Category = e.Category,
+                Date = e.Date,
+                St_Date = e.St_Date,
+                E_Date = e.E_Date,
+                City = e.City,
+                Location = e.Location,
+                Capacity = e.Capacity,
+                OrganizerID = e.OrganizerID,
+                Organizer = new OrganizerDto
+                {
+                    UserID = e.Organizer.UserID,
+                    IsVerified = e.Organizer.IsVerified,
+                    User = new UserDto
+                    {
+                        ID = e.Organizer.User.ID,
+                        Name = e.Organizer.User.Name,
+                        First_Name = e.Organizer.User.First_Name,
+                        Last_Name = e.Organizer.User.Last_Name,
+                        Email = e.Organizer.User.Email,
+                        Phone_No = e.Organizer.User.Phone_No,
+                        DOB = e.Organizer.User.DOB
+                    }
+                },
+                TicketTypes = e.TicketTypes.Select(t => new TicketTypeDto
+                {
+                    ID = t.ID,
+                    Name = t.Name,
+                    Price = t.Price,
+                    Quantity_Total = t.Quantity_Total
+                }).ToList()
+            });
+
+            return Ok(eventDtos);
+        }
+
+
         // POST: api/Events
         [HttpPost]
         public async Task<ActionResult<EventDto>> CreateEvent(CreateEventDto createEventDto)
