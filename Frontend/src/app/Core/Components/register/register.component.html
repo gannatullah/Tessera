@@ -71,9 +71,12 @@
         <div class="col-md-6">
           @let DOBControl = registerForm.get('dateOfBirth');
           <label class="form-label fw-semibold">Date of Birth</label>
-          <input formControlName="dateOfBirth" type="date" class="form-control">
-          @if(DOBControl?.errors && DOBControl?.touched){
+          <input formControlName="dateOfBirth" type="date" class="form-control" [max]="endRange" [min]="minBirthdate">
+          @if(DOBControl?.getError('required') && DOBControl?.touched){
             <small class="text-danger">Date of birth is required</small>
+          }
+          @if (DOBControl?.getError('ageRange') && DOBControl?.touched) {
+          <small class="text-danger">Age must be between 18 and 100 years old.</small>
           }
         </div>
 
@@ -81,11 +84,11 @@
           @let nationalityControl = registerForm.get('nationality');
           <label class="form-label fw-semibold">Nationality</label>
           <select formControlName="nationality" class="form-select">
-            <option value="">Select nationality</option>
-            <option value="pakistan">Pakistan</option>
-            <option value="india">India</option>
-            <option value="usa">United States</option>
-            <option value="uk">United Kingdom</option>
+             <option value="">Select nationality</option>
+
+               @for (nat of nationalities; track nat) {
+                <option [value]="nat">{{ nat }}</option>
+              }
           </select>
           @if(nationalityControl?.errors && nationalityControl?.touched){
             <small class="text-danger">Please select nationality</small>
@@ -96,12 +99,13 @@
         <div class="col-md-6">
           @let countryControl = registerForm.get('country');
           <label class="form-label fw-semibold">Country</label>
-          <select formControlName="country" class="form-select">
-            <option value="">Select country</option>
-            <option value="pakistan">Pakistan</option>
-            <option value="india">India</option>
-            <option value="usa">United States</option>
-            <option value="uk">United Kingdom</option>
+          <select formControlName="country" class="form-select" (change)="onCountryChange(countrySelect.value)" #countrySelect>
+             <option value="">Select country</option>">
+              @for (c of countries; track c.isoCode) {
+                 <option [value]="c.isoCode">
+                 {{ c.name }}
+                 </option>
+            }
           </select>
           @if(countryControl?.errors && countryControl?.touched){
             <small class="text-danger">Please select country</small>
@@ -111,7 +115,15 @@
         <div class="col-md-6">
           @let cityControl = registerForm.get('city');
           <label class="form-label fw-semibold">City</label>
-          <input formControlName="city" type="text" class="form-control" placeholder="Enter city">
+          <select formControlName="city" class="form-select">
+          <option value="">Select City</option>
+
+          @for (city of cities; track city.name) {
+            <option [value]="city.name">
+              {{ city.name }}
+            </option>
+          }
+        </select>
           @if(cityControl?.errors && cityControl?.touched){
             <small class="text-danger">City is required</small>
           }
