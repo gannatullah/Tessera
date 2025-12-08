@@ -88,6 +88,7 @@
 /* Booking Card */
 .booking-card {
   top: 20px;
+  z-index: 999;
 }
 .price-section {
   padding-bottom: 1rem;
