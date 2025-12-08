@@ -1,7 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
 import { count } from 'console';
 import { first } from 'rxjs';
+import { Country, City } from 'country-state-city';
+import countries from 'world-countries';
+
 @Component({
   selector: 'app-register',
   standalone: true,
@@ -9,11 +12,24 @@ import { first } from 'rxjs';
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
-export class RegisterComponent {
+
+
+export class RegisterComponent implements OnInit {
 today = new Date();
 endRange=new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate()).toISOString().split('T')[0];
 maxBirthdate = new Date(this.today.getFullYear() - 18, this.today.getMonth(), this.today.getDate()).toISOString().split('T')[0];
 minBirthdate = new Date(this.today.getFullYear() - 100, this.today.getMonth(), this.today.getDate()).toISOString().split('T')[0];
+
+countries :any[] = [];
+cities?: any[] = [];
+nationalities = Array.from(
+  new Set(
+    countries.map(c => c.demonyms?.['eng']?.m).filter(n => !!n)
+  )
+) as string[];
+
+
+
 
 //control names must match the json keys in backend
   registerForm: FormGroup=new FormGroup({
@@ -30,6 +46,13 @@ minBirthdate = new Date(this.today.getFullYear() - 100, this.today.getMonth(), t
   },{validators:this.validateConfirmPassword}
 );
 
+ngOnInit(): void {
+
+    this.countries = Country.getAllCountries();
+}
+onCountryChange(countryCode: string) {
+  this.cities = City.getCitiesOfCountry(countryCode);
+}
   register(){
     console.log(this.registerForm);
     if(this.registerForm.invalid){
