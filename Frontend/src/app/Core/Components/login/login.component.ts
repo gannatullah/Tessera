@@ -52,16 +52,6 @@ export class LoginComponent {
         
         // Store JWT token
         localStorage.setItem('authToken', response.token);
-        
-        // Store user data ..... WHY !!
-        // localStorage.setItem('currentUser', JSON.stringify({
-        //   id: response.id,
-        //   email: response.email,
-        //   name: response.name,
-        //   firstName: response.first_Name,
-        //   lastName: response.last_Name,
-        //   phoneNo: response.phone_No
-        // }));
 
         // Navigate after short delay
         setTimeout(() => {
