@@ -3,14 +3,33 @@
     <div class="card-body p-4 p-md-5">
       <h2 class="text-center mb-4 fw-bold">Login</h2>
 
-      <form [formGroup]="registerForm" (ngSubmit)="login()" class="row g-3">
+      <!-- Success Message -->
+      @if(successMessage) {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          <strong>Success!</strong> {{ successMessage }}
+        </div>
+      }
+      
+      <!-- Error Message -->
+      @if(errorMessage) {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <strong>Error!</strong> {{ errorMessage }}
+        </div>
+      }
 
-        
-        <!-- Contact Info -->
+      <form [formGroup]="loginForm" (ngSubmit)="login()" class="row g-3">
+
+        <!-- Email -->
         <div class="col-12">
-          @let emailControl = registerForm.get('email');
+          @let emailControl = loginForm.get('email');
           <label class="form-label fw-semibold">Email Address</label>
-          <input formControlName="email" type="email" class="form-control" placeholder="Enter email address">
+          <input 
+            formControlName="email" 
+            type="email" 
+            class="form-control" 
+            placeholder="Enter email address"
+            [class.is-invalid]="emailControl?.errors && emailControl?.touched"
+          >
           @if(emailControl?.errors && emailControl?.touched){
             <small class="text-danger">
               @if(emailControl?.getError('required')){Email is required}
@@ -19,23 +38,36 @@
           }
         </div>
 
-        
-
-        <!-- Password Fields -->
+        <!-- Password -->
         <div class="col-12">
-          @let passwordControl = registerForm.get('password');
+          @let passwordControl = loginForm.get('password');
           <label class="form-label fw-semibold">Password</label>
-          <input formControlName="password" type="password" class="form-control" placeholder="Enter password">
+          <input 
+            formControlName="password" 
+            type="password" 
+            class="form-control" 
+            placeholder="Enter password"
+            [class.is-invalid]="passwordControl?.errors && passwordControl?.touched"
+          >
           @if(passwordControl?.errors && passwordControl?.touched){
             <small class="text-danger">Password is required</small>
           }
         </div>
 
-
-  
-
+        <!-- Submit Button -->
         <div class="col-12">
-          <button type="submit" class="btn btn-signUp w-100 py-3 fw-bold">Create Account</button>
+          <button 
+            type="submit" 
+            class="btn btn-signUp w-100 py-3 fw-bold"
+            [disabled]="isLoading"
+          >
+            @if(isLoading) {
+              <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+              Logging in...
+            } @else {
+              Login
+            }
+          </button>
         </div>
 
         <div class="col-12 text-center">
