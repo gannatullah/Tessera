@@ -65,4 +65,11 @@ export const routes: Routes = [
         (c) => c.RegisterComponent
       ),
   },
+  {
+    path: 'event-details',
+    loadComponent: () =>
+      import('./Feature/Components/customer/event-details/event-details.component').then(
+        (c) => c.EventDetailsComponent
+      ),
+  }
 ];

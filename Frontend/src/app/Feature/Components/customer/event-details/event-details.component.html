@@ -1,0 +1,192 @@
+<div class="event-details-container">
+  <!-- Hero Section -->
+  <section class="event-hero">
+    <div class="hero-overlay"></div>
+    <img [src]="event.image" [alt]="event.title" class="hero-image" />
+    <div class="hero-content">
+      <div class="container">
+        <div class="badge-container">
+          <span class="badge bg-warning text-dark">{{ event.category }}</span>
+        </div>
+        <h1 class="display-3 fw-bold text-white mb-3">{{ event.title }}</h1>
+        <div class="event-meta d-flex flex-wrap gap-4 text-white">
+          <div class="meta-item">
+            <i class="bi bi-calendar-event me-2"></i>
+            <span>{{ event.date }}</span>
+          </div>
+          <div class="meta-item">
+            <i class="bi bi-clock me-2"></i>
+            <span>{{ event.time }}</span>
+          </div>
+          <div class="meta-item">
+            <i class="bi bi-geo-alt me-2"></i>
+            <span>{{ event.location }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <div class="container my-5">
+    <div class="row g-4">
+      <!-- Left Column - Event Details -->
+      <div class="col-lg-8">
+        <!-- About Section -->
+        <div class="card mb-4">
+          <div class="card-body">
+            <h2 class="card-title mb-4">About This Event</h2>
+            <p class="card-text">{{ event.description }}</p>
+            
+            <div class="event-highlights mt-4">
+              <h4 class="mb-3">Event Highlights</h4>
+              <ul class="highlights-list">
+                <li *ngFor="let highlight of event.highlights">
+                  <i class="bi bi-check-circle-fill text-warning me-2"></i>
+                  {{ highlight }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Venue Information -->
+        <div class="card mb-4">
+          <div class="card-body">
+            <h3 class="card-title mb-4">
+              <i class="bi bi-pin-map me-2 text-warning"></i>
+              Venue Information
+            </h3>
+            <h5>{{ event.venueName }}</h5>
+            <p class="text-muted mb-3">{{ event.venueAddress }}</p>
+            
+            <!-- Map Placeholder -->
+            <div class="map-container">
+              <div class="map-placeholder">
+                <i class="bi bi-map display-4 text-muted"></i>
+                <p class="text-muted mt-2">Map view</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Organizer Info -->
+        <div class="card mb-4">
+          <div class="card-body">
+            <h3 class="card-title mb-4">
+              <i class="bi bi-person-circle me-2 text-warning"></i>
+              Organized By
+            </h3>
+            <div class="d-flex align-items-center">
+              <div class="organizer-avatar me-3">
+                <i class="bi bi-building display-6 text-warning"></i>
+              </div>
+              <div>
+                <h5 class="mb-1">{{ event.organizer }}</h5>
+                <p class="text-muted mb-0">Event Organizer</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column - Booking Section -->
+      <div class="col-lg-4">
+        <div class="booking-card sticky-top">
+          <div class="card">
+            <div class="card-body">
+              <div class="price-section mb-4">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <span class="text-muted">Starting from</span>
+                    <h2 class="mb-0 fw-bold">${{ event.price }}</h2>
+                  </div>
+                  <div class="text-end">
+                    <span class="badge bg-success">{{ event.availability }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Ticket Selection -->
+              <div class="ticket-selection mb-4">
+                <label class="form-label fw-semibold">Select Tickets</label>
+                <div class="ticket-types">
+                  <div class="ticket-type" *ngFor="let ticket of event.ticketTypes">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                      <div>
+                        <h6 class="mb-0">{{ ticket.name }}</h6>
+                        <small class="text-muted">${{ ticket.price }}</small>
+                      </div>
+                      <div class="quantity-selector">
+                        <button class="btn btn-sm btn-outline-secondary" (click)="decreaseQuantity(ticket)">
+                          <i class="bi bi-dash"></i>
+                        </button>
+                        <span class="quantity mx-2">{{ ticket.quantity }}</span>
+                        <button class="btn btn-sm btn-outline-secondary" (click)="increaseQuantity(ticket)">
+                          <i class="bi bi-plus"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Total Price -->
+              <div class="total-section mb-4">
+                <div class="d-flex justify-content-between align-items-center">
+                  <h5 class="mb-0">Total:</h5>
+                  <h4 class="mb-0 fw-bold text-warning">${{ getTotalPrice() }}</h4>
+                </div>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="action-buttons">
+                <button class="btn btn-warning w-100 mb-2" (click)="bookNow()">
+                  <i class="bi bi-ticket-perforated me-2"></i>
+                  Book Now
+                </button>
+                <button class="btn btn-outline-secondary w-100" (click)="addToWishlist()">
+                  <i class="bi bi-heart me-2"></i>
+                  Add to Wishlist
+                </button>
+              </div>
+
+              <!-- Event Info -->
+              <div class="event-info mt-4">
+                <div class="info-item">
+                  <i class="bi bi-shield-check text-success me-2"></i>
+                  <small>Secure booking guaranteed</small>
+                </div>
+                <div class="info-item">
+                  <i class="bi bi-arrow-clockwise text-primary me-2"></i>
+                  <small>Free cancellation available</small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Share Section -->
+          <div class="card mt-3">
+            <div class="card-body">
+              <h6 class="card-title mb-3">Share This Event</h6>
+              <div class="d-flex gap-2">
+                <button class="btn btn-outline-primary btn-sm flex-fill">
+                  <i class="bi bi-facebook"></i>
+                </button>
+                <button class="btn btn-outline-info btn-sm flex-fill">
+                  <i class="bi bi-twitter"></i>
+                </button>
+                <button class="btn btn-outline-danger btn-sm flex-fill">
+                  <i class="bi bi-instagram"></i>
+                </button>
+                <button class="btn btn-outline-success btn-sm flex-fill">
+                  <i class="bi bi-whatsapp"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

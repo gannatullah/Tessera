@@ -1,7 +1,7 @@
 import { Component, AfterViewInit, PLATFORM_ID, Inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import Typed from 'typed.js';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -12,7 +12,10 @@ import { RouterLink } from '@angular/router';
 })
 export class HomeComponent implements AfterViewInit {
   
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private router: Router
+  ) {}
 
   ngAfterViewInit(): void {
     if (isPlatformBrowser(this.platformId)) {
@@ -34,5 +37,9 @@ export class HomeComponent implements AfterViewInit {
 
       new Typed('#typedElement', options);
     }
+  }
+
+  navigateToEventDetails(): void {
+    this.router.navigate(['/event-details']);
   }
 }

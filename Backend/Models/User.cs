@@ -71,3 +71,5 @@ namespace Tessera.API.Models
         public ICollection<Event> Events { get; set; } = new List<Event>();
     }
 }
+
+// make it work

@@ -41,4 +41,5 @@ namespace Tessera.API.DTOs
         public int Quantity_Sold { get; set; }
         public int EventID { get; set; }
     }
+    
 }

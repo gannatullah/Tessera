@@ -1,0 +1,190 @@
+
+/* Hero Section */
+.event-hero {
+  position: relative;
+  height: 500px;
+  overflow: hidden;
+  margin-bottom: 0;
+}
+.hero-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.7));
+  z-index: 1;
+}
+.hero-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 3rem 0;
+  z-index: 2;
+}
+.badge-container {
+  margin-bottom: 1rem;
+}
+.event-meta {
+  font-size: 1.1rem;
+}
+.meta-item {
+  display: flex;
+  align-items: center;
+}
+/* Cards */
+.card {
+  border: none;
+  box-shadow: var(--shadow);
+  border-radius: 12px;
+  transition: transform 0.3s ease;
+}
+.card:hover {
+  transform: translateY(-5px);
+}
+.card-title {
+  color: var(--main-color);
+  font-weight: 600;
+}
+/* Highlights List */
+.highlights-list {
+  list-style: none;
+  padding: 0;
+}
+.highlights-list li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+.highlights-list li:last-child {
+  border-bottom: none;
+}
+/* Map Placeholder */
+.map-container {
+  margin-top: 1rem;
+}
+.map-placeholder {
+  background-color: #f8f9fa;
+  border: 2px dashed #dee2e6;
+  border-radius: 8px;
+  padding: 3rem;
+  text-align: center;
+}
+/* Organizer */
+.organizer-avatar {
+  width: 60px;
+  height: 60px;
+  background-color: #fff3cd;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* Booking Card */
+.booking-card {
+  top: 20px;
+  z-index: 999;
+}
+.price-section {
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #f0f0f0;
+}
+.price-section h2 {
+  color: var(--main-color);
+}
+/* Ticket Selection */
+.ticket-types {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1rem;
+}
+.ticket-type {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+.ticket-type:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+.quantity-selector {
+  display: flex;
+  align-items: center;
+}
+.quantity {
+  min-width: 30px;
+  text-align: center;
+  font-weight: 600;
+}
+/* Total Section */
+.total-section {
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+/* Action Buttons */
+.btn-warning {
+  background-color: #ffc107;
+  border-color: #ffc107;
+  font-weight: 600;
+  padding: 0.75rem;
+  transition: all 0.3s ease;
+}
+.btn-warning:hover {
+  background-color: #ffb300;
+  border-color: #ffb300;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(255, 193, 7, 0.3);
+}
+.btn-outline-secondary {
+  font-weight: 600;
+  padding: 0.75rem;
+  transition: all 0.3s ease;
+}
+.btn-outline-secondary:hover {
+  transform: translateY(-2px);
+}
+/* Event Info */
+.event-info {
+  padding-top: 1rem;
+  border-top: 1px solid #e0e0e0;
+}
+.info-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+/* Responsive Design */
+@media (max-width: 991px) {
+  .event-hero {
+    height: 400px;
+  }
+  .hero-content {
+    padding: 2rem 0;
+  }
+  .hero-content h1 {
+    font-size: 2.5rem;
+  }
+  .booking-card {
+    position: relative;
+    top: 0;
+  }
+}
+@media (max-width: 767px) {
+  .event-hero {
+    height: 350px;
+  }
+  .hero-content h1 {
+    font-size: 2rem;
+  }
+  .event-meta {
+    font-size: 0.9rem;
+  }
+  .meta-item {
+    font-size: 0.85rem;
+  }
+}
