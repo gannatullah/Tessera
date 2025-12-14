@@ -7,8 +7,6 @@ using Tessera.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configure Kestrel to use port 5001
-builder.WebHost.UseUrls("http://localhost:5001");
 
 builder.Services.AddControllers();
 
@@ -96,7 +94,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 app.UseCors("AllowAll");
 
 app.UseAuthentication(); // Add this BEFORE UseAuthorization
