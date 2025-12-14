@@ -30,7 +30,8 @@ namespace Tessera.API.Controllers
                     Last_Name = u.Last_Name,
                     Email = u.Email,
                     Phone_No = u.Phone_No,
-                    DOB = u.DOB
+                    DOB = u.DOB,
+                    ProfilePic = u.ProfilePic
                 })
                 .ToListAsync();
 
@@ -105,7 +106,8 @@ namespace Tessera.API.Controllers
                 Email = createUserDto.Email,
                 Phone_No = createUserDto.Phone_No,
                 Password = createUserDto.Password, // In production, hash this!
-                DOB = createUserDto.DOB
+                DOB = createUserDto.DOB,
+                ProfilePic = createUserDto.ProfilePic
             };
 
             _context.Users.Add(user);
@@ -119,7 +121,8 @@ namespace Tessera.API.Controllers
                 Last_Name = user.Last_Name,
                 Email = user.Email,
                 Phone_No = user.Phone_No,
-                DOB = user.DOB
+                DOB = user.DOB,
+                ProfilePic = user.ProfilePic
             };
 
             return CreatedAtAction(nameof(GetUser), new { id = user.ID }, userDto);
@@ -149,6 +152,8 @@ namespace Tessera.API.Controllers
                 user.Phone_No = updateUserDto.Phone_No;
             if (updateUserDto.DOB.HasValue)
                 user.DOB = updateUserDto.DOB;
+            if (!string.IsNullOrEmpty(updateUserDto.ProfilePic))
+                user.ProfilePic = updateUserDto.ProfilePic;
 
             await _context.SaveChangesAsync();
 

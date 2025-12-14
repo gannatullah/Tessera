@@ -19,6 +19,8 @@ namespace Tessera.API.DTOs
         public string? City { get; set; }
         public string? Location { get; set; }
         public int? Capacity { get; set; }
+        public string? Description { get; set; }
+        public string? Image { get; set; }
 
         [Required]
         public int OrganizerID { get; set; }
@@ -49,6 +51,8 @@ namespace Tessera.API.DTOs
         public string? City { get; set; }
         public string? Location { get; set; }
         public int? Capacity { get; set; }
+        public string? Description { get; set; }
+        public string? Image { get; set; }
     }
 
     public class EventDto
@@ -61,6 +65,8 @@ namespace Tessera.API.DTOs
         public string? City { get; set; }
         public string? Location { get; set; }
         public int? Capacity { get; set; }
+        public string? Description { get; set; }
+        public string? Image { get; set; }
         public int OrganizerID { get; set; }
         public OrganizerDto? Organizer { get; set; }
         public List<TicketTypeDto>? TicketTypes { get; set; }

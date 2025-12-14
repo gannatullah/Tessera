@@ -36,6 +36,9 @@ namespace Tessera.API.Models
 
         public DateTime? DOB { get; set; }
 
+        [StringLength(500)]
+        public string? ProfilePic { get; set; }
+
         public Buyer? Buyer { get; set; }
         public Organizer? Organizer { get; set; }
         public ICollection<Order> Orders { get; set; } = new List<Order>();

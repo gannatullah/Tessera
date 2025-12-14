@@ -26,6 +26,8 @@ namespace Tessera.API.DTOs
         public string Password { get; set; } = string.Empty;
 
         public DateTime? DOB { get; set; }
+
+        public string? ProfilePic { get; set; }
     }
 
     // For updating user
@@ -37,6 +39,7 @@ namespace Tessera.API.DTOs
         public string? Email { get; set; }
         public string? Phone_No { get; set; }
         public DateTime? DOB { get; set; }
+        public string? ProfilePic { get; set; }
     }
 
     // For returning user data (without password)
@@ -49,5 +52,6 @@ namespace Tessera.API.DTOs
         public string Email { get; set; } = string.Empty;
         public string Phone_No { get; set; } = string.Empty;
         public DateTime? DOB { get; set; }
+        public string? ProfilePic { get; set; }
     }
 }

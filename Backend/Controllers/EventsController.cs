@@ -32,6 +32,8 @@ namespace Tessera.API.Controllers
                     City = e.City,
                     Location = e.Location,
                     Capacity = e.Capacity,
+                    Description = e.Description,
+                    Image = e.Image,
                     OrganizerID = e.OrganizerID,
                     Organizer = new OrganizerDto
                     {
@@ -45,7 +47,8 @@ namespace Tessera.API.Controllers
                             Last_Name = e.Organizer.User.Last_Name,
                             Email = e.Organizer.User.Email,
                             Phone_No = e.Organizer.User.Phone_No,
-                            DOB = e.Organizer.User.DOB
+                            DOB = e.Organizer.User.DOB,
+                            ProfilePic = e.Organizer.User.ProfilePic
                         }
                     },
                     //=============================================
@@ -88,6 +91,8 @@ namespace Tessera.API.Controllers
                 City = eventItem.City,
                 Location = eventItem.Location,
                 Capacity = eventItem.Capacity,
+                Description = eventItem.Description,
+                Image = eventItem.Image,
                 OrganizerID = eventItem.OrganizerID,
                 Organizer = new OrganizerDto
                 {
@@ -101,7 +106,8 @@ namespace Tessera.API.Controllers
                         Last_Name = eventItem.Organizer.User.Last_Name,
                         Email = eventItem.Organizer.User.Email,
                         Phone_No = eventItem.Organizer.User.Phone_No,
-                        DOB = eventItem.Organizer.User.DOB
+                        DOB = eventItem.Organizer.User.DOB,
+                        ProfilePic = eventItem.Organizer.User.ProfilePic
                     }
                 }
             };
@@ -143,6 +149,8 @@ namespace Tessera.API.Controllers
                 City = e.City,
                 Location = e.Location,
                 Capacity = e.Capacity,
+                Description = e.Description,
+                Image = e.Image,
                 OrganizerID = e.OrganizerID,
                 Organizer = new OrganizerDto
                 {
@@ -156,7 +164,8 @@ namespace Tessera.API.Controllers
                         Last_Name = e.Organizer.User.Last_Name,
                         Email = e.Organizer.User.Email,
                         Phone_No = e.Organizer.User.Phone_No,
-                        DOB = e.Organizer.User.DOB
+                        DOB = e.Organizer.User.DOB,
+                        ProfilePic = e.Organizer.User.ProfilePic
                     }
                 },
                 TicketTypes = e.TicketTypes.Select(t => new TicketTypeDto
@@ -164,7 +173,8 @@ namespace Tessera.API.Controllers
                     ID = t.ID,
                     Name = t.Name,
                     Price = t.Price,
-                    Quantity_Total = t.Quantity_Total
+                    Quantity_Total = t.Quantity_Total,
+                    EventID = t.Event_ID
                 }).ToList()
             });
 
@@ -191,6 +201,8 @@ namespace Tessera.API.Controllers
                 City = createEventDto.City,
                 Location = createEventDto.Location,
                 Capacity = createEventDto.Capacity,
+                Description = createEventDto.Description,
+                Image = createEventDto.Image,
                 OrganizerID = createEventDto.OrganizerID
             };
 
@@ -247,6 +259,8 @@ namespace Tessera.API.Controllers
                 City = eventItem.City,
                 Location = eventItem.Location,
                 Capacity = eventItem.Capacity,
+                Description = eventItem.Description,
+                Image = eventItem.Image,
                 OrganizerID = eventItem.OrganizerID,
                 TicketTypes = ticketTypesToCreate.Select(tt => new TicketTypeDto
                 {
@@ -288,6 +302,10 @@ namespace Tessera.API.Controllers
                 eventItem.Location = updateEventDto.Location;
             if (updateEventDto.Capacity.HasValue)
                 eventItem.Capacity = updateEventDto.Capacity.Value;
+            if (!string.IsNullOrEmpty(updateEventDto.Description))
+                eventItem.Description = updateEventDto.Description;
+            if (!string.IsNullOrEmpty(updateEventDto.Image))
+                eventItem.Image = updateEventDto.Image;
 
             await _context.SaveChangesAsync();
 

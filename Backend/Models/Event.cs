@@ -30,6 +30,12 @@ namespace Tessera.API.Models
 
         public int? Capacity { get; set; }
 
+        [StringLength(1000)]
+        public string? Description { get; set; }
+
+        [StringLength(500)]
+        public string? Image { get; set; }
+
         [Required]
         public int OrganizerID { get; set; }
 

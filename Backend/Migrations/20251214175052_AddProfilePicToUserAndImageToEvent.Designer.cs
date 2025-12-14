@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Tessera.API.Data;
 
@@ -11,9 +12,11 @@ using Tessera.API.Data;
 namespace Tessera.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251214175052_AddProfilePicToUserAndImageToEvent")]
+    partial class AddProfilePicToUserAndImageToEvent
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -77,10 +80,6 @@ namespace Tessera.API.Migrations
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(1000)
-                        .HasColumnType("varchar(1000)");
 
                     b.Property<DateTime>("E_Date")
                         .HasColumnType("datetime(6)");
