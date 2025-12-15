@@ -5,6 +5,9 @@ namespace Tessera.API.DTOs
     public class CreateEventDto
     {
         [Required]
+        public string Name { get; set; } = string.Empty;
+
+        [Required]
         public string Category { get; set; } = string.Empty;
 
         [Required]
@@ -44,6 +47,7 @@ namespace Tessera.API.DTOs
 
     public class UpdateEventDto
     {
+        public string? Name { get; set; }
         public string? Category { get; set; }
         public DateTime? Date { get; set; }
         public DateTime? St_Date { get; set; }
@@ -58,6 +62,7 @@ namespace Tessera.API.DTOs
     public class EventDto
     {
         public int Event_ID { get; set; }
+        public string Name { get; set; } = string.Empty;
         public string Category { get; set; } = string.Empty;
         public DateTime Date { get; set; }
         public DateTime St_Date { get; set; }

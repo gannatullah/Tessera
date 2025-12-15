@@ -18,6 +18,7 @@ namespace Tessera.API.Data
         public DbSet<Ticket> Tickets { get; set; }
         public DbSet<TicketType> TicketTypes { get; set; }
         public DbSet<Order> Orders { get; set; }
+        public DbSet<Wishlist> Wishlists { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -82,6 +83,26 @@ namespace Tessera.API.Data
                 .HasMany(o => o.Tickets)
                 .WithMany(t => t.Orders)
                 .UsingEntity(j => j.ToTable("OrderTickets"));
+
+            // Wishlist relationships
+            // Buyer -> Wishlist (One-to-Many)
+            modelBuilder.Entity<Wishlist>()
+                .HasOne(w => w.Buyer)
+                .WithMany()
+                .HasForeignKey(w => w.UserID)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Event -> Wishlist (One-to-Many)
+            modelBuilder.Entity<Wishlist>()
+                .HasOne(w => w.Event)
+                .WithMany()
+                .HasForeignKey(w => w.EventID)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Unique constraint to prevent duplicate wishlist entries
+            modelBuilder.Entity<Wishlist>()
+                .HasIndex(w => new { w.UserID, w.EventID })
+                .IsUnique();
         }
     }
 }

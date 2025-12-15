@@ -25,6 +25,7 @@ namespace Tessera.API.Controllers
                 .Select(e => new EventDto
                 {
                     Event_ID = e.Event_ID,
+                    Name = e.Name,
                     Category = e.Category,
                     Date = e.Date,
                     St_Date = e.St_Date,
@@ -142,6 +143,7 @@ namespace Tessera.API.Controllers
             var eventDtos = events.Select(e => new EventDto
             {
                 Event_ID = e.Event_ID,
+                Name = e.Name,
                 Category = e.Category,
                 Date = e.Date,
                 St_Date = e.St_Date,
@@ -194,6 +196,7 @@ namespace Tessera.API.Controllers
 
             var eventItem = new Event
             {
+                Name = createEventDto.Name,
                 Category = createEventDto.Category,
                 Date = createEventDto.Date,
                 St_Date = createEventDto.St_Date,
@@ -252,6 +255,7 @@ namespace Tessera.API.Controllers
             var eventDto = new EventDto
             {
                 Event_ID = eventItem.Event_ID,
+                Name = eventItem.Name,
                 Category = eventItem.Category,
                 Date = eventItem.Date,
                 St_Date = eventItem.St_Date,
@@ -288,6 +292,8 @@ namespace Tessera.API.Controllers
             }
 
             // Update only provided fields
+            if (!string.IsNullOrEmpty(updateEventDto.Name))
+                eventItem.Name = updateEventDto.Name;
             if (!string.IsNullOrEmpty(updateEventDto.Category))
                 eventItem.Category = updateEventDto.Category;
             if (updateEventDto.Date.HasValue)
