@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, PLATFORM_ID, Inject } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { TicketService, TicketDto } from '../../../../Services/ticket.service';
 
 interface Booking {
   id: string;
@@ -22,7 +23,7 @@ interface Booking {
   templateUrl: './mybookings.component.html',
   styleUrls: ['./mybookings.component.css']
 })
-export class MybookingsComponent {
+export class MybookingsComponent implements OnInit {
   activeFilter: 'All' | 'Upcoming' | 'Completed' | 'Cancelled' = 'All';
 
   bookings: Booking[] = [
@@ -66,6 +67,53 @@ export class MybookingsComponent {
       bookingCode: 'CF-25-ZX41'
     }
   ];
+
+  constructor(
+    private ticketService: TicketService,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {}
+
+  ngOnInit(): void {
+    // Only fetch tickets in browser environment
+    if (isPlatformBrowser(this.platformId)) {
+      this.fetchUserTickets();
+    }
+  }
+
+  fetchUserTickets(): void {
+    const userId = localStorage.getItem('userId');
+
+    if (!userId) {
+      console.log('No user ID found in localStorage');
+      return;
+    }
+
+    console.log(`Fetching user tickets for user ID: ${userId} from API: api/tickets/usertickets/${userId}`);
+
+    this.ticketService.getUserTickets(parseInt(userId)).subscribe({
+      next: (tickets: TicketDto[]) => {
+        console.log('User tickets API response:', tickets);
+        console.log('Total tickets fetched:', tickets.length);
+
+        // Log each ticket details
+        tickets.forEach((ticket: TicketDto, index: number) => {
+          console.log(`Ticket ${index + 1}:`, {
+            ticketId: ticket.ticket_ID,
+            status: ticket.status,
+            qrCode: ticket.qr_Code,
+            eventId: ticket.eventID,
+            ticketTypeId: ticket.ticketTypeID,
+            userId: ticket.userID,
+            ticketType: ticket.ticketType,
+            event: ticket.event
+          });
+        });
+      },
+      error: (error: any) => {
+        console.error('Error fetching user tickets:', error);
+      }
+    });
+  }
 
   get filteredBookings(): Booking[] {
     if (this.activeFilter === 'All') {

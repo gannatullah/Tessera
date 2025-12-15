@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../Core/Services/auth/auth.service';
 import { Usersinterface } from '../../../Core/interfaces/usersinterface';
+import { UserService, UserProfile } from '../../../Services/user.service';
 
 @Component({
   selector: 'app-profile',
@@ -13,10 +14,15 @@ import { Usersinterface } from '../../../Core/interfaces/usersinterface';
   styleUrl: './profile.component.css'
 })
 export class ProfileComponent implements OnInit {
-  constructor(private router: Router, private auth:AuthService) {}
-  isEditing = false;
+  constructor(
+    private router: Router, 
+    private auth: AuthService,
+    private userService: UserService
+  ) {}
   
-
+  isEditing = false;
+  isLoggedIn = false;
+  
   // Profile data
   profile = {
     name: 'Sabrina Carpenter',
@@ -34,6 +40,53 @@ export class ProfileComponent implements OnInit {
   selectedFile: File | null = null;
   imagePreview: string | null = null;
 
+  ngOnInit(): void {
+    // Check if user is logged in
+    const token = localStorage.getItem('authToken');
+    const userId = localStorage.getItem('userId');
+    
+    if (token && userId) {
+      this.isLoggedIn = true;
+      this.loadUserProfile(parseInt(userId));
+    } else {
+      this.isLoggedIn = false;
+      console.log('No user logged in, showing default profile data');
+    }
+  }
+
+  loadUserProfile(userId: number): void {
+    console.log(`Fetching user profile for user ID: ${userId}`);
+    
+    this.userService.getUserById(userId).subscribe({
+      next: (userData: UserProfile) => {
+        console.log('User profile data fetched:', userData);
+        
+        // Update profile with fetched data
+        this.profile = {
+          name: userData.name,
+          email: userData.email,
+          phone: userData.phone_No || '+1 (123) 456-7890',
+          location: 'New York, USA', // Not in backend, keep default
+          birthday: userData.dob ? new Date(userData.dob).toLocaleDateString('en-US', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+          }) : 'May 11, 1999',
+          interests: 'Music, Theater, Sports', // Not in backend, keep default
+          bio: 'Passionate about events and connecting people through amazing experiences. Love discovering new events and meeting like-minded individuals.', // Not in backend, keep default
+          profilePicture: userData.profilePic || 'pp.jpg'
+        };
+        
+        // Update edit profile as well
+        this.editProfile = { ...this.profile };
+      },
+      error: (error) => {
+        console.error('Error fetching user profile:', error);
+        console.log('Using default profile data due to error');
+      }
+    });
+  }
+
   toggleEditMode() {
     if (this.isEditing) {
       // Cancel editing - reset changes
@@ -50,8 +103,6 @@ export class ProfileComponent implements OnInit {
 
     // If a new image was selected, update the profile picture
     if (this.selectedFile) {
-      // In a real app, you would upload the file to a server here
-      // For now, we'll create a data URL for preview
       const reader = new FileReader();
       reader.onload = (e) => {
         this.profile.profilePicture = e.target?.result as string;
@@ -63,7 +114,6 @@ export class ProfileComponent implements OnInit {
     this.selectedFile = null;
     this.imagePreview = null;
 
-    // Here you would typically make an API call to save to backend
     console.log('Profile saved:', this.profile);
   }
 
@@ -101,16 +151,7 @@ export class ProfileComponent implements OnInit {
       reader.onload = (e) => {
         this.imagePreview = e.target?.result as string;
       };
+      reader.readAsDataURL(file);
     }
-  }
-
-  ngOnInit() {
-    this.auth.getallusers().subscribe({
-      next: (data: any) => {
-        console.log(data);
-      },
-      error: (error) => console.error('Error:', error),
-      complete: () => console.log('Completed'),
-    });
   }
 }

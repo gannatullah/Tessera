@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
-  private apiUrl = 'http://localhost:5001/api/Users';
+  private apiUrl = 'http://localhost:5000/api/Users';
   
   loginForm: FormGroup = new FormGroup({
     email: new FormControl(null, [Validators.required, Validators.email]),
@@ -50,8 +50,11 @@ export class LoginComponent {
         console.log('Login successful:', response);
         this.successMessage = 'Login successful! Redirecting...';
         
-        // Store JWT token
+        // Store JWT token and user ID
         localStorage.setItem('authToken', response.token);
+        localStorage.setItem('userId', response.id.toString());
+        localStorage.setItem('userName', response.name);
+        localStorage.setItem('userEmail', response.email);
 
         // Navigate after short delay
         setTimeout(() => {

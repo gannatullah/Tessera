@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 using Tessera.API.Data;
 using Tessera.API.Models;
 using Tessera.API.DTOs;
@@ -15,6 +16,66 @@ namespace Tessera.API.Controllers
         public EventsController(ApplicationDbContext context)
         {
             _context = context;
+        }
+
+        // GET: api/Events/trending
+        [HttpGet("trending")]
+        public async Task<ActionResult<IEnumerable<EventDto>>> GetTrendingEvents()
+        {
+            var trendingEvents = await _context.Events
+                .Include(e => e.Organizer)
+                    .ThenInclude(o => o.User)
+                .Include(e => e.TicketTypes)
+                .Select(e => new
+                {
+                    Event = e,
+                    TicketsSold = e.TicketTypes.Sum(tt => tt.Quantity_Sold) // Sum of tickets sold across all ticket types
+                })
+                .OrderByDescending(x => x.TicketsSold)
+                .Take(5)
+                .ToListAsync();
+
+            var eventDtos = trendingEvents.Select(item => new EventDto
+            {
+                Event_ID = item.Event.Event_ID,
+                Category = item.Event.Category,
+                Date = item.Event.Date,
+                St_Date = item.Event.St_Date,
+                E_Date = item.Event.E_Date,
+                City = item.Event.City,
+                Location = item.Event.Location,
+                Capacity = item.Event.Capacity,
+                Description = item.Event.Description,
+                Image = item.Event.Image,
+                OrganizerID = item.Event.OrganizerID,
+                Organizer = new OrganizerDto
+                {
+                    UserID = item.Event.Organizer.UserID,
+                    IsVerified = item.Event.Organizer.IsVerified,
+                    User = new UserDto
+                    {
+                        ID = item.Event.Organizer.User.ID,
+                        Name = item.Event.Organizer.User.Name,
+                        First_Name = item.Event.Organizer.User.First_Name,
+                        Last_Name = item.Event.Organizer.User.Last_Name,
+                        Email = item.Event.Organizer.User.Email,
+                        Phone_No = item.Event.Organizer.User.Phone_No,
+                        DOB = item.Event.Organizer.User.DOB,
+                        ProfilePic = item.Event.Organizer.User.ProfilePic
+                    }
+                },
+                TicketTypes = item.Event.TicketTypes.Select(tt => new TicketTypeDto
+                {
+                    ID = tt.ID,
+                    Name = tt.Name,
+                    Price = tt.Price,
+                    Quantity_Total = tt.Quantity_Total,
+                    Quantity_Sold = tt.Quantity_Sold,
+                    EventID = tt.Event_ID
+                }).ToList()
+            }).ToList();
+
+            return Ok(eventDtos);
         }
 
         // GET: api/Events
@@ -68,7 +129,7 @@ namespace Tessera.API.Controllers
         }
 
         // GET: api/Events/5
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<ActionResult<EventDto>> GetEvent(int id)
         {
             var eventItem = await _context.Events

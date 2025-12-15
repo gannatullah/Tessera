@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { Router } from '@angular/router';
-import { EventService, CreateEventDto, CreateTicketTypeDto } from '../Services/event.service';
+import { EventService, CreateEventDto, CreateTicketTypeDto } from '../../../../Services/event.service';
 
 @Component({
   selector: 'app-createevent',

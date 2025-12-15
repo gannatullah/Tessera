@@ -50,7 +50,7 @@ export interface TicketTypeDto {
   providedIn: 'root'
 })
 export class EventService {
-  private apiUrl = 'https://late-sound-3475.fly.dev/api/Events';
+  private apiUrl = 'http://localhost:5000/api/Events';
 
   constructor(private http: HttpClient) { }
 
@@ -72,5 +72,9 @@ export class EventService {
 
   deleteEvent(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  getTrendingEvents(): Observable<EventDto[]> {
+    return this.http.get<EventDto[]>(`${this.apiUrl}/trending`);
   }
 }
