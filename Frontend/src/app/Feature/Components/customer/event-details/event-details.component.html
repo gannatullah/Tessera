@@ -4,7 +4,7 @@
     <div class="hero-overlay"></div>
     <img [src]="event.image" [alt]="event.title" class="hero-image" />
     <div class="hero-content">
-      <div class="container">
+      <div class="container"> 
         <div class="badge-container">
           <span class="badge bg-warning text-dark">{{ event.category }}</span>
         </div>
@@ -12,7 +12,7 @@
         <div class="event-meta d-flex flex-wrap gap-4 text-white">
           <div class="meta-item">
             <i class="bi bi-calendar-event me-2"></i>
-            <span>{{ event.date }}</span>
+            <span>{{ event.date | date:'mediumDate' }}</span>
           </div>
           <div class="meta-item">
             <i class="bi bi-clock me-2"></i>
@@ -171,16 +171,16 @@
               <h6 class="card-title mb-3">Share This Event</h6>
               <div class="d-flex gap-2">
                 <button class="btn btn-outline-primary btn-sm flex-fill">
-                  <i class="bi bi-facebook"></i>
+                  <i class="fa-brands fa-facebook"></i>
                 </button>
                 <button class="btn btn-outline-info btn-sm flex-fill">
-                  <i class="bi bi-twitter"></i>
+                  <i class="fa-brands fa-twitter"></i>
                 </button>
                 <button class="btn btn-outline-danger btn-sm flex-fill">
-                  <i class="bi bi-instagram"></i>
+                  <i class="fa-brands fa-instagram"></i>
                 </button>
                 <button class="btn btn-outline-success btn-sm flex-fill">
-                  <i class="bi bi-whatsapp"></i>
+                  <i class="fa-brands fa-whatsapp"></i>
                 </button>
               </div>
             </div>

@@ -1,18 +1,25 @@
 import { Component, OnInit, PLATFORM_ID, Inject } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser, CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { EventService, EventDto } from '../../../Services/event.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-events',
   standalone: true,
-  imports: [],
+  imports: [CommonModule, DatePipe, FormsModule],
   templateUrl: './events.component.html',
   styleUrl: './events.component.css'
 })
 export class EventsComponent implements OnInit {
+  events: EventDto[] = [];
+  selectedCity: string = 'all';
+  selectedCategory: string = 'all';
 
   constructor(
     private eventService: EventService,
+    private router: Router,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
@@ -30,28 +37,38 @@ export class EventsComponent implements OnInit {
       next: (events: EventDto[]) => {
         console.log('All events fetched successfully:', events);
         console.log('Total events:', events.length);
-
-        // // Log each event details
-        // events.forEach((event, index) => {
-        //   console.log(`Event ${index + 1}:`, {
-        //     eventId: event.event_ID,
-        //     category: event.category,
-        //     date: event.date,
-        //     startDate: event.st_Date,
-        //     endDate: event.e_Date,
-        //     city: event.city,
-        //     location: event.location,
-        //     capacity: event.capacity,
-        //     description: event.description,
-        //     image: event.image,
-        //     organizerId: event.organizerID,
-        //     ticketTypes: event.ticketTypes
-        //   });
-        // });
+        this.events = events;
       },
       error: (error: any) => {
         console.error('Error fetching events:', error);
       }
     });
+  }
+
+  applyFilters(): void {
+    console.log('Applying filters:', { city: this.selectedCity, category: this.selectedCategory });
+    
+    if (this.selectedCity === 'all' && this.selectedCategory === 'all') {
+      this.fetchAllEvents();
+      return;
+    }
+
+    const city = this.selectedCity === 'all' ? undefined : this.selectedCity;
+    const category = this.selectedCategory === 'all' ? undefined : this.selectedCategory;
+
+    this.eventService.filterEvents(city, category).subscribe({
+      next: (events: EventDto[]) => {
+        console.log('Filtered events:', events);
+        this.events = events;
+      },
+      error: (error: any) => {
+        console.error('Error filtering events:', error);
+        this.events = [];
+      }
+    });
+  }
+
+  navigateToEventDetails(eventId: number): void {
+    this.router.navigate(['/event-details', eventId]);
   }
 }

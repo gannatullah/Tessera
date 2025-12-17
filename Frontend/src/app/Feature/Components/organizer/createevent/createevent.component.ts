@@ -89,6 +89,7 @@ export class CreateeventComponent {
 
       const createEventDto: CreateEventDto = {
         category: formValue.category,
+        name: formValue.name,
         date: new Date(eventDate).toISOString(),
         st_Date: new Date(stDateTime).toISOString(),
         e_Date: new Date(eDateTime).toISOString(),

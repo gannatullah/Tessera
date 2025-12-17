@@ -96,18 +96,18 @@ export class MybookingsComponent implements OnInit {
         console.log('Total tickets fetched:', tickets.length);
 
         // Log each ticket details
-        tickets.forEach((ticket: TicketDto, index: number) => {
-          console.log(`Ticket ${index + 1}:`, {
-            ticketId: ticket.ticket_ID,
-            status: ticket.status,
-            qrCode: ticket.qr_Code,
-            eventId: ticket.eventID,
-            ticketTypeId: ticket.ticketTypeID,
-            userId: ticket.userID,
-            ticketType: ticket.ticketType,
-            event: ticket.event
-          });
-        });
+        // tickets.forEach((ticket: TicketDto, index: number) => {
+        //   console.log(`Ticket ${index + 1}:`, {
+        //     ticketId: ticket.ticket_ID,
+        //     status: ticket.status,
+        //     qrCode: ticket.qr_Code,
+        //     eventId: ticket.eventID,
+        //     ticketTypeId: ticket.ticketTypeID,
+        //     userId: ticket.userID,
+        //     ticketType: ticket.ticketType,
+        //     event: ticket.event
+        //   });
+        // });
       },
       error: (error: any) => {
         console.error('Error fetching user tickets:', error);

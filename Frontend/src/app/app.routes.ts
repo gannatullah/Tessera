@@ -66,7 +66,7 @@ export const routes: Routes = [
       ),
   },
   {
-    path: 'event-details',
+    path: 'event-details/:id',
     loadComponent: () =>
       import('./Feature/Components/customer/event-details/event-details.component').then(
         (c) => c.EventDetailsComponent
