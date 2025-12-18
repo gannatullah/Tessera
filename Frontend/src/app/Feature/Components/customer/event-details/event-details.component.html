@@ -145,10 +145,21 @@
                   <i class="bi bi-ticket-perforated me-2"></i>
                   Book Now
                 </button>
-                <button class="btn btn-outline-secondary w-100" (click)="addToWishlist()">
-                  <i class="bi bi-heart me-2"></i>
-                  Add to Wishlist
+                <button 
+                  class="btn w-100" 
+                  [class.btn-outline-secondary]="!isInWishlist"
+                  [class.btn-danger]="isInWishlist"
+                  (click)="addToWishlist()"
+                  [disabled]="isAddingToWishlist"
+                >
+                  <i class="bi me-2" [class.bi-heart]="!isInWishlist" [class.bi-heart-fill]="isInWishlist"></i>
+                  <span *ngIf="!isAddingToWishlist">{{ isInWishlist ? 'Remove from Wishlist' : 'Add to Wishlist' }}</span>
+                  <span *ngIf="isAddingToWishlist">
+                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    Processing...
+                  </span>
                 </button>
+                
               </div>
 
               <!-- Event Info -->

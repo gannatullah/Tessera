@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 import { EventService, EventDto } from '../../../../Services/event.service';
+import { WishlistService } from '../../../../Services/wishlist.service';
 import { DatePipe } from '@angular/common';
 interface TicketType {
   name: string;
@@ -51,16 +52,24 @@ export class EventDetailsComponent implements OnInit {
     ticketTypes: []
   };
 
+  eventId: number = 0;
+  userId = 1; // TODO: Get from auth service
+  isInWishlist = false;
+  isAddingToWishlist = false;
+
   constructor(
     private route: ActivatedRoute,
     private eventService: EventService,
+    private wishlistService: WishlistService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       const eventId = this.route.snapshot.paramMap.get('id');
       if (eventId) {
-        this.loadEventDetails(+eventId);
+        this.eventId = +eventId;
+        this.loadEventDetails(this.eventId);
+        this.checkWishlistStatus();
       }
     }
   }
@@ -125,7 +134,52 @@ export class EventDetailsComponent implements OnInit {
     // Implement booking logic here
   }
   addToWishlist(): void {
-    alert('Event added to wishlist!');
-    // Implement wishlist logic here
+    if (this.isAddingToWishlist) return;
+
+    this.isAddingToWishlist = true;
+
+    if (this.isInWishlist) {
+      // Remove from wishlist
+      this.wishlistService.deleteWishlistItemByUserAndEvent(this.userId, this.eventId).subscribe({
+        next: () => {
+          this.isInWishlist = false;
+          this.isAddingToWishlist = false;
+          alert('Event removed from wishlist!');
+        },
+        error: (error) => {
+          console.error('Error removing from wishlist:', error);
+          this.isAddingToWishlist = false;
+          alert('Failed to remove from wishlist');
+        }
+      });
+    } else {
+      // Add to wishlist
+      this.wishlistService.addToWishlist({
+        userID: this.userId,
+        eventID: this.eventId
+      }).subscribe({
+        next: () => {
+          this.isInWishlist = true;
+          this.isAddingToWishlist = false;
+          alert('Event added to wishlist!');
+        },
+        error: (error) => {
+          console.error('Error adding to wishlist:', error);
+          this.isAddingToWishlist = false;
+          alert('Failed to add to wishlist');
+        }
+      });
+    }
+  }
+
+  checkWishlistStatus(): void {
+    this.wishlistService.checkWishlistItem(this.userId, this.eventId).subscribe({
+      next: (response) => {
+        this.isInWishlist = response.exists;
+      },
+      error: (error) => {
+        console.error('Error checking wishlist status:', error);
+      }
+    });
   }
 }
