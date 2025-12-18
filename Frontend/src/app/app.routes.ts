@@ -71,5 +71,12 @@ export const routes: Routes = [
       import('./Feature/Components/customer/event-details/event-details.component').then(
         (c) => c.EventDetailsComponent
       ),
+  },
+  {
+    path: 'wishlist',
+    loadComponent: () =>
+      import('./Feature/Components/customer/wishlist/wishlist.component').then(
+        (c) => c.WishlistComponent
+      ),
   }
 ];

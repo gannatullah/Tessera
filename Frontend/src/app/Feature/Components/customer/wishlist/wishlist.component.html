@@ -1,0 +1,99 @@
+<div class="wishlist-container">
+  <div class="container my-5">
+    <!-- Header -->
+    <div class="wishlist-header mb-5">
+      <h1 class="display-4 fw-bold text-center mb-2">
+        <i class="bi bi-heart-fill me-3" style="color: var(--main-color)"></i>
+        My Wishlist
+      </h1>
+      <p class="text-center text-muted">Save your favorite events for later</p>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="text-center py-5">
+      <div class="spinner-border text-warning" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p class="mt-3 text-muted">Loading your wishlist...</p>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!isLoading && wishlistItems.length === 0" class="empty-state text-center py-5">
+      <i class="bi bi-heart display-1 text-muted mb-4"></i>
+      <h3 class="mb-3">Your wishlist is empty</h3>
+      <p class="text-muted mb-4">Start adding events you're interested in!</p>
+      <button class="btn btn-warning btn-lg" routerLink="/events">
+        <i class="bi bi-search me-2"></i>
+        Browse Events
+      </button>
+    </div>
+
+    <!-- Wishlist Items -->
+    <div *ngIf="!isLoading && wishlistItems.length > 0" class="wishlist-items">
+      <div class="row g-4">
+        <div class="col-md-6 col-lg-4" *ngFor="let item of wishlistItems">
+          <div class="card wishlist-card h-100">
+            <!-- Event Image -->
+            <div class="card-img-container position-relative">
+              <img 
+                [src]="item.event?.image || 'default-event.jpg'" 
+                [alt]="item.event?.name"
+                class="card-img-top"
+              />
+              <span class="badge badge-category">{{ item.event?.category }}</span>
+              <button 
+                class="btn-remove-wishlist"
+                (click)="removeFromWishlist(item)"
+                title="Remove from wishlist"
+              >
+                <i class="bi bi-x-circle-fill"></i>
+              </button>
+            </div>
+
+            <!-- Event Details -->
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title mb-3">{{ item.event?.name }}</h5>
+              
+              <div class="event-info mb-3">
+                <div class="info-item mb-2">
+                  <i class="bi bi-calendar-event text-warning me-2"></i>
+                  <small>{{ item.event?.date | date: 'MMM dd, yyyy' }}</small>
+                </div>
+                <div class="info-item mb-2">
+                  <i class="bi bi-geo-alt text-warning me-2"></i>
+                  <small>{{ item.event?.city }}, {{ item.event?.location }}</small>
+                </div>
+                <div class="info-item">
+                  <i class="bi bi-tag text-warning me-2"></i>
+                  <small>From ${{ getMinPrice(item.event?.ticketTypes || []) }}</small>
+                </div>
+              </div>
+
+              <div class="card-actions mt-auto">
+                <button 
+                  class="btn btn-warning w-100 mb-2"
+                  (click)="viewEventDetails(item.eventID)"
+                >
+                  <i class="bi bi-eye me-2"></i>
+                  View Details
+                </button>
+                <small class="text-muted d-block text-center">
+                  <i class="bi bi-clock me-1"></i>
+                  Added {{ item.addedDate | date: 'short' }}
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Summary -->
+      <div class="wishlist-summary mt-5 text-center">
+        <div class="alert alert-info d-inline-block">
+          <i class="bi bi-info-circle me-2"></i>
+          You have <strong>{{ wishlistItems.length }}</strong> event{{ wishlistItems.length !== 1 ? 's' : '' }} in your wishlist
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
