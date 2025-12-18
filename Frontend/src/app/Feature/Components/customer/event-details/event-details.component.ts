@@ -1,7 +1,7 @@
 
 import { Component, OnInit, PLATFORM_ID, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 import { EventService, EventDto } from '../../../../Services/event.service';
 import { WishlistService } from '../../../../Services/wishlist.service';
@@ -23,6 +23,7 @@ interface Event {
   venueName: string;
   venueAddress: string;
   organizer: string;
+  organizerId: number;
   price: number;
   availability: string;
   ticketTypes: TicketType[];
@@ -47,6 +48,7 @@ export class EventDetailsComponent implements OnInit {
     venueName: '',
     venueAddress: '',
     organizer: '',
+    organizerId: 0,
     price: 0,
     availability: 'Available',
     ticketTypes: []
@@ -59,6 +61,7 @@ export class EventDetailsComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private eventService: EventService,
     private wishlistService: WishlistService,
     @Inject(PLATFORM_ID) private platformId: Object
@@ -96,6 +99,7 @@ export class EventDetailsComponent implements OnInit {
           venueName: eventData.location || 'Event Venue',
           venueAddress: `${eventData.location}, ${eventData.city}`,
           organizer: eventData.organizer?.user?.name || 'Event Organizer',
+          organizerId: eventData.organizerID || 0,
           // price: eventData.ticketTypes?.length > 0 ? Math.min(...eventData.ticketTypes.map((t: any) => t.price)) : 0,
           price:0,
           availability: 'Available',
@@ -181,5 +185,11 @@ export class EventDetailsComponent implements OnInit {
         console.error('Error checking wishlist status:', error);
       }
     });
+  }
+
+  viewOrganizerProfile(): void {
+    if (this.event.organizerId > 0) {
+      this.router.navigate(['/organizer-profile', this.event.organizerId]);
+    }
   }
 }

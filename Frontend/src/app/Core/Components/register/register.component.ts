@@ -14,7 +14,7 @@ import countries from 'world-countries';
   styleUrl: './register.component.css'
 })
 export class RegisterComponent implements OnInit {
-  private apiUrl = 'http://localhost:5001/api/Users';
+  private apiUrl = 'http://localhost:5000/api/Users';
 
   today = new Date();
   endRange = new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate()).toISOString().split('T')[0];
@@ -43,7 +43,8 @@ export class RegisterComponent implements OnInit {
     dateOfBirth: new FormControl(null, [Validators.required, this.validateAge()]),
     country: new FormControl(null, [Validators.required]),
     city: new FormControl(null, [Validators.required]),
-    nationality: new FormControl(null, [Validators.required])
+    nationality: new FormControl(null, [Validators.required]),
+    bio: new FormControl(null, [Validators.maxLength(1000)])
   }, { validators: this.validateConfirmPassword });
 
   constructor(
@@ -79,9 +80,9 @@ export class RegisterComponent implements OnInit {
       email: this.registerForm.value.email,
       phone_No: this.registerForm.value.mobileNumber,
       password: this.registerForm.value.password,
-      dob: this.registerForm.value.dateOfBirth
-      // Note: Country, City, Nationality are not in your User model yet
-      // You'll need to add these fields to your backend if you want to store them
+      dob: this.registerForm.value.dateOfBirth,
+      location: this.registerForm.value.country, // Send country as location
+      bio: this.registerForm.value.bio
     };
 
     console.log('Sending registration data:', registerData);

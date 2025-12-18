@@ -45,6 +45,13 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'organizer-profile/:id',
+    loadComponent: () =>
+      import('./Feature/Components/organizer/organizer-profile/organizer-profile.component').then(
+        (c) => c.OrganizerProfileComponent
+      ),
+  },
+  {
     path: 'account-type',
     loadComponent: () =>
       import('./Core/Components/account-type/account-type.component').then(

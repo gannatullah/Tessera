@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../../../Core/Services/auth/auth.service';
+import { AuthService } from '../../../Services/auth.service';
 import { Usersinterface } from '../../../Core/interfaces/usersinterface';
 import { UserService, UserProfile } from '../../../Services/user.service';
+import { TicketService, TicketDto } from '../../../Services/ticket.service';
 
 @Component({
   selector: 'app-profile',
@@ -17,11 +18,13 @@ export class ProfileComponent implements OnInit {
   constructor(
     private router: Router, 
     private auth: AuthService,
-    private userService: UserService
+    private userService: UserService,
+    private ticketService: TicketService
   ) {}
   
   isEditing = false;
   isLoggedIn = false;
+  recentTickets: TicketDto[] = [];
   
   // Profile data
   profile = {
@@ -32,7 +35,7 @@ export class ProfileComponent implements OnInit {
     birthday: 'May 11, 1999',
     interests: 'Music, Theater, Sports',
     bio: 'Passionate about events and connecting people through amazing experiences. Love discovering new events and meeting like-minded individuals.',
-    profilePicture: 'pp.jpg'
+    profilePic: '/pp.jpg'
   };
 
   // Temporary data for editing
@@ -57,6 +60,9 @@ export class ProfileComponent implements OnInit {
   loadUserProfile(userId: number): void {
     console.log(`Fetching user profile for user ID: ${userId}`);
     
+    // Fetch user tickets
+    this.loadUserTickets(userId);
+    
     this.userService.getUserById(userId).subscribe({
       next: (userData: UserProfile) => {
         console.log('User profile data fetched:', userData);
@@ -66,15 +72,15 @@ export class ProfileComponent implements OnInit {
           name: userData.name,
           email: userData.email,
           phone: userData.phone_No || '+1 (123) 456-7890',
-          location: 'New York, USA', // Not in backend, keep default
+          location: userData.location || 'New York, USA',
           birthday: userData.dob ? new Date(userData.dob).toLocaleDateString('en-US', { 
             year: 'numeric', 
             month: 'long', 
             day: 'numeric' 
           }) : 'May 11, 1999',
           interests: 'Music, Theater, Sports', // Not in backend, keep default
-          bio: 'Passionate about events and connecting people through amazing experiences. Love discovering new events and meeting like-minded individuals.', // Not in backend, keep default
-          profilePicture: userData.profilePic || 'pp.jpg'
+          bio: userData.bio || 'Passionate about events and connecting people through amazing experiences. Love discovering new events and meeting like-minded individuals.',
+          profilePic: userData.profilePic && userData.profilePic.trim() !== '' ? userData.profilePic : '/pp.jpg'
         };
         
         // Update edit profile as well
@@ -98,23 +104,47 @@ export class ProfileComponent implements OnInit {
   }
 
   saveProfile() {
-    // Save the edited data
-    this.profile = { ...this.editProfile };
-
-    // If a new image was selected, update the profile picture
-    if (this.selectedFile) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        this.profile.profilePicture = e.target?.result as string;
-      };
-      reader.readAsDataURL(this.selectedFile);
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+      console.error('No user ID found');
+      return;
     }
 
-    this.isEditing = false;
-    this.selectedFile = null;
-    this.imagePreview = null;
+    // Prepare update data
+    const updateData = {
+      name: this.editProfile.name,
+      email: this.editProfile.email,
+      phone_No: this.editProfile.phone,
+      location: this.editProfile.location,
+      bio: this.editProfile.bio,
+      profilePic: this.selectedFile ? this.editProfile.profilePic : undefined
+    };
 
-    console.log('Profile saved:', this.profile);
+    console.log('Updating profile:', updateData);
+
+    this.userService.updateUser(parseInt(userId), updateData).subscribe({
+      next: (updatedUser) => {
+        console.log('Profile updated successfully:', updatedUser);
+
+        // Update local profile with response
+        this.profile = {
+          ...this.editProfile,
+          profilePic: updatedUser.profilePic || this.editProfile.profilePic
+        };
+
+        this.isEditing = false;
+        this.selectedFile = null;
+        this.imagePreview = null;
+      },
+      error: (error) => {
+        console.error('Error updating profile:', error);
+        // Still update local state even if backend fails
+        this.profile = { ...this.editProfile };
+        this.isEditing = false;
+        this.selectedFile = null;
+        this.imagePreview = null;
+      }
+    });
   }
 
   cancelEdit() {
@@ -126,6 +156,27 @@ export class ProfileComponent implements OnInit {
 
   viewAllBookings() {
     this.router.navigate(['/mybookings']);
+  }
+
+  logout() {
+    // Call auth service logout which handles all cleanup
+    this.auth.logout();
+    
+    // Update component state
+    this.isLoggedIn = false;
+    
+    // Reset profile to default
+    this.profile = {
+      name: 'Sabrina Carpenter',
+      email: 'sabrinacarpet@gmail.com',
+      phone: '+1 (123) 456-7890',
+      location: 'New York, USA',
+      birthday: 'May 11, 1999',
+      interests: 'Music, Theater, Sports',
+      bio: 'Passionate about events and connecting people through amazing experiences. Love discovering new events and meeting like-minded individuals.',
+      profilePic: '/pp.jpg'
+    };
+    this.editProfile = { ...this.profile };
   }
 
 
@@ -153,5 +204,46 @@ export class ProfileComponent implements OnInit {
       };
       reader.readAsDataURL(file);
     }
+  }
+
+  onImageError(event: any) {
+    // If image fails to load, fallback to default profile picture
+    const imgElement = event.target as HTMLImageElement;
+    if (imgElement.src !== '/pp.jpg') {
+      imgElement.src = '/pp.jpg';
+    }
+  }
+
+  loadUserTickets(userId: number): void {
+    this.ticketService.getUserTickets(userId).subscribe({
+      next: (tickets) => {
+        console.log('User tickets fetched:', tickets);
+        // Get the last 3 tickets (most recent)
+        this.recentTickets = tickets.slice(-3).reverse();
+      },
+      error: (error) => {
+        console.error('Error fetching user tickets:', error);
+        this.recentTickets = [];
+      }
+    });
+  }
+
+  getEventIcon(category: string): string {
+    const categoryLower = category?.toLowerCase() || '';
+    if (categoryLower.includes('music') || categoryLower.includes('concert')) {
+      return 'fas fa-music';
+    } else if (categoryLower.includes('theater') || categoryLower.includes('play')) {
+      return 'fas fa-theater-masks';
+    } else if (categoryLower.includes('sport')) {
+      return 'fas fa-football-ball';
+    } else if (categoryLower.includes('festival')) {
+      return 'fas fa-calendar-alt';
+    }
+    return 'fas fa-ticket-alt';
+  }
+
+  formatTicketDate(dateStr: string): string {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
   }
 }

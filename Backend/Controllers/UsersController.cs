@@ -31,7 +31,9 @@ namespace Tessera.API.Controllers
                     Email = u.Email,
                     Phone_No = u.Phone_No,
                     DOB = u.DOB,
-                    ProfilePic = u.ProfilePic
+                    ProfilePic = u.ProfilePic,
+                    Location = u.Location,
+                    Bio = u.Bio
                 })
                 .ToListAsync();
 
@@ -57,7 +59,10 @@ namespace Tessera.API.Controllers
                 Last_Name = user.Last_Name,
                 Email = user.Email,
                 Phone_No = user.Phone_No,
-                DOB = user.DOB
+                DOB = user.DOB,
+                ProfilePic = user.ProfilePic,
+                Location = user.Location,
+                Bio = user.Bio
             };
 
             return Ok(userDto);
@@ -83,7 +88,9 @@ namespace Tessera.API.Controllers
                 Phone_No = createUserDto.Phone_No,
                 Password = createUserDto.Password, // In production, hash this!
                 DOB = createUserDto.DOB,
-                ProfilePic = createUserDto.ProfilePic
+                ProfilePic = createUserDto.ProfilePic,
+                Location = createUserDto.Location,
+                Bio = createUserDto.Bio
             };
 
             _context.Users.Add(user);
@@ -98,7 +105,9 @@ namespace Tessera.API.Controllers
                 Email = user.Email,
                 Phone_No = user.Phone_No,
                 DOB = user.DOB,
-                ProfilePic = user.ProfilePic
+                ProfilePic = user.ProfilePic,
+                Location = user.Location,
+                Bio = user.Bio
             };
 
             return CreatedAtAction(nameof(GetUser), new { id = user.ID }, userDto);
@@ -130,6 +139,12 @@ namespace Tessera.API.Controllers
                 user.DOB = updateUserDto.DOB;
             if (!string.IsNullOrEmpty(updateUserDto.ProfilePic))
                 user.ProfilePic = updateUserDto.ProfilePic;
+
+            if (!string.IsNullOrEmpty(updateUserDto.Location))
+                user.Location = updateUserDto.Location;
+
+            if (!string.IsNullOrEmpty(updateUserDto.Bio))
+                user.Bio = updateUserDto.Bio;
 
             await _context.SaveChangesAsync();
 
@@ -182,6 +197,8 @@ namespace Tessera.API.Controllers
                 Email = user.Email,
                 Phone_No = user.Phone_No,
                 DOB = user.DOB,
+                Location = user.Location,
+                Bio = user.Bio,
                 Token = token
             };
 

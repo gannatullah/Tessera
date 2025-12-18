@@ -36,12 +36,7 @@
           >
           <select class="form-select form-select-sm" id="categoryFilter" [(ngModel)]="selectedCategory" (change)="applyFilters()">
             <option value="all">All Categories</option>
-            <option value="Arts & Theater">Arts & Theater</option>
-            <option value="Concerts">Concerts</option>
-            <option value="Conference">Conference</option>
-            <option value="Family">Family</option>
-            <option value="Festivals">Festivals</option>
-            <option value="Musical">Musical</option>
+            <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
           </select>
         </li>
         <li class="mt-3">

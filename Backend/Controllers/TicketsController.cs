@@ -106,6 +106,7 @@ namespace Tessera.API.Controllers
                     Event = new EventDto
                     {
                         Event_ID = t.Event.Event_ID,
+                        Name = t.Event.Name,
                         Category = t.Event.Category,
                         Date = t.Event.Date,
                         St_Date = t.Event.St_Date,

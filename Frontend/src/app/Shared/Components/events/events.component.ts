@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { EventService, EventDto } from '../../../Services/event.service';
 import { DatePipe } from '@angular/common';
+import { EVENT_CATEGORIES } from '../../constants/categories';
 
 @Component({
   selector: 'app-events',
@@ -16,6 +17,7 @@ export class EventsComponent implements OnInit {
   events: EventDto[] = [];
   selectedCity: string = 'all';
   selectedCategory: string = 'all';
+  categories = EVENT_CATEGORIES;
 
   constructor(
     private eventService: EventService,

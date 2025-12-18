@@ -11,6 +11,8 @@ export interface UserProfile {
   phone_No: string;
   dob: string | null;
   profilePic: string | null;
+  location: string | null;
+  bio: string | null;
 }
 
 @Injectable({

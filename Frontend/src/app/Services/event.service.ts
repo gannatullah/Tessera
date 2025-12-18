@@ -108,4 +108,8 @@ export class EventService {
     }
     return this.http.get<EventDto[]>(`${this.apiUrl}/filter${params}`);
   }
+
+  getEventsByOrganizer(organizerId: number): Observable<EventDto[]> {
+    return this.http.get<EventDto[]>(`${this.apiUrl}/organizer/${organizerId}`);
+  }
 }
