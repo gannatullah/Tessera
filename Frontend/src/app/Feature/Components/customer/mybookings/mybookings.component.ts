@@ -26,47 +26,7 @@ interface Booking {
 export class MybookingsComponent implements OnInit {
   activeFilter: 'All' | 'Upcoming' | 'Completed' | 'Cancelled' = 'All';
 
-  bookings: Booking[] = [
-    {
-      id: '1',
-      eventName: 'Tech Summit 2025',
-      eventDate: '2025-12-01',
-      eventTime: '19:30',
-      venue: 'Grand Hall Center',
-      city: 'Cairo',
-      status: 'Upcoming',
-      ticketType: 'VIP',
-      quantity: 2,
-      totalPrice: 1200,
-      bookingCode: 'TS-25-AB12'
-    },
-    {
-      id: '2',
-      eventName: 'Music Night Live',
-      eventDate: '2025-11-10',
-      eventTime: '20:00',
-      venue: 'Riverside Arena',
-      city: 'Giza',
-      status: 'Completed',
-      ticketType: 'General Admission',
-      quantity: 3,
-      totalPrice: 900,
-      bookingCode: 'MN-25-CC90'
-    },
-    {
-      id: '3',
-      eventName: 'Comedy Festival',
-      eventDate: '2025-10-05',
-      eventTime: '21:00',
-      venue: 'Downtown Theater',
-      city: 'Alexandria',
-      status: 'Cancelled',
-      ticketType: 'Balcony',
-      quantity: 1,
-      totalPrice: 250,
-      bookingCode: 'CF-25-ZX41'
-    }
-  ];
+  bookings: Booking[] = []; // Initialize empty - will be populated from API
 
   constructor(
     private ticketService: TicketService,
@@ -95,24 +55,44 @@ export class MybookingsComponent implements OnInit {
         console.log('User tickets API response:', tickets);
         console.log('Total tickets fetched:', tickets.length);
 
-        // Log each ticket details
-        // tickets.forEach((ticket: TicketDto, index: number) => {
-        //   console.log(`Ticket ${index + 1}:`, {
-        //     ticketId: ticket.ticket_ID,
-        //     status: ticket.status,
-        //     qrCode: ticket.qr_Code,
-        //     eventId: ticket.eventID,
-        //     ticketTypeId: ticket.ticketTypeID,
-        //     userId: ticket.userID,
-        //     ticketType: ticket.ticketType,
-        //     event: ticket.event
-        //   });
-        // });
+        // Map API tickets to bookings format
+        this.bookings = tickets.map((ticket: TicketDto) => {
+          const eventDate = new Date(ticket.event?.date || '');
+          const eventStatus = this.determineTicketStatus(eventDate);
+          
+          return {
+            id: ticket.ticket_ID?.toString() || '',
+            eventName: ticket.event?.name || 'Unknown Event',
+            eventDate: ticket.event?.date || '',
+            eventTime: ticket.event?.st_Date ? new Date(ticket.event.st_Date).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '00:00',
+            venue: ticket.event?.location || 'Unknown Venue',
+            city: ticket.event?.city || 'Unknown City',
+            status: eventStatus,
+            ticketType: ticket.ticketType?.name || 'Standard',
+            quantity: 1, // Each ticket is 1 quantity
+            totalPrice: ticket.ticketType?.price || 0,
+            bookingCode: ticket.qr_Code || `TKT-${ticket.ticket_ID}`
+          };
+        });
+
+        console.log('Mapped bookings:', this.bookings);
       },
       error: (error: any) => {
         console.error('Error fetching user tickets:', error);
       }
     });
+  }
+
+  // Helper method to determine ticket status based on event date
+  private determineTicketStatus(eventDate: Date): 'Upcoming' | 'Completed' | 'Cancelled' {
+    const now = new Date();
+    const eventDateTime = new Date(eventDate);
+    
+    if (eventDateTime > now) {
+      return 'Upcoming';
+    } else {
+      return 'Completed';
+    }
   }
 
   get filteredBookings(): Booking[] {
