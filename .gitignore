@@ -9,6 +9,8 @@
 # .NET
 bin/
 obj/
+appsettings.json
+appsettings.Development.json
 
 # Node
 /Frontend/node_modules
@@ -42,9 +44,14 @@ yarn-error.log
 testem.log
 /typings
 
+# Environment files
+**/environments/environment.ts
+**/environments/environment.prod.ts
+
 # System files
 .DS_Store
 Thumbs.db
 .vscode
 */.vs
 /Frontend/dist/
+*\Backend\appsettings.Development.json

@@ -1,0 +1,36 @@
+<div class="payment-container">
+  <div class="payment-header">
+    <h2>Complete Your Payment</h2>
+    <p class="event-title">{{ eventTitle }}</p>
+  </div>
+
+  <!-- Order Summary -->
+  <div class="order-summary">
+    <h3>Order Summary</h3>
+    <div class="ticket-item" *ngFor="let ticket of tickets">
+      <div class="ticket-info">
+        <span class="ticket-name">{{ ticket.name }}</span>
+        <span class="ticket-quantity">x{{ ticket.quantity }}</span>
+      </div>
+      <span class="ticket-price">${{ ticket.price * ticket.quantity }}</span>
+    </div>
+    <div class="total-amount">
+      <span>Total Amount:</span>
+      <span class="amount">${{ totalAmount }}</span>
+    </div>
+  </div>
+
+  <!-- Payment Form -->
+  <div class="payment-form">
+    <h3>Payment Details</h3>
+    <div id="card-element" class="card-element"></div>
+    
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+    
+    <button (click)="pay()" [disabled]="isProcessing" class="pay-button">
+      {{ isProcessing ? 'Processing...' : 'Pay $' + totalAmount }}
+    </button>
+  </div>
+</div>

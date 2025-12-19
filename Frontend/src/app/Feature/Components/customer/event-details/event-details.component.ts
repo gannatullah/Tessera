@@ -134,8 +134,14 @@ export class EventDetailsComponent implements OnInit {
       alert('Please select at least one ticket');
       return;
     }
-    alert(`Booking confirmed! Total: $${total}`);
-    // Implement booking logic here
+    // Navigate to payment page with event and ticket data
+    this.router.navigate(['/payment', this.eventId], {
+      state: {
+        tickets: this.event.ticketTypes.filter(t => t.quantity > 0),
+        totalAmount: total,
+        eventTitle: this.event.title
+      }
+    });
   }
   addToWishlist(): void {
     if (this.isAddingToWishlist) return;

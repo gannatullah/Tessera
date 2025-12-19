@@ -22,6 +22,7 @@
     "@angular/router": "^18.2.0",
     "@angular/ssr": "^18.2.21",
     "@fortawesome/fontawesome-free": "^7.1.0",
+    "@stripe/stripe-js": "^8.6.0",
     "bootstrap": "^5.3.8",
     "country-city": "^1.0.0",
     "country-state-city": "^3.2.1",

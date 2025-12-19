@@ -1,0 +1,136 @@
+.payment-container {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+.payment-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.payment-header h2 {
+  color: #333;
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+.event-title {
+  color: #666;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.order-summary {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+}
+
+.order-summary h3 {
+  font-size: 20px;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.ticket-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.ticket-item:last-child {
+  border-bottom: none;
+}
+
+.ticket-info {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.ticket-name {
+  font-weight: 500;
+  color: #333;
+}
+
+.ticket-quantity {
+  color: #666;
+  font-size: 14px;
+}
+
+.ticket-price {
+  font-weight: 600;
+  color: #333;
+}
+
+.total-amount {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 2px solid #333;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.total-amount .amount {
+  color: #5469d4;
+  font-size: 24px;
+}
+
+.payment-form {
+  background: white;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.payment-form h3 {
+  font-size: 20px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.card-element {
+  border: 1px solid #ccc;
+  padding: 15px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  background-color: white;
+}
+
+.error-message {
+  color: #e74c3c;
+  margin-bottom: 15px;
+  padding: 10px;
+  background-color: #ffeaea;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.pay-button {
+  width: 100%;
+  padding: 15px;
+  background-color: #5469d4;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.pay-button:hover:not(:disabled) {
+  background-color: #4153c0;
+}
+
+.pay-button:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
