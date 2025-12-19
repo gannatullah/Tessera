@@ -17,6 +17,7 @@ interface Event {
   totalTickets: number;
   ticketsSold: number;
   revenue: number;
+  image?: string;
 }
 
 @Component({
@@ -97,7 +98,8 @@ export class MyeventsComponent implements OnInit {
       ticketPrice: avgPrice,
       totalTickets: totalTickets,
       ticketsSold: ticketsSold,
-      revenue: revenue
+      revenue: revenue,
+      image: dto.image
     };
   }
 
