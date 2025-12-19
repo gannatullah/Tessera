@@ -153,9 +153,24 @@
           </div>
 
           <div class="col-12">
-            <label class="form-label fw-semibold">Event Image URL</label>
-            <input formControlName="image" type="text" class="form-control" placeholder="https://example.com/image.jpg">
-            <small class="text-muted">Enter the URL of your event image</small>
+            <label class="form-label fw-semibold">Event Image</label>
+            <input 
+              type="file" 
+              class="form-control" 
+              accept="image/*"
+              (change)="onFileSelected($event)"
+            >
+            <small class="text-muted">Upload an event image (JPG, PNG, GIF, WebP - max 5MB)</small>
+            @if(imagePreview) {
+              <div class="mt-3 text-center">
+                <img [src]="imagePreview" alt="Event preview" class="img-thumbnail" style="max-width: 100%; max-height: 300px;">
+              </div>
+            }
+            @if(uploadingImage) {
+              <div class="mt-2">
+                <small class="text-primary">Uploading image...</small>
+              </div>
+            }
           </div>
 
           <!-- Ticket Types Section -->

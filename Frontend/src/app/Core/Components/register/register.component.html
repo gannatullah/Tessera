@@ -1,4 +1,6 @@
-<div class="container-fluid min-vh-100 d-flex align-items-center justify-content-center py-4">
+<div
+  class="container-fluid min-vh-100 d-flex align-items-center justify-content-center py-4"
+>
   <div class="reg-card card shadow-lg border-0">
     <div class="card-body p-4 p-md-5">
       <h2 class="text-center mb-4 fw-bold">Create Account</h2>
@@ -6,157 +8,257 @@
       <form [formGroup]="registerForm" (ngSubmit)="register()" class="row g-3">
         <!-- Name Fields -->
         <div class="col-md-6">
-          @let firstNameControl = registerForm.get('firstName');
+          @let firstNameControl = registerForm.get("firstName");
           <label class="form-label fw-semibold">First Name</label>
-          <input formControlName="firstName" type="text" class="form-control" placeholder="Enter first name">
-          @if(firstNameControl?.errors && firstNameControl?.touched){
+          <input
+            formControlName="firstName"
+            type="text"
+            class="form-control"
+            placeholder="Enter first name"
+          />
+          @if (firstNameControl?.errors && firstNameControl?.touched) {
             <small class="text-danger">First name is required</small>
           }
         </div>
 
         <div class="col-md-6">
-          @let lastNameControl = registerForm.get('lastName');
+          @let lastNameControl = registerForm.get("lastName");
           <label class="form-label fw-semibold">Last Name</label>
-          <input formControlName="lastName" type="text" class="form-control" placeholder="Enter last name">
-          @if(lastNameControl?.errors && lastNameControl?.touched){
+          <input
+            formControlName="lastName"
+            type="text"
+            class="form-control"
+            placeholder="Enter last name"
+          />
+          @if (lastNameControl?.errors && lastNameControl?.touched) {
             <small class="text-danger">Last name is required</small>
           }
         </div>
-        
+
         <!-- Contact Info -->
         <div class="col-12">
-          @let emailControl = registerForm.get('email');
+          @let emailControl = registerForm.get("email");
           <label class="form-label fw-semibold">Email Address</label>
-          <input formControlName="email" type="email" class="form-control" placeholder="Enter email address">
-          @if(emailControl?.errors && emailControl?.touched){
+          <input
+            formControlName="email"
+            type="email"
+            class="form-control"
+            placeholder="Enter email address"
+          />
+          @if (emailControl?.errors && emailControl?.touched) {
             <small class="text-danger">
-              @if(emailControl?.getError('required')){Email is required}
-              @else if(emailControl?.getError('email')){Invalid email format}
+              @if (emailControl?.getError("required")) {
+                Email is required
+              } @else if (emailControl?.getError("email")) {
+                Invalid email format
+              }
             </small>
           }
         </div>
 
         <div class="col-12">
-          @let mobileControl = registerForm.get('mobileNumber');
+          @let mobileControl = registerForm.get("mobileNumber");
           <label class="form-label fw-semibold">Mobile Number</label>
-          <input formControlName="mobileNumber" type="tel" class="form-control" placeholder="Enter mobile number">
-          @if(mobileControl?.errors && mobileControl?.touched){
+          <input
+            formControlName="mobileNumber"
+            type="tel"
+            class="form-control"
+            placeholder="Enter mobile number"
+          />
+          @if (mobileControl?.errors && mobileControl?.touched) {
             <small class="text-danger">Mobile number is required</small>
           }
         </div>
 
         <!-- Password Fields -->
         <div class="col-md-6">
-          @let passwordControl = registerForm.get('password');
+          @let passwordControl = registerForm.get("password");
           <label class="form-label fw-semibold">Password</label>
-          <input formControlName="password" type="password" class="form-control" placeholder="Create password">
-          @if(passwordControl?.errors && passwordControl?.touched){
+          <input
+            formControlName="password"
+            type="password"
+            class="form-control"
+            placeholder="Create password"
+          />
+          @if (passwordControl?.errors && passwordControl?.touched) {
             <small class="text-danger">Password is required</small>
           }
         </div>
 
         <div class="col-md-6">
-          @let confirmPasswordControl = registerForm.get('confirmPassword');
+          @let confirmPasswordControl = registerForm.get("confirmPassword");
           <label class="form-label fw-semibold">Confirm Password</label>
-          <input formControlName="confirmPassword" type="password" class="form-control" placeholder="Confirm password">
-          @if(confirmPasswordControl?.touched && (confirmPasswordControl?.errors || registerForm.getError('passwordMismatch'))){
+          <input
+            formControlName="confirmPassword"
+            type="password"
+            class="form-control"
+            placeholder="Confirm password"
+          />
+          @if (
+            confirmPasswordControl?.touched &&
+            (confirmPasswordControl?.errors ||
+              registerForm.getError("passwordMismatch"))
+          ) {
             <small class="text-danger">
-              @if(confirmPasswordControl?.getError('required')){Please confirm password}
-              @else if(registerForm.getError('passwordMismatch')){Passwords do not match}
+              @if (confirmPasswordControl?.getError("required")) {
+                Please confirm password
+              } @else if (registerForm.getError("passwordMismatch")) {
+                Passwords do not match
+              }
             </small>
           }
         </div>
 
         <!-- Personal Info -->
         <div class="col-md-6">
-          @let DOBControl = registerForm.get('dateOfBirth');
+          @let DOBControl = registerForm.get("dateOfBirth");
           <label class="form-label fw-semibold">Date of Birth</label>
-          <input formControlName="dateOfBirth" type="date" class="form-control" [max]="endRange" [min]="minBirthdate">
-          @if(DOBControl?.getError('required') && DOBControl?.touched){
+          <input
+            formControlName="dateOfBirth"
+            type="date"
+            class="form-control"
+            [max]="endRange"
+            [min]="minBirthdate"
+          />
+          @if (DOBControl?.getError("required") && DOBControl?.touched) {
             <small class="text-danger">Date of birth is required</small>
           }
-          @if (DOBControl?.getError('ageRange') && DOBControl?.touched) {
-          <small class="text-danger">Age must be between 18 and 100 years old.</small>
+          @if (DOBControl?.getError("ageRange") && DOBControl?.touched) {
+            <small class="text-danger"
+              >Age must be between 18 and 100 years old.</small
+            >
           }
         </div>
 
         <div class="col-md-6">
-          @let nationalityControl = registerForm.get('nationality');
+          @let nationalityControl = registerForm.get("nationality");
           <label class="form-label fw-semibold">Nationality</label>
           <select formControlName="nationality" class="form-select">
-             <option value="">Select nationality</option>
+            <option value="">Select nationality</option>
 
-               @for (nat of nationalities; track nat) {
-                <option [value]="nat">{{ nat }}</option>
-              }
+            @for (nat of nationalities; track nat) {
+              <option [value]="nat">{{ nat }}</option>
+            }
           </select>
-          @if(nationalityControl?.errors && nationalityControl?.touched){
+          @if (nationalityControl?.errors && nationalityControl?.touched) {
             <small class="text-danger">Please select nationality</small>
           }
         </div>
 
         <!-- Location -->
         <div class="col-md-6">
-          @let countryControl = registerForm.get('country');
+          @let countryControl = registerForm.get("country");
           <label class="form-label fw-semibold">Country</label>
-          <select formControlName="country" class="form-select" (change)="onCountryChange(countrySelect.value)" #countrySelect>
-             <option value="">Select country</option>">
-              @for (c of countries; track c.isoCode) {
-                 <option [value]="c.isoCode">
-                 {{ c.name }}
-                 </option>
+          <select
+            formControlName="country"
+            class="form-select"
+            (change)="onCountryChange(countrySelect.value)"
+            #countrySelect
+          >
+            <option value="">Select country</option>
+            ">
+            @for (c of countries; track c.isoCode) {
+              <option [value]="c.isoCode">
+                {{ c.name }}
+              </option>
             }
           </select>
-          @if(countryControl?.errors && countryControl?.touched){
+          @if (countryControl?.errors && countryControl?.touched) {
             <small class="text-danger">Please select country</small>
           }
         </div>
 
         <div class="col-md-6">
-          @let cityControl = registerForm.get('city');
+          @let cityControl = registerForm.get("city");
           <label class="form-label fw-semibold">City</label>
           <select formControlName="city" class="form-select">
-          <option value="">Select City</option>
+            <option value="">Select City</option>
 
-          @for (city of cities; track city.name) {
-            <option [value]="city.name">
-              {{ city.name }}
-            </option>
-          }
-        </select>
-          @if(cityControl?.errors && cityControl?.touched){
+            @for (city of cities; track city.name) {
+              <option [value]="city.name">
+                {{ city.name }}
+              </option>
+            }
+          </select>
+          @if (cityControl?.errors && cityControl?.touched) {
             <small class="text-danger">City is required</small>
           }
         </div>
 
         <!-- Bio -->
         <div class="col-12">
-          @let bioControl = registerForm.get('bio');
+          @let bioControl = registerForm.get("bio");
           <label class="form-label fw-semibold">Bio (Optional)</label>
-          <textarea formControlName="bio" class="form-control" rows="3" placeholder="Tell us about yourself... (max 1000 characters)"></textarea>
-          @if(bioControl?.errors && bioControl?.touched){
+          <textarea
+            formControlName="bio"
+            class="form-control"
+            rows="3"
+            placeholder="Tell us about yourself... (max 1000 characters)"
+          ></textarea>
+          @if (bioControl?.errors && bioControl?.touched) {
             <small class="text-danger">
-              @if(bioControl?.getError('maxlength')){Bio cannot exceed 1000 characters}
+              @if (bioControl?.getError("maxlength")) {
+                Bio cannot exceed 1000 characters
+              }
             </small>
           }
+        </div>
+
+        <div class="col-12">
+          <label class="form-label fw-semibold"
+            >Profile Picture (Optional)</label
+          >
+          <div class="upload-container">
+            <input
+              type="file"
+              id="profilePic"
+              class="form-control"
+              accept="image/*"
+              (change)="onFileSelected($event)"
+            />
+            @if (imagePreview) {
+              <div class="mt-3 text-center">
+                <img
+                  [src]="imagePreview"
+                  alt="Profile preview"
+                  class="img-thumbnail"
+                  style="max-width: 200px; max-height: 200px"
+                />
+              </div>
+            }
+            @if (uploadingImage) {
+              <div class="mt-2">
+                <small class="text-primary">Uploading image...</small>
+              </div>
+            }
+          </div>
         </div>
 
         <!-- Terms and Submit -->
         <div class="col-12">
           <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="termsCheck">
+            <input class="form-check-input" type="checkbox" id="termsCheck" />
             <label class="form-check-label small" for="termsCheck">
-              I agree to the <a href="#" class="text-decoration-none">Terms & Conditions</a> and <a href="#" class="text-decoration-none">Privacy Policy</a>
+              I agree to the
+              <a href="#" class="text-decoration-none">Terms & Conditions</a>
+              and <a href="#" class="text-decoration-none">Privacy Policy</a>
             </label>
           </div>
         </div>
 
         <div class="col-12">
-          <button type="submit" class="btn btn-signUp w-100 py-3 fw-bold">Create Account</button>
+          <button type="submit" class="btn btn-signUp w-100 py-3 fw-bold">
+            Create Account
+          </button>
         </div>
 
         <div class="col-12 text-center">
-          <small class="text-muted">Already have an account? <a routerLink="/login" class="text-decoration-none fw-semibold">Login</a></small>
+          <small class="text-muted"
+            >Already have an account?
+            <a routerLink="/login" class="text-decoration-none fw-semibold"
+              >Login</a
+            ></small
+          >
         </div>
       </form>
     </div>

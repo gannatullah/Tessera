@@ -103,6 +103,9 @@ if (app.Environment.IsDevelopment())
 // app.UseHttpsRedirection();
 app.UseCors("AllowAll");
 
+// Enable static files for serving uploaded images
+app.UseStaticFiles();
+
 app.UseAuthentication(); // Add this BEFORE UseAuthorization
 app.UseAuthorization();
 

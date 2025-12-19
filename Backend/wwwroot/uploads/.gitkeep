@@ -1,0 +1,2 @@
+# This directory is used for local file uploads during development
+# In production, Cloudinary is used instead

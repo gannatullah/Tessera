@@ -4,6 +4,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormArray } fr
 import { Router } from '@angular/router';
 import { EventService, CreateEventDto, CreateTicketTypeDto } from '../../../../Services/event.service';
 import { EVENT_CATEGORIES } from '../../../../Shared/constants/categories';
+import { FileUploadService } from '../../../../Services/file-upload.service';
 
 @Component({
   selector: 'app-createevent',
@@ -18,11 +19,15 @@ export class CreateeventComponent {
   successMessage: string = '';
   errorMessage: string = '';
   categories = EVENT_CATEGORIES;
+  selectedFile: File | null = null;
+  imagePreview: string | null = null;
+  uploadingImage = false;
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private eventService: EventService
+    private eventService: EventService,
+    private fileUploadService: FileUploadService
   ) {
     this.eventForm = this.fb.group({
       // Basic Information
@@ -77,11 +82,51 @@ export class CreateeventComponent {
     }
   }
 
-  onSubmit() {
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      this.selectedFile = input.files[0];
+      
+      // Preview image
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.imagePreview = e.target?.result as string;
+      };
+      reader.readAsDataURL(this.selectedFile);
+    }
+  }
+
+  async uploadEventImage(): Promise<string | null> {
+    if (!this.selectedFile) return null;
+
+    this.uploadingImage = true;
+    try {
+      const response = await this.fileUploadService.uploadImage(this.selectedFile).toPromise();
+      this.uploadingImage = false;
+      return response?.url || null;
+    } catch (error) {
+      this.uploadingImage = false;
+      console.error('Error uploading image:', error);
+      return null;
+    }
+  }
+
+  async onSubmit() {
     if (this.eventForm.valid && !this.isSubmitting) {
       this.isSubmitting = true;
       this.successMessage = '';
       this.errorMessage = '';
+
+      // Upload event image if selected
+      let imageUrl = this.eventForm.value.image;
+      if (this.selectedFile) {
+        imageUrl = await this.uploadEventImage();
+        if (!imageUrl && this.selectedFile) {
+          this.errorMessage = 'Failed to upload event image';
+          this.isSubmitting = false;
+          return;
+        }
+      }
 
       const formValue = this.eventForm.value;
 
@@ -100,7 +145,7 @@ export class CreateeventComponent {
         location: formValue.location,
         capacity: formValue.capacity,
         description: formValue.description,
-        image: formValue.image,
+        image: imageUrl,
         organizerID: formValue.organizerID,
         ticketTypes: formValue.ticketTypes
       };

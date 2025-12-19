@@ -1,64 +1,103 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  ValidationErrors,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { Country, City } from 'country-state-city';
 import countries from 'world-countries';
+import { FileUploadService } from '../../../Services/file-upload.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-register',
   standalone: true,
   imports: [ReactiveFormsModule, HttpClientModule, CommonModule, RouterModule],
   templateUrl: './register.component.html',
-  styleUrl: './register.component.css'
+  styleUrl: './register.component.css',
 })
 export class RegisterComponent implements OnInit {
-  private apiUrl = 'http://localhost:5000/api/Users';
+  private apiUrl = environment.apiUrl + '/Users';
 
   today = new Date();
-  endRange = new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate()).toISOString().split('T')[0];
-  maxBirthdate = new Date(this.today.getFullYear() - 18, this.today.getMonth(), this.today.getDate()).toISOString().split('T')[0];
-  minBirthdate = new Date(this.today.getFullYear() - 100, this.today.getMonth(), this.today.getDate()).toISOString().split('T')[0];
+  endRange = new Date(
+    this.today.getFullYear(),
+    this.today.getMonth(),
+    this.today.getDate(),
+  )
+    .toISOString()
+    .split('T')[0];
+  maxBirthdate = new Date(
+    this.today.getFullYear() - 18,
+    this.today.getMonth(),
+    this.today.getDate(),
+  )
+    .toISOString()
+    .split('T')[0];
+  minBirthdate = new Date(
+    this.today.getFullYear() - 100,
+    this.today.getMonth(),
+    this.today.getDate(),
+  )
+    .toISOString()
+    .split('T')[0];
 
   countries: any[] = [];
   cities?: any[] = [];
   nationalities = Array.from(
-    new Set(
-      countries.map(c => c.demonyms?.['eng']?.m).filter(n => !!n)
-    )
+    new Set(countries.map((c) => c.demonyms?.['eng']?.m).filter((n) => !!n)),
   ) as string[];
 
   isLoading = false;
   errorMessage = '';
   successMessage = '';
   userType: string = 'client'; // Default to client
+  selectedFile: File | null = null;
+  imagePreview: string | null = null;
+  uploadingImage = false;
 
-  registerForm: FormGroup = new FormGroup({
-    firstName: new FormControl(null, [Validators.required]),
-    lastName: new FormControl(null, [Validators.required]),
-    email: new FormControl(null, [Validators.required, Validators.email]),
-    password: new FormControl(null, [Validators.required, Validators.minLength(6)]),
-    confirmPassword: new FormControl(null, [Validators.required]),
-    mobileNumber: new FormControl(null, [Validators.required]),
-    dateOfBirth: new FormControl(null, [Validators.required, this.validateAge()]),
-    country: new FormControl(null, [Validators.required]),
-    city: new FormControl(null, [Validators.required]),
-    nationality: new FormControl(null, [Validators.required]),
-    bio: new FormControl(null, [Validators.maxLength(1000)])
-  }, { validators: this.validateConfirmPassword });
+  registerForm: FormGroup = new FormGroup(
+    {
+      firstName: new FormControl(null, [Validators.required]),
+      lastName: new FormControl(null, [Validators.required]),
+      email: new FormControl(null, [Validators.required, Validators.email]),
+      password: new FormControl(null, [
+        Validators.required,
+        Validators.minLength(6),
+      ]),
+      confirmPassword: new FormControl(null, [Validators.required]),
+      mobileNumber: new FormControl(null, [Validators.required]),
+      dateOfBirth: new FormControl(null, [
+        Validators.required,
+        this.validateAge(),
+      ]),
+      country: new FormControl(null, [Validators.required]),
+      city: new FormControl(null, [Validators.required]),
+      nationality: new FormControl(null, [Validators.required]),
+      bio: new FormControl(null, [Validators.maxLength(1000)]),
+    },
+    { validators: this.validateConfirmPassword },
+  );
 
   constructor(
     private http: HttpClient,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private fileUploadService: FileUploadService,
   ) {}
 
   ngOnInit(): void {
     this.countries = Country.getAllCountries();
-    
+
     // Read the user type from query parameters
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe((params) => {
       this.userType = params['type'] || 'client';
     });
   }
@@ -68,7 +107,37 @@ export class RegisterComponent implements OnInit {
     this.registerForm.patchValue({ city: null }); // Reset city when country changes
   }
 
-  register() {
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      this.selectedFile = input.files[0];
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.imagePreview = e.target?.result as string;
+      };
+      reader.readAsDataURL(this.selectedFile);
+    }
+  }
+
+  async uploadProfilePic(): Promise<string | null> {
+    if (!this.selectedFile) return null;
+
+    this.uploadingImage = true;
+    try {
+      const response = await this.fileUploadService
+        .uploadImage(this.selectedFile)
+        .toPromise();
+      this.uploadingImage = false;
+      return response?.url || null;
+    } catch (error) {
+      this.uploadingImage = false;
+      console.error('Error uploading image:', error);
+      return null;
+    }
+  }
+
+  async register() {
     this.errorMessage = '';
     this.successMessage = '';
 
@@ -78,6 +147,17 @@ export class RegisterComponent implements OnInit {
     }
 
     this.isLoading = true;
+
+    // Upload profile picture if selected
+    let profilePicUrl = null;
+    if (this.selectedFile) {
+      profilePicUrl = await this.uploadProfilePic();
+      if (!profilePicUrl && this.selectedFile) {
+        this.errorMessage = 'Failed to upload profile picture';
+        this.isLoading = false;
+        return;
+      }
+    }
 
     // Map form data to match backend DTO structure
     const registerData = {
@@ -90,7 +170,8 @@ export class RegisterComponent implements OnInit {
       dob: this.registerForm.value.dateOfBirth,
       location: this.registerForm.value.country, // Send country as location
       bio: this.registerForm.value.bio,
-      userType: this.userType // Include the user type
+      profilePic: profilePicUrl,
+      userType: this.userType, // Include the user type
     };
 
     console.log('Sending registration data:', registerData);
@@ -98,21 +179,22 @@ export class RegisterComponent implements OnInit {
     this.http.post<any>(this.apiUrl, registerData).subscribe({
       next: (response) => {
         console.log('Registration successful:', response);
-        this.successMessage = 'Account created successfully! Redirecting to login...';
-        
+        this.successMessage =
+          'Account created successfully! Redirecting to login...';
+
         // Redirect to login after 2 seconds
         setTimeout(() => {
           this.router.navigate(['/login']).catch(() => {
             console.log('Navigation attempted - login route');
           });
         }, 2000);
-        
+
         this.isLoading = false;
       },
       error: (error) => {
         this.isLoading = false;
         console.error('Registration error:', error);
-        
+
         if (error.status === 400 && error.error?.message) {
           this.errorMessage = error.error.message;
         } else if (error.status === 400) {
@@ -120,7 +202,7 @@ export class RegisterComponent implements OnInit {
         } else {
           this.errorMessage = 'Registration failed. Please try again.';
         }
-      }
+      },
     });
   }
 
@@ -140,8 +222,16 @@ export class RegisterComponent implements OnInit {
       if (!birthDate) return null;
 
       const today = new Date();
-      const minDate = new Date(today.getFullYear() - 100, today.getMonth(), today.getDate());
-      const maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+      const minDate = new Date(
+        today.getFullYear() - 100,
+        today.getMonth(),
+        today.getDate(),
+      );
+      const maxDate = new Date(
+        today.getFullYear() - 18,
+        today.getMonth(),
+        today.getDate(),
+      );
 
       const valid = birthDate >= minDate && birthDate <= maxDate;
       return valid ? null : { ageRange: { minAge: 18, maxAge: 100 } };

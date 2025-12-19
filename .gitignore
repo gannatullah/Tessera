@@ -56,3 +56,4 @@ Thumbs.db
 */.vs
 /Frontend/dist/
 *\Backend\appsettings.Development.json
+/node_modules/
