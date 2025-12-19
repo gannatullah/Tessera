@@ -103,7 +103,7 @@
                 {{ ticket.event?.date | date : "MMM" }}
               </div>
               <div class="ticket-time">
-                {{ ticket.event?.stDate | date : "hh:mm a" }}
+                {{ (ticket.event?.st_Date | date : "hh:mm a") || 'Time TBA' }}
               </div>
             </div>
 

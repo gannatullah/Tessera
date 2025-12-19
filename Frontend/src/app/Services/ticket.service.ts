@@ -23,16 +23,16 @@ export interface TicketTypeDto {
 }
 
 export interface EventDto {
-  eventId: number;
+  event_ID: number;
   name: string;
   category: string;
   date: string;
-  stDate: string;
-  eDate: string;
+  st_Date: string;
+  e_Date: string;
   city?: string;
   location?: string;
   capacity?: number;
-  organizerId: number;
+  organizerID: number;
 }
 
 @Injectable({

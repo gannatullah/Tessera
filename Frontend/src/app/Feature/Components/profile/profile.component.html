@@ -149,8 +149,8 @@
                             <div class="booking-item" *ngFor="let ticket of recentTickets">
                                 <i [class]="getEventIcon(ticket.event?.category || '') + ' booking-icon'"></i>
                                 <div class="booking-details">
-                                    <h5>{{ ticket.event?.category || 'Event' }}</h5>
-                                    <p>{{ formatTicketDate(ticket.event?.date || ticket.event?.stDate || '') }}</p>
+                                    <h5>{{ ticket.event?.name || 'Event' }}</h5>
+                                    <p>{{ formatTicketDate(ticket.event?.date || ticket.event?.st_Date || '') }}</p>
                                     <small class="text-muted">Ticket #{{ ticket.ticket_ID }}</small>
                                 </div>
                             </div>
