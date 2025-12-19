@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../../Services/auth.service';
 import { EventDto, EventService } from '../../../../Services/event.service';
+import { environment } from '../../../../../environments/environment.example';
 
 interface Event {
   id: number;
@@ -109,9 +110,7 @@ export class MyeventsComponent implements OnInit {
       totalTickets: totalTickets,
       ticketsSold: ticketsSold,
       revenue: revenue,
-      image: dto.image && dto.image.trim() !== '' 
-        ? (dto.image.startsWith('http') ? dto.image : `http://localhost:5000${dto.image}`)
-        : undefined,
+      image: this.getImageUrl(dto.image),
     };
   }
 
@@ -147,8 +146,8 @@ export class MyeventsComponent implements OnInit {
   }
 
   onViewEvent(event: Event) {
-    // TODO: navigate to event details page
-    console.log('View event:', event);
+    // Navigate to event details page
+    this.router.navigate(['/event-details', event.id]);
   }
 
   onEditEvent(event: Event) {
@@ -159,5 +158,24 @@ export class MyeventsComponent implements OnInit {
   onCancelEvent(event: Event) {
     // TODO: show confirmation dialog and call API
     console.log('Cancel event:', event);
+  }
+
+  getImageUrl(imagePath: string | undefined): string {
+    if (!imagePath) {
+      return '';
+    }
+
+    // If it's already a full URL (Cloudinary), return as is
+    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+      return imagePath;
+    }
+
+    // If it's a local path starting with /uploads/, prefix with API URL
+    if (imagePath.startsWith('/uploads/')) {
+      return `${environment.apiUrl.replace('/api', '')}${imagePath}`;
+    }
+
+    // For any other relative paths, assume they're local uploads
+    return `${environment.apiUrl.replace('/api', '')}/uploads/${imagePath}`;
   }
 }

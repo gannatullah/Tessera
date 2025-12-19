@@ -17,17 +17,17 @@ import { TicketService, TicketDto } from '../../../Services/ticket.service';
 })
 export class ProfileComponent implements OnInit {
   constructor(
-    private router: Router, 
+    private router: Router,
     private auth: AuthService,
     private userService: UserService,
     private ticketService: TicketService,
     private http: HttpClient
-  ) {}
-  
+  ) { }
+
   isEditing = false;
   isLoggedIn = false;
   recentTickets: TicketDto[] = [];
-  
+
   // Profile data
   profile = {
     name: 'Sabrina Carpenter',
@@ -50,7 +50,7 @@ export class ProfileComponent implements OnInit {
     const token = this.auth.getToken();
     const userId = this.auth.getCurrentUser()?.id?.toString();
 
-    
+
     if (token && userId) {
       this.isLoggedIn = true;
       this.loadUserProfile(parseInt(userId));
@@ -62,32 +62,32 @@ export class ProfileComponent implements OnInit {
 
   loadUserProfile(userId: number): void {
     console.log(`Fetching user profile for user ID: ${userId}`);
-    
+
     // Fetch user tickets
     this.loadUserTickets(userId);
-    
+
     this.userService.getUserById(userId).subscribe({
       next: (userData: UserProfile) => {
         console.log('User profile data fetched:', userData);
-        
+
         // Update profile with fetched data
         this.profile = {
           name: userData.name,
           email: userData.email,
           phone: userData.phone_No || '+1 (123) 456-7890',
           location: userData.location || 'New York, USA',
-          birthday: userData.dob ? new Date(userData.dob).toLocaleDateString('en-US', { 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric' 
+          birthday: userData.dob ? new Date(userData.dob).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
           }) : 'May 11, 1999',
           interests: 'Music, Theater, Sports', // Not in backend, keep default
           bio: userData.bio || 'Passionate about events and connecting people through amazing experiences. Love discovering new events and meeting like-minded individuals.',
-          profilePic: userData.profilePic && userData.profilePic.trim() !== '' 
+          profilePic: userData.profilePic && userData.profilePic.trim() !== ''
             ? (userData.profilePic.startsWith('http') ? userData.profilePic : `http://localhost:5000${userData.profilePic}`)
             : '/pp.jpg'
         };
-        
+
         // Update edit profile as well
         this.editProfile = { ...this.profile };
       },
@@ -155,7 +155,7 @@ export class ProfileComponent implements OnInit {
         // Update local profile with response
         this.profile = {
           ...this.editProfile,
-          profilePic: updatedUser.profilePic && updatedUser.profilePic.trim() !== '' 
+          profilePic: updatedUser.profilePic && updatedUser.profilePic.trim() !== ''
             ? (updatedUser.profilePic.startsWith('http') ? updatedUser.profilePic : `http://localhost:5000${updatedUser.profilePic}`)
             : '/pp.jpg'
         };
@@ -196,10 +196,10 @@ export class ProfileComponent implements OnInit {
   logout() {
     // Call auth service logout which handles all cleanup
     this.auth.logout();
-    
+
     // Update component state
     this.isLoggedIn = false;
-    
+
     // Reset profile to default
     this.profile = {
       name: 'Sabrina Carpenter',
@@ -246,7 +246,7 @@ export class ProfileComponent implements OnInit {
     const imgElement = event.target as HTMLImageElement;
     const currentSrc = imgElement.src;
     const defaultSrc = '/pp.jpg';
-    
+
     if (!currentSrc.includes('pp.jpg')) {
       imgElement.src = defaultSrc;
     }
@@ -255,9 +255,13 @@ export class ProfileComponent implements OnInit {
   loadUserTickets(userId: number): void {
     this.ticketService.getUserTickets(userId).subscribe({
       next: (tickets) => {
+        if (this.recentTickets.length === 0) {
+          console.log('No recent tickets found for user.');
+        }
         console.log('User tickets fetched:', tickets);
         // Get the last 3 tickets (most recent)
         this.recentTickets = tickets.slice(-3).reverse();
+
       },
       error: (error) => {
         console.error('Error fetching user tickets:', error);

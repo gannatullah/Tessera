@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { EventDto, EventService } from '../../../Services/event.service';
 import { EVENT_CATEGORIES } from '../../constants/categories';
+import { environment } from '../../../../environments/environment.example';
 
 @Component({
   selector: 'app-events',
@@ -48,9 +49,7 @@ export class EventsComponent implements OnInit {
         // Process image URLs to include full backend URL
         this.allEvents = events.map(event => ({
           ...event,
-          image: event.image && event.image.trim() !== '' 
-            ? (event.image.startsWith('http') ? event.image : `http://localhost:5000${event.image}`)
-            : event.image
+          image: this.getImageUrl(event.image)
         }));
         this.currentPage = 1; // Reset to first page when loading new data
         this.updateCurrentPageEvents();
@@ -161,5 +160,24 @@ export class EventsComponent implements OnInit {
   onImageError(event: any): void {
     const imgElement = event.target as HTMLImageElement;
     imgElement.src = 'https://via.placeholder.com/400x250?text=Event+Image';
+  }
+
+  getImageUrl(imagePath: string | undefined): string {
+    if (!imagePath) {
+      return 'https://via.placeholder.com/400x250?text=Event+Image';
+    }
+
+    // If it's already a full URL (Cloudinary), return as is
+    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+      return imagePath;
+    }
+
+    // If it's a local path starting with /uploads/, prefix with API URL
+    if (imagePath.startsWith('/uploads/')) {
+      return `${environment.apiUrl.replace('/api', '')}${imagePath}`;
+    }
+
+    // For any other relative paths, assume they're local uploads
+    return `${environment.apiUrl.replace('/api', '')}/uploads/${imagePath}`;
   }
 }

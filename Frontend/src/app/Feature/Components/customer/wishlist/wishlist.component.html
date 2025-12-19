@@ -3,7 +3,7 @@
     <!-- Header -->
     <div class="wishlist-header mb-5">
       <h1 class="display-4 fw-bold text-center mb-2">
-        <i class="bi bi-heart-fill me-3" style="color: var(--main-color)"></i>
+        <i class="fas fa-heart me-3" style="color: var(--main-color)"></i>
         My Wishlist
       </h1>
       <p class="text-center text-muted">Save your favorite events for later</p>
@@ -19,11 +19,11 @@
 
     <!-- Empty State -->
     <div *ngIf="!isLoading && wishlistItems.length === 0" class="empty-state text-center py-5">
-      <i class="bi bi-heart display-1 text-muted mb-4"></i>
+      <i class="fas fa-heart display-1 text-muted mb-4"></i>
       <h3 class="mb-3">Your wishlist is empty</h3>
       <p class="text-muted mb-4">Start adding events you're interested in!</p>
       <button class="btn btn-warning btn-lg" routerLink="/events">
-        <i class="bi bi-search me-2"></i>
+        <i class="fas fa-search me-2"></i>
         Browse Events
       </button>
     </div>
@@ -46,7 +46,7 @@
                 (click)="removeFromWishlist(item)"
                 title="Remove from wishlist"
               >
-                <i class="bi bi-x-circle-fill"></i>
+                <i class="fas fa-times-circle"></i>
               </button>
             </div>
 
@@ -56,15 +56,15 @@
               
               <div class="event-info mb-3">
                 <div class="info-item mb-2">
-                  <i class="bi bi-calendar-event text-warning me-2"></i>
+                  <i class="fas fa-calendar-alt text-warning me-2"></i>
                   <small>{{ item.event?.date | date: 'MMM dd, yyyy' }}</small>
                 </div>
                 <div class="info-item mb-2">
-                  <i class="bi bi-geo-alt text-warning me-2"></i>
+                  <i class="fas fa-map-marker-alt text-warning me-2"></i>
                   <small>{{ item.event?.city }}, {{ item.event?.location }}</small>
                 </div>
                 <div class="info-item">
-                  <i class="bi bi-tag text-warning me-2"></i>
+                  <i class="fas fa-tag text-warning me-2"></i>
                   <small>From ${{ getMinPrice(item.event?.ticketTypes || []) }}</small>
                 </div>
               </div>
@@ -74,11 +74,11 @@
                   class="btn btn-warning w-100 mb-2"
                   (click)="viewEventDetails(item.eventID)"
                 >
-                  <i class="bi bi-eye me-2"></i>
+                  <i class="fas fa-eye me-2"></i>
                   View Details
                 </button>
                 <small class="text-muted d-block text-center">
-                  <i class="bi bi-clock me-1"></i>
+                  <i class="fas fa-clock me-1"></i>
                   Added {{ item.addedDate | date: 'short' }}
                 </small>
               </div>
@@ -90,7 +90,7 @@
       <!-- Summary -->
       <div class="wishlist-summary mt-5 text-center">
         <div class="alert alert-info d-inline-block">
-          <i class="bi bi-info-circle me-2"></i>
+          <i class="fas fa-info-circle me-2"></i>
           You have <strong>{{ wishlistItems.length }}</strong> event{{ wishlistItems.length !== 1 ? 's' : '' }} in your wishlist
         </div>
       </div>

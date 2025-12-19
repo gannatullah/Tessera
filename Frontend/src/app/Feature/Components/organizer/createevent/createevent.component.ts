@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { Router } from '@angular/router';
 import { EventService, CreateEventDto, CreateTicketTypeDto } from '../../../../Services/event.service';
 import { EVENT_CATEGORIES } from '../../../../Shared/constants/categories';
 import { FileUploadService } from '../../../../Services/file-upload.service';
+import { AuthService } from '../../../../Services/auth.service';
 
 @Component({
   selector: 'app-createevent',
@@ -13,7 +14,7 @@ import { FileUploadService } from '../../../../Services/file-upload.service';
   templateUrl: './createevent.component.html',
   styleUrls: ['./createevent.component.css']
 })
-export class CreateeventComponent {
+export class CreateeventComponent implements OnInit {
   eventForm: FormGroup;
   isSubmitting = false;
   successMessage: string = '';
@@ -27,7 +28,8 @@ export class CreateeventComponent {
     private fb: FormBuilder,
     private router: Router,
     private eventService: EventService,
-    private fileUploadService: FileUploadService
+    private fileUploadService: FileUploadService,
+    private authService: AuthService
   ) {
     this.eventForm = this.fb.group({
       // Basic Information
@@ -50,14 +52,30 @@ export class CreateeventComponent {
       // Image
       image: [''],
 
-      // Organizer ID (hardcoded for now, should come from auth)
-      organizerID: [1, [Validators.required, Validators.min(1)]],
+      // Organizer ID (will be auto-set from logged-in user)
+      organizerID: [{value: '', disabled: true}],
 
       // Ticket Types
       ticketTypes: this.fb.array([
         this.createTicketTypeGroup()
       ])
     });
+  }
+
+  ngOnInit(): void {
+    // Auto-set organizer ID from logged-in user
+    const currentUser = this.authService.getCurrentUser();
+    if (currentUser && currentUser.id) {
+      this.eventForm.patchValue({
+        organizerID: currentUser.id
+      });
+      console.log('Organizer ID auto-set to:', currentUser.id);
+    } else {
+      console.error('No logged-in user found. Cannot create event.');
+      this.errorMessage = 'You must be logged in to create an event.';
+      // Redirect to login if not authenticated
+      this.router.navigate(['/login']);
+    }
   }
 
   createTicketTypeGroup(): FormGroup {
@@ -146,7 +164,7 @@ export class CreateeventComponent {
         capacity: formValue.capacity,
         description: formValue.description,
         image: imageUrl,
-        organizerID: formValue.organizerID,
+        organizerID: this.eventForm.get('organizerID')?.value,
         ticketTypes: formValue.ticketTypes
       };
 

@@ -4,7 +4,7 @@
     <div class="mb-4">
       <div class="d-flex justify-content-start mb-3">
         <button class="btn btn-link text-decoration-none p-0" (click)="onCancel()">
-          <i class="bi bi-arrow-left me-2"></i>Back to My Events
+          <i class="fas fa-arrow-left me-2"></i>Back to My Events
         </button>
       </div>
       <div class="text-center">
@@ -16,13 +16,13 @@
     <!-- Success/Error Messages -->
     @if(successMessage) {
       <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <i class="bi bi-check-circle me-2"></i>{{ successMessage }}
+        <i class="fas fa-check-circle me-2"></i>{{ successMessage }}
         <button type="button" class="btn-close" (click)="successMessage = ''"></button>
       </div>
     }
     @if(errorMessage) {
       <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <i class="bi bi-exclamation-triangle me-2"></i>{{ errorMessage }}
+        <i class="fas fa-exclamation-triangle me-2"></i>{{ errorMessage }}
         <button type="button" class="btn-close" (click)="errorMessage = ''"></button>
       </div>
     }
@@ -34,7 +34,7 @@
           <!-- Event Basic Information -->
           <div class="col-12">
             <h4 class="section-title mb-3">
-              <i class="bi bi-info-circle me-2"></i>Event Information
+              <i class="fas fa-info-circle me-2"></i>Event Information
             </h4>
           </div>
 
@@ -80,7 +80,7 @@
           <!-- Date and Time Section -->
           <div class="col-12 mt-4">
             <h4 class="section-title mb-3">
-              <i class="bi bi-calendar-event me-2"></i>Date & Time
+              <i class="fas fa-calendar-alt me-2"></i>Date & Time
             </h4>
           </div>
 
@@ -114,7 +114,7 @@
           <!-- Location Section -->
           <div class="col-12 mt-4">
             <h4 class="section-title mb-3">
-              <i class="bi bi-geo-alt me-2"></i>Location
+              <i class="fas fa-map-marker-alt me-2"></i>Location
             </h4>
           </div>
 
@@ -136,19 +136,10 @@
             }
           </div>
 
-          <!-- Organizer ID -->
-          <div class="col-md-6">
-            <label class="form-label fw-semibold">Organizer ID *</label>
-            <input formControlName="organizerID" type="number" class="form-control" placeholder="1">
-            @if(eventForm.get('organizerID')?.errors && eventForm.get('organizerID')?.touched){
-              <small class="text-danger">Organizer ID is required</small>
-            }
-          </div>
-
           <!-- Event Image -->
           <div class="col-12 mt-4">
             <h4 class="section-title mb-3">
-              <i class="bi bi-image me-2"></i>Event Image
+              <i class="fas fa-image me-2"></i>Event Image
             </h4>
           </div>
 
@@ -177,10 +168,10 @@
           <div class="col-12 mt-4">
             <div class="d-flex justify-content-between align-items-center mb-3">
               <h4 class="section-title mb-0">
-                <i class="bi bi-ticket-perforated me-2"></i>Ticket Types
+                <i class="fas fa-ticket-alt me-2"></i>Ticket Types
               </h4>
               <button type="button" class="btn btn-sm btn-outline-primary" (click)="addTicketType()">
-                <i class="bi bi-plus-circle me-1"></i>Add Ticket Type
+                <i class="fas fa-plus-circle me-1"></i>Add Ticket Type
               </button>
             </div>
           </div>
@@ -193,7 +184,7 @@
                     <h6 class="mb-0">Ticket Type {{ i + 1 }}</h6>
                     @if(ticketTypes.length > 1) {
                       <button type="button" class="btn btn-sm btn-outline-danger" (click)="removeTicketType(i)">
-                        <i class="bi bi-trash"></i>
+                        <i class="fas fa-trash"></i>
                       </button>
                     }
                   </div>
@@ -229,13 +220,13 @@
           <div class="col-12 mt-4">
             <div class="d-flex gap-3 justify-content-end">
               <button type="button" class="btn btn-outline-secondary px-4" (click)="onCancel()" [disabled]="isSubmitting">
-                <i class="bi bi-x-circle me-2"></i>Cancel
+                <i class="fas fa-times-circle me-2"></i>Cancel
               </button>
               <button type="submit" class="btn create-event-btn px-5" [disabled]="eventForm.invalid || isSubmitting">
                 @if(isSubmitting) {
                   <span class="spinner-border spinner-border-sm me-2"></span>Creating...
                 } @else {
-                  <i class="bi bi-plus-circle me-2"></i>Create Event
+                  <i class="fas fa-plus-circle me-2"></i>Create Event
                 }
               </button>
             </div>

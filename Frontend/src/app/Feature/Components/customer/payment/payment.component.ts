@@ -1,6 +1,7 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { PaymentService } from '../../../../Services/payment.service';
 import { TicketService } from '../../../../Services/ticket.service';
+import { AuthService } from '../../../../Services/auth.service';
 import { StripeCardElement } from '@stripe/stripe-js';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -25,6 +26,7 @@ export class PaymentComponent implements OnInit, AfterViewInit {
   constructor(
     private paymentService: PaymentService,
     private ticketService: TicketService,
+    private authService: AuthService,
     private router: Router,
     private route: ActivatedRoute
   ) {
@@ -38,6 +40,15 @@ export class PaymentComponent implements OnInit, AfterViewInit {
   }
 
   async ngOnInit() {
+    // Check authentication
+    if (!this.authService.isAuthenticated()) {
+      console.log('Payment: User not authenticated, redirecting to login');
+      this.router.navigate(['/login'], { 
+        queryParams: { returnUrl: `/payment/${this.eventId}` } 
+      });
+      return;
+    }
+    
     // Get eventId from route params
     this.route.paramMap.subscribe(params => {
       const id = params.get('eventId');

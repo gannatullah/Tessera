@@ -2,106 +2,69 @@
   <div class="container-fluid">
     <div class="container d-flex align-items-center justify-content-between">
       <a class="navbar-brand" href="#">
-        <img
-          src="logo2.png"
-          alt="Logo"
-          class="navbar-logo"
-        />
+        <img src="logo2.png" alt="Logo" class="navbar-logo" />
       </a>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarNav"
-        aria-controls="navbarNav"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item">
-            <a
-              class="nav-link"
-              routerLink="/home"
-              [routerLinkActiveOptions]="{ exact: true }"
-              routerLinkActive="active"
-              >Home</a
-            >
+            <a class="nav-link" routerLink="/home" [routerLinkActiveOptions]="{ exact: true }"
+              routerLinkActive="active">Home</a>
           </li>
           <li class="nav-item">
-            <a
-              class="nav-link position-relative"
-              routerLink="/events"
-              [routerLinkActiveOptions]="{ exact: true }"
-              routerLinkActive="active"
-            >
+            <a class="nav-link position-relative" routerLink="/events" [routerLinkActiveOptions]="{ exact: true }"
+              routerLinkActive="active">
               Events
             </a>
           </li>
-          
+
           <!-- Buyer specific menu items -->
-          <li class="nav-item" *ngIf="isLoggedIn && isBuyer">
-            <a
-              class="nav-link"
-              routerLink="/mybookings"
-              [routerLinkActiveOptions]="{ exact: true }"
-              routerLinkActive="active"
-              >My Bookings</a
-            >
+          @if (isLoggedIn && isBuyer) {
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/mybookings" [routerLinkActiveOptions]="{ exact: true }"
+              routerLinkActive="active">My Bookings</a>
           </li>
-          <li class="nav-item" *ngIf="isLoggedIn && isBuyer">
-            <a
-              class="nav-link"
-              routerLink="/wishlist"
-              [routerLinkActiveOptions]="{ exact: true }"
-              routerLinkActive="active"
-            >
-              <i class="bi bi-heart me-1"></i>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/wishlist" [routerLinkActiveOptions]="{ exact: true }"
+              routerLinkActive="active">
               Wishlist
             </a>
           </li>
-          
+          }
+
           <!-- Organizer specific menu items -->
-          <li class="nav-item" *ngIf="isLoggedIn && isOrganizer">
-            <a
-              class="nav-link"
-              routerLink="/myevents"
-              [routerLinkActiveOptions]="{ exact: true }"
-              routerLinkActive="active"
-              >My Events</a
-            >
+          @if (isLoggedIn && isOrganizer) {
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/myevents" [routerLinkActiveOptions]="{ exact: true }"
+              routerLinkActive="active">My Events</a>
           </li>
-          
+          }
+
           <!-- Profile (for all logged in users) -->
-          <li class="nav-item" *ngIf="isLoggedIn">
-            <a
-              class="nav-link"
-              routerLink="/profile"
-              [routerLinkActiveOptions]="{ exact: true }"
-              routerLinkActive="active"
-              >Profile</a
-            >
+          @if (isLoggedIn) {
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/profile" [routerLinkActiveOptions]="{ exact: true }"
+              routerLinkActive="active">Profile</a>
           </li>
+          }
 
           <!-- Login/Logout buttons -->
-          <li class="nav-item" *ngIf="!isLoggedIn">
-            <button
-              class="btn nav-link-btn login-btn"
-              (click)="navigateToLogin()"
-            >
+          @if (!isLoggedIn){  
+          <li class="nav-item">
+            <button class="btn nav-link-btn login-btn" (click)="navigateToLogin()">
               Login
             </button>
           </li>
-          <li class="nav-item" *ngIf="isLoggedIn">
-            <button
-              class="btn nav-link-btn logout-btn"
-              (click)="logout()"
-            >
+          }@else{
+          <li class="nav-item">
+            <button class="btn nav-link-btn logout-btn" (click)="logout()">
               Logout
             </button>
           </li>
+          }
           <!-- <a
             class="nav-link"
             routerLink="/register"

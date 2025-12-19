@@ -3,9 +3,7 @@
   <section class="event-hero">
     <div class="hero-overlay"></div>
     <img
-      [src]="
-        event.image || 'https://via.placeholder.com/1200x600?text=Event+Image'
-      "
+      [src]="event.image"
       [alt]="event.title"
       class="hero-image"
       (error)="onImageError($event)"
@@ -18,15 +16,15 @@
         <h1 class="display-3 fw-bold text-white mb-3">{{ event.title }}</h1>
         <div class="event-meta d-flex flex-wrap gap-4 text-white">
           <div class="meta-item">
-            <i class="bi bi-calendar-event me-2"></i>
+            <i class="fas fa-calendar-alt me-2"></i>
             <span>{{ event.date | date : "mediumDate" }}</span>
           </div>
           <div class="meta-item">
-            <i class="bi bi-clock me-2"></i>
+            <i class="fas fa-clock me-2"></i>
             <span>{{ event.time }}</span>
           </div>
           <div class="meta-item">
-            <i class="bi bi-geo-alt me-2"></i>
+            <i class="fas fa-map-marker-alt me-2"></i>
             <span>{{ event.location }}</span>
           </div>
         </div>
@@ -49,7 +47,7 @@
               <h4 class="mb-3">Event Highlights</h4>
               <ul class="highlights-list">
                 <li *ngFor="let highlight of event.highlights">
-                  <i class="bi bi-check-circle-fill text-warning me-2"></i>
+                  <i class="fas fa-check-circle text-warning me-2"></i>
                   {{ highlight }}
                 </li>
               </ul>
@@ -61,7 +59,7 @@
         <div class="card mb-4">
           <div class="card-body">
             <h3 class="card-title mb-4">
-              <i class="bi bi-pin-map me-2 text-warning"></i>
+              <i class="fas fa-map-pin me-2 text-warning"></i>
               Venue Information
             </h3>
             <h5>{{ event.venueName }}</h5>
@@ -74,7 +72,7 @@
                 target="_blank"
                 class="btn btn-outline-primary btn-sm"
               >
-                <i class="bi bi-navigation me-1"></i>
+                <i class="fas fa-directions me-1"></i>
                 Get Directions
               </a>
             </div>
@@ -85,7 +83,7 @@
         <div class="card mb-4">
           <div class="card-body">
             <h3 class="card-title mb-4">
-              <i class="bi bi-person-circle me-2 text-warning"></i>
+              <i class="fas fa-user-circle me-2 text-warning"></i>
               Organized By
             </h3>
             <div
@@ -94,14 +92,14 @@
               style="cursor: pointer"
             >
               <div class="organizer-avatar me-3">
-                <i class="bi bi-building display-6 text-warning"></i>
+                <i class="fas fa-building display-6 text-warning"></i>
               </div>
               <div>
                 <h5 class="mb-1">{{ event.organizer }}</h5>
                 <p class="text-muted mb-0">Event Organizer</p>
               </div>
               <div class="ms-auto">
-                <i class="bi bi-chevron-right text-muted"></i>
+                <i class="fas fa-chevron-right text-muted"></i>
               </div>
             </div>
           </div>
@@ -113,19 +111,7 @@
         <div class="booking-card sticky-top">
           <div class="card">
             <div class="card-body">
-              <div class="price-section mb-4">
-                <div class="d-flex justify-content-between align-items-center">
-                  <div>
-                    <span class="text-muted">Starting from</span>
-                    <h2 class="mb-0 fw-bold">${{ event.price }}</h2>
-                  </div>
-                  <div class="text-end">
-                    <span class="badge bg-success">{{
-                      event.availability
-                    }}</span>
-                  </div>
-                </div>
-              </div>
+
 
               <!-- Ticket Selection -->
               <div class="ticket-selection mb-4">
@@ -175,7 +161,7 @@
               <!-- Action Buttons -->
               <div class="action-buttons">
                 <button class="btn btn-warning w-100 mb-2" (click)="bookNow()">
-                  <i class="bi bi-ticket-perforated me-2"></i>
+                  <i class="fas fa-ticket-alt me-2"></i>
                   Book Now
                 </button>
                 <button
@@ -207,11 +193,11 @@
               <!-- Event Info -->
               <div class="event-info mt-4">
                 <div class="info-item">
-                  <i class="bi bi-shield-check text-success me-2"></i>
+                  <i class="fas fa-shield-alt text-success me-2"></i>
                   <small>Secure booking guaranteed</small>
                 </div>
                 <div class="info-item">
-                  <i class="bi bi-arrow-clockwise text-primary me-2"></i>
+                  <i class="fas fa-redo text-primary me-2"></i>
                   <small>Free cancellation available</small>
                 </div>
               </div>

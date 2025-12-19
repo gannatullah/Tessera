@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './Guards/auth.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -23,12 +24,14 @@ export const routes: Routes = [
       import('./Feature/Components/customer/mybookings/mybookings.component').then(
         (c) => c.MybookingsComponent
       ),
+    canActivate: [authGuard]
   },
   {path: 'myevents',
     loadComponent: () =>
       import('./Feature/Components/organizer/myevents/myevents.component').then(
         (c) => c.MyeventsComponent
       ),
+    canActivate: [authGuard]
   },
   {
     path: 'create-event',
@@ -36,6 +39,7 @@ export const routes: Routes = [
       import('./Feature/Components/organizer/createevent/createevent.component').then(
         (c) => c.CreateeventComponent
       ),
+    canActivate: [authGuard]
   },
   {
     path: 'edit-event/:id',
@@ -43,6 +47,7 @@ export const routes: Routes = [
       import('./Feature/Components/organizer/editevent/editevent.component').then(
         (c) => c.EditeventComponent
       ),
+    canActivate: [authGuard]
   },
   {
     path: 'profile',
@@ -50,6 +55,7 @@ export const routes: Routes = [
       import('./Feature/Components/profile/profile.component').then(
         (c) => c.ProfileComponent
       ),
+    canActivate: [authGuard]
   },
   {
     path: 'organizer-profile/:id',
@@ -92,12 +98,12 @@ export const routes: Routes = [
       import('./Feature/Components/customer/wishlist/wishlist.component').then(
         (c) => c.WishlistComponent
       ),
+    canActivate: [authGuard]
   },
   {
     path: 'payment/:eventId',
     loadComponent: () =>
       import('./Feature/Components/customer/payment/payment.component').then(
         (c) => c.PaymentComponent
-      ),
-  }
+      ),    canActivate: [authGuard]  }
 ];

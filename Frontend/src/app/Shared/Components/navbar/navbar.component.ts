@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit, OnDestroy } from '@angular/core';
+import { Component, HostListener, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, } from "@angular/router";
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../Services/auth.service';
@@ -10,7 +10,8 @@ import { Subscription } from 'rxjs';
   standalone: true,
   imports: [RouterLinkActive, RouterLink, CommonModule],
   templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.css'
+  styleUrl: './navbar.component.css',
+  changeDetection: ChangeDetectionStrategy.Default
 })
 export class NavbarComponent implements OnInit, OnDestroy {
   isScrolled = false;
@@ -35,12 +36,16 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.subscriptions.push(
       this.authService.currentUser$.subscribe(user => {
         console.log('Navbar: Auth state changed, user:', user);
+        console.log('Navbar: isLoggedIn will be set to:', !!user);
         this.isLoggedIn = !!user;
         if (user) {
+          console.log('Navbar: User logged in, checking user type for user ID:', user.id);
           this.checkUserType(user.id);
         } else {
+          console.log('Navbar: User logged out, resetting flags');
           this.isBuyer = false;
           this.isOrganizer = false;
+          this.logNavbarState();
         }
       })
     );
@@ -48,6 +53,16 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscriptions.forEach(sub => sub.unsubscribe());
+  }
+
+  /**
+   * Debug method to check current navbar state
+   */
+  private logNavbarState() {
+    console.log('Navbar State Debug:');
+    console.log('- isLoggedIn:', this.isLoggedIn);
+    console.log('- isBuyer:', this.isBuyer);
+    console.log('- isOrganizer:', this.isOrganizer);
   }
 
   private checkAuthStatus() {
@@ -66,29 +81,33 @@ export class NavbarComponent implements OnInit, OnDestroy {
   private checkUserType(userId: number) {
     console.log('Navbar: Checking user type for user ID:', userId);
     
-    // Check if user is a buyer
+    // Check if user is a buyer first (has Buyer record)
+    // Note: Organizers may also become buyers later if they purchase tickets
     this.subscriptions.push(
       this.userService.isUserBuyer(userId).subscribe({
         next: () => {
-          console.log('Navbar: User is a buyer');
+          console.log('Navbar: User is a buyer (has buyer record)');
           this.isBuyer = true;
           this.isOrganizer = false;
+          this.logNavbarState();
         },
         error: (error) => {
           console.log('Navbar: User is not a buyer, checking if organizer...', error);
-          // If not a buyer, check if organizer
+          // If not a buyer, check if organizer (has Organizer record)
           this.subscriptions.push(
             this.userService.isUserOrganizer(userId).subscribe({
               next: () => {
-                console.log('Navbar: User is an organizer');
+                console.log('Navbar: User is an organizer (has organizer record)');
                 this.isBuyer = false;
                 this.isOrganizer = true;
+                this.logNavbarState();
               },
               error: (error) => {
                 console.log('Navbar: User is neither buyer nor organizer', error);
-                // User is neither buyer nor organizer (shouldn't happen)
+                // User is neither buyer nor organizer (shouldn't happen in normal flow)
                 this.isBuyer = false;
                 this.isOrganizer = false;
+                this.logNavbarState();
               }
             })
           );

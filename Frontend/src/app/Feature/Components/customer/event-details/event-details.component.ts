@@ -3,6 +3,8 @@ import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EventDto, EventService } from '../../../../Services/event.service';
 import { WishlistService } from '../../../../Services/wishlist.service';
+import { AuthService } from '../../../../Services/auth.service';
+import { environment } from '../../../../../environments/environment.example';
 interface TicketType {
   name: string;
   price: number;
@@ -61,6 +63,7 @@ export class EventDetailsComponent implements OnInit {
     private router: Router,
     private eventService: EventService,
     private wishlistService: WishlistService,
+    private authService: AuthService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
   ngOnInit(): void {
@@ -93,7 +96,7 @@ export class EventDetailsComponent implements OnInit {
           date: eventData.date,
           time: `${eventData.st_Date} - ${eventData.e_Date}`,
           location: `${eventData.city}, ${eventData.location}`,
-          image: eventData.image || 'default-event.jpg',
+          image: this.getImageUrl(eventData.image),
           description: eventData.description || 'No description available.',
           highlights: [
             `Capacity: ${eventData.capacity}`,
@@ -144,6 +147,15 @@ export class EventDetailsComponent implements OnInit {
   }
 
   bookNow(): void {
+    // Check if user is logged in
+    if (!this.authService.isAuthenticated()) {
+      console.log('Event Details: User not authenticated, redirecting to login');
+      this.router.navigate(['/login'], { 
+        queryParams: { returnUrl: `/event-details/${this.eventId}` } 
+      });
+      return;
+    }
+    
     const total = this.getTotalPrice();
     if (total === 0) {
       alert('Please select at least one ticket');
@@ -225,5 +237,24 @@ export class EventDetailsComponent implements OnInit {
   onImageError(event: any): void {
     const imgElement = event.target as HTMLImageElement;
     imgElement.src = 'https://via.placeholder.com/1200x600?text=Event+Image';
+  }
+
+  getImageUrl(imagePath: string | undefined): string {
+    if (!imagePath) {
+      return 'https://via.placeholder.com/1200x600?text=Event+Image';
+    }
+
+    // If it's already a full URL (Cloudinary), return as is
+    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+      return imagePath;
+    }
+
+    // If it's a local path starting with /uploads/, prefix with API URL
+    if (imagePath.startsWith('/uploads/')) {
+      return `${environment.apiUrl.replace('/api', '')}${imagePath}`;
+    }
+
+    // For any other relative paths, assume they're local uploads
+    return `${environment.apiUrl.replace('/api', '')}/uploads/${imagePath}`;
   }
 }

@@ -97,21 +97,32 @@ namespace Tessera.API.Controllers
             await _context.SaveChangesAsync();
 
             // Create Buyer or Organizer based on UserType
-            // All users get a Buyer record so they can purchase tickets
-            var buyer = new Buyer
-            {
-                UserID = user.ID
-            };
-            _context.Buyers.Add(buyer);
-
+            // IMPORTANT: Users can only be ONE type during registration
+            // - Clients get Buyer records (can purchase tickets)
+            // - Organizers get Organizer records (can create events)
+            // - If an organizer later wants to buy tickets, a Buyer record will be created automatically
+            Console.WriteLine($"User registration - UserType: {createUserDto.UserType}");
+            
             if (createUserDto.UserType.ToLower() == "organizer")
             {
+                // Organizers only get an Organizer record
+                Console.WriteLine($"Creating organizer record for user {user.ID}");
                 var organizer = new Organizer
                 {
                     UserID = user.ID,
                     IsVerified = false // Default to not verified
                 };
                 _context.Organizers.Add(organizer);
+            }
+            else
+            {
+                // Buyers get a Buyer record so they can purchase tickets
+                Console.WriteLine($"Creating buyer record for user {user.ID}");
+                var buyer = new Buyer
+                {
+                    UserID = user.ID
+                };
+                _context.Buyers.Add(buyer);
             }
 
             await _context.SaveChangesAsync();
