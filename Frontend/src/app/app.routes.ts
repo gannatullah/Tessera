@@ -45,6 +45,13 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'organizer-profile/:id',
+    loadComponent: () =>
+      import('./Feature/Components/organizer/organizer-profile/organizer-profile.component').then(
+        (c) => c.OrganizerProfileComponent
+      ),
+  },
+  {
     path: 'account-type',
     loadComponent: () =>
       import('./Core/Components/account-type/account-type.component').then(
@@ -66,10 +73,24 @@ export const routes: Routes = [
       ),
   },
   {
-    path: 'event-details',
+    path: 'event-details/:id',
     loadComponent: () =>
       import('./Feature/Components/customer/event-details/event-details.component').then(
         (c) => c.EventDetailsComponent
+      ),
+  },
+  {
+    path: 'wishlist',
+    loadComponent: () =>
+      import('./Feature/Components/customer/wishlist/wishlist.component').then(
+        (c) => c.WishlistComponent
+      ),
+  },
+  {
+    path: 'payment/:eventId',
+    loadComponent: () =>
+      import('./Feature/Components/customer/payment/payment.component').then(
+        (c) => c.PaymentComponent
       ),
   }
 ];

@@ -41,9 +41,9 @@
   transition: transform 0.3s ease;
 }
 
-.profile-pic:hover {
+/* .profile-pic:hover {
   transform: scale(1.05);
-}
+} */
 
 .profile-name {
   font-size: 3rem;
@@ -112,10 +112,10 @@
   height: 100%;
 }
 
-.profile-card:hover {
+/* .profile-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
-}
+} */
 
 .card-header {
   background: linear-gradient(135deg, #7d0404 0%, #a00505 100%);
@@ -147,11 +147,11 @@
   border-bottom: none;
 }
 
-.info-item:hover {
+/* .info-item:hover {
   background-color: #f8f9fa;
   padding-left: 10px;
   border-radius: 8px;
-}
+} */
 
 .info-item i {
   color: #ffc908;
@@ -190,11 +190,11 @@
   transition: all 0.3s ease;
 }
 
-.booking-item:hover {
+/* .booking-item:hover {
   transform: translateX(10px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   border-left-width: 6px;
-}
+} */
 
 .booking-icon {
   font-size: 2.5rem;
@@ -251,6 +251,17 @@
   color: #fff;
   transform: translateY(-3px);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.danger-btn {
+  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+  color: #fff;
+}
+
+.danger-btn:hover {
+  background: linear-gradient(135deg, #c82333 0%, #bd2130 100%);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
 }
 
 /* Profile Picture Upload */

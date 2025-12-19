@@ -56,8 +56,8 @@
     <div class="col-12 col-md-4">
       <div class="summary-card card shadow-sm border-0">
         <div class="card-body d-flex flex-column">
-          <span class="summary-label">Total Bookings</span>
-          <span class="summary-value">{{ bookings.length }}</span>
+          <span class="summary-label">Total Tickets</span>
+          <span class="summary-value">{{ tickets.length }}</span>
         </div>
       </div>
     </div>
@@ -83,11 +83,11 @@
     </div>
   </div>
 
-  <!-- Bookings List -->
-  <div *ngIf="filteredBookings.length > 0; else noBookings">
+  <!-- Tickets List -->
+  <div *ngIf="!isLoading && filteredTickets.length > 0; else noTickets">
     <div
-      class="booking-card card mb-3"
-      *ngFor="let booking of filteredBookings"
+      class="ticket-card card mb-3"
+      *ngFor="let ticket of filteredTickets"
     >
       <div class="card-body">
         <div
@@ -95,30 +95,30 @@
         >
           <!-- Left: Event details -->
           <div class="d-flex flex-column flex-md-row gap-3 flex-grow-1">
-            <div class="booking-date text-center px-3 py-2">
-              <div class="booking-day">
-                {{ booking.eventDate | date : "dd" }}
+            <div class="ticket-date text-center px-3 py-2">
+              <div class="ticket-day">
+                {{ ticket.event?.date | date : "dd" }}
               </div>
-              <div class="booking-month">
-                {{ booking.eventDate | date : "MMM" }}
+              <div class="ticket-month">
+                {{ ticket.event?.date | date : "MMM" }}
               </div>
-              <div class="booking-time">
-                {{ booking.eventTime }}
+              <div class="ticket-time">
+                {{ (ticket.event?.st_Date | date : "hh:mm a") || 'Time TBA' }}
               </div>
             </div>
 
             <div>
-              <h5 class="mb-1 booking-event-name">
-                {{ booking.eventName }}
+              <h5 class="mb-1 ticket-event-name">
+                {{ ticket.event?.name || 'Event Name' }}
               </h5>
-              <p class="mb-1 text-muted booking-venue">
-                {{ booking.venue }} · {{ booking.city }}
+              <p class="mb-1 text-muted ticket-venue">
+                {{ ticket.event?.location || 'Venue' }} · {{ ticket.event?.city || 'City' }}
               </p>
-              <p class="mb-1 booking-ticket-info">
-                {{ booking.ticketType }} · {{ booking.quantity }} ticket(s)
+              <p class="mb-1 ticket-type-info">
+                {{ ticket.ticketType?.name || 'Ticket Type' }}
               </p>
-              <p class="mb-0 booking-code text-muted small">
-                Booking code: <strong>{{ booking.bookingCode }}</strong>
+              <p class="mb-0 ticket-code text-muted small">
+                Ticket ID: <strong>{{ ticket.ticket_ID }}</strong>
               </p>
             </div>
           </div>
@@ -129,23 +129,23 @@
           >
             <div class="mb-2">
               <span
-                class="badge booking-status-badge"
+                class="badge ticket-status-badge"
                 [ngClass]="{
-                  'status-upcoming': booking.status === 'Upcoming',
-                  'status-completed': booking.status === 'Completed',
-                  'status-cancelled': booking.status === 'Cancelled'
+                  'status-upcoming': getTicketStatus(ticket).toLowerCase() === 'upcoming',
+                  'status-completed': getTicketStatus(ticket).toLowerCase() === 'completed',
+                  'status-cancelled': getTicketStatus(ticket).toLowerCase() === 'cancelled'
                 }"
               >
-                {{ booking.status }}
+                {{ getTicketStatus(ticket) }}
               </span>
             </div>
 
             <div class="text-lg-end">
-              <div class="booking-price mb-2">
-                <span class="price-label">Total Paid</span>
+              <div class="ticket-price mb-2">
+                <span class="price-label">Price</span>
                 <span class="price-value">
                   {{
-                    booking.totalPrice | currency : "EGP" : "symbol" : "1.0-0"
+                    ticket.ticketType?.price | currency : "EGP" : "symbol" : "1.0-0"
                   }}
                 </span>
               </div>
@@ -153,14 +153,14 @@
               <div class="btn-group">
                 <button
                   class="btn btn-sm my-btn-primary"
-                  (click)="onViewTicket(booking)"
+                  (click)="onViewTicket(ticket)"
                 >
-                  View Tickets
+                  View Ticket
                 </button>
                 <button
-                  *ngIf="booking.status === 'Upcoming'"
+                  *ngIf="getTicketStatus(ticket).toLowerCase() === 'upcoming'"
                   class="btn btn-sm btn-outline-danger"
-                  (click)="onCancelBooking(booking)"
+                  (click)="onCancelTicket(ticket)"
                 >
                   Cancel
                 </button>
@@ -172,13 +172,19 @@
     </div>
   </div>
 
-  <!-- No bookings state -->
-  <ng-template #noBookings>
-    <div class="no-bookings card border-0 text-center p-4">
+  <!-- Loading state -->
+  <div *ngIf="isLoading" class="text-center py-5">
+    <i class="fas fa-spinner fa-spin fa-3x text-muted"></i>
+    <p class="text-muted mt-3">Loading your tickets...</p>
+  </div>
+
+  <!-- No tickets state -->
+  <ng-template #noTickets>
+    <div class="no-tickets card border-0 text-center p-4">
       <div class="card-body">
-        <h5 class="mb-2">No bookings yet</h5>
+        <h5 class="mb-2">No tickets yet</h5>
         <p class="text-muted mb-3">
-          You don’t have any {{ activeFilter | lowercase }} bookings right now.
+          You don't have any {{ activeFilter | lowercase }} tickets right now.
         </p>
         <a routerLink="/events" class="btn my-btn-primary"> Browse Events </a>
       </div>

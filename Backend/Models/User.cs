@@ -39,6 +39,12 @@ namespace Tessera.API.Models
         [StringLength(500)]
         public string? ProfilePic { get; set; }
 
+        [StringLength(100)]
+        public string? Location { get; set; }
+
+        [StringLength(1000)]
+        public string? Bio { get; set; }
+
         public Buyer? Buyer { get; set; }
         public Organizer? Organizer { get; set; }
         public ICollection<Order> Orders { get; set; } = new List<Order>();

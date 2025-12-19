@@ -9,6 +9,8 @@ namespace Tessera.API.DTOs
         public string Email { get; set; } = string.Empty;
         public string Phone_No { get; set; } = string.Empty;
         public DateTime? DOB { get; set; }
+        public string? Location { get; set; }
+        public string? Bio { get; set; }
         public string Token { get; set; } = string.Empty;
     }
 }

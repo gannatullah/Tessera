@@ -2,12 +2,13 @@ import { Component, AfterViewInit, OnInit, PLATFORM_ID, Inject } from '@angular/
 import { isPlatformBrowser } from '@angular/common';
 import Typed from 'typed.js';
 import { RouterLink, Router } from '@angular/router';
+import { DatePipe } from '@angular/common';
 import { EventService, EventDto } from '../../../../Services/event.service';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, DatePipe],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
@@ -77,7 +78,7 @@ export class HomeComponent implements AfterViewInit, OnInit {
     }
   }
 
-  navigateToEventDetails(): void {
-    this.router.navigate(['/event-details']);
+  navigateToEventDetails(eventId: number): void {
+    this.router.navigate(['/event-details', eventId]);
   }
 }

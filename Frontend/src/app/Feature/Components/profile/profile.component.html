@@ -4,11 +4,11 @@
         <div class="profile-header text-center mb-5">
             <div class="profile-pic-wrapper">
                 <!-- View Mode -->
-                <img *ngIf="!isEditing" [src]="profile.profilePicture" alt="Profile Picture" class="profile-pic">
+                <img *ngIf="!isEditing" [src]="profile.profilePic" alt="Profile Picture" class="profile-pic" (error)="onImageError($event)">
 
                 <!-- Edit Mode -->
                 <div *ngIf="isEditing" class="profile-pic-edit">
-                    <img [src]="imagePreview || profile.profilePicture" alt="Profile Picture" class="profile-pic">
+                    <img [src]="imagePreview || profile.profilePic" alt="Profile Picture" class="profile-pic" (error)="onImageError($event)">
                     <div class="upload-overlay">
                         <label for="profilePictureInput" class="upload-btn">
                             <i class="fas fa-camera"></i>
@@ -132,26 +132,26 @@
                         <h3><i class="fas fa-ticket-alt me-2"></i>Recent Bookings</h3>
                     </div>
                     <div class="card-body">
-                        <div class="bookings-grid">
-                            <div class="booking-item">
-                                <i class="fas fa-music booking-icon"></i>
+                        <!-- Loading state -->
+                        <div *ngIf="!recentTickets" class="text-center py-4">
+                            <i class="fas fa-spinner fa-spin fa-2x text-muted"></i>
+                            <p class="text-muted mt-2">Loading tickets...</p>
+                        </div>
+
+                        <!-- No tickets state -->
+                        <div *ngIf="recentTickets && recentTickets.length === 0" class="text-center py-4">
+                            <i class="fas fa-ticket-alt fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">No bookings yet. Start exploring events!</p>
+                        </div>
+
+                        <!-- Tickets display -->
+                        <div *ngIf="recentTickets && recentTickets.length > 0" class="bookings-grid">
+                            <div class="booking-item" *ngFor="let ticket of recentTickets">
+                                <i [class]="getEventIcon(ticket.event?.category || '') + ' booking-icon'"></i>
                                 <div class="booking-details">
-                                    <h5>Music Festival</h5>
-                                    <p>July 2025</p>
-                                </div>
-                            </div>
-                            <div class="booking-item">
-                                <i class="fas fa-theater-masks booking-icon"></i>
-                                <div class="booking-details">
-                                    <h5>Theater Show</h5>
-                                    <p>June 2025</p>
-                                </div>
-                            </div>
-                            <div class="booking-item">
-                                <i class="fas fa-football-ball booking-icon"></i>
-                                <div class="booking-details">
-                                    <h5>Sports Event</h5>
-                                    <p>May 2025</p>
+                                    <h5>{{ ticket.event?.name || 'Event' }}</h5>
+                                    <p>{{ formatTicketDate(ticket.event?.date || ticket.event?.st_Date || '') }}</p>
+                                    <small class="text-muted">Ticket #{{ ticket.ticket_ID }}</small>
                                 </div>
                             </div>
                         </div>
@@ -170,6 +170,9 @@
             </button>
             <button *ngIf="isEditing" class="profile-btn secondary-btn me-3" (click)="cancelEdit()">
                 <i class="fas fa-times me-2"></i>Cancel
+            </button>
+            <button class="profile-btn danger-btn" (click)="logout()">
+                <i class="fas fa-sign-out-alt me-2"></i>Logout
             </button>
             <!-- <button class="profile-btn secondary-btn" (click)="viewAllBookings()">
                 <i class="fas fa-calendar-alt me-2"></i>View All Bookings

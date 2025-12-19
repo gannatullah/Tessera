@@ -225,6 +225,10 @@ namespace Tessera.API.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("ID"));
 
+                    b.Property<string>("Bio")
+                        .HasMaxLength(1000)
+                        .HasColumnType("varchar(1000)");
+
                     b.Property<DateTime?>("DOB")
                         .HasColumnType("datetime(6)");
 
@@ -242,6 +246,10 @@ namespace Tessera.API.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
+
+                    b.Property<string>("Location")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("Name")
                         .IsRequired()

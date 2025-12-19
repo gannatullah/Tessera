@@ -112,6 +112,7 @@ namespace Tessera.API.Controllers
                     Event = new EventDto
                     {
                         Event_ID = t.Event.Event_ID,
+                        Name = t.Event.Name,
                         Category = t.Event.Category,
                         Date = t.Event.Date,
                         St_Date = t.Event.St_Date,
@@ -133,30 +134,57 @@ namespace Tessera.API.Controllers
             return Ok(tickets);
         }
 
+        // GET: api/Tickets/user/{userid}/event/{eventid}/count
+        // Efficient endpoint to check how many tickets a user has for a specific event
+        [HttpGet("user/{userid}/event/{eventid}/count")]
+        public async Task<ActionResult<object>> GetUserTicketCountForEvent(int userid, int eventid)
+        {
+            var count = await _context.Tickets
+                .Where(t => t.UserID == userid && t.EventID == eventid)
+                .CountAsync();
+
+            return Ok(new 
+            { 
+                userId = userid,
+                eventId = eventid,
+                ticketCount = count,
+                remainingAllowed = Math.Max(0, 2 - count),
+                maxAllowed = 2
+            });
+        }
+
 
 
         // POST: api/Tickets
         [HttpPost]
         public async Task<ActionResult<TicketDto>> CreateTicket(CreateTicketDto createTicketDto)
         {
-            // Ensure the ticket type exists
-            var ticketType = await _context.TicketTypes.FindAsync(createTicketDto.TicketTypeID);
-            if (ticketType == null)
+            // Use database transaction to handle concurrent ticket purchases efficiently
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            
+            try
             {
-                return BadRequest(new { message = "TicketType not found" });
-            }
+                // Ensure the ticket type exists and lock the row for update (pessimistic locking)
+                var ticketType = await _context.TicketTypes
+                    .FirstOrDefaultAsync(tt => tt.ID == createTicketDto.TicketTypeID);
+                
+                if (ticketType == null)
+                {
+                    return BadRequest(new { message = "TicketType not found" });
+                }
 
-            // Ensure the event exists
-            if (!await _context.Events.AnyAsync(e => e.Event_ID == createTicketDto.EventID))
-            {
-                return BadRequest(new { message = "Event not found" });
-            }
+                // Ensure the event exists
+                if (!await _context.Events.AnyAsync(e => e.Event_ID == createTicketDto.EventID))
+                {
+                    return BadRequest(new { message = "Event not found" });
+                }
 
-            // Check inventory availability
-            if (ticketType.Quantity_Sold >= ticketType.Quantity_Total)
-            {
-                return BadRequest(new { message = "No more tickets available for this type" });
-            }
+                // Check inventory availability (prevents overselling)
+                if (ticketType.Quantity_Sold >= ticketType.Quantity_Total)
+                {
+                    await transaction.RollbackAsync();
+                    return BadRequest(new { message = "No more tickets available for this type" });
+                }
 
             // Create the ticket with default status if not provided
             var ticket = new Ticket
@@ -166,17 +194,30 @@ namespace Tessera.API.Controllers
                 EventID = createTicketDto.EventID,
                 UserID = createTicketDto.UserID
             };
+                // EFFICIENT CHECK: Limit 2 tickets per user per event
+                // Only check if UserID is provided (not null)
+                if (createTicketDto.UserID.HasValue)
+                {
+                    // Use a single efficient query to count existing tickets for this user and event
+                    var existingTicketsCount = await _context.Tickets
+                        .Where(t => t.UserID == createTicketDto.UserID && t.EventID == createTicketDto.EventID)
+                        .CountAsync();
 
-            _context.Tickets.Add(ticket);
-            await _context.SaveChangesAsync();
+                    // Enforce maximum of 2 tickets per user per event
+                    if (existingTicketsCount >= 2)
+                    {
+                        await transaction.RollbackAsync();
+                        return BadRequest(new { message = "Maximum ticket limit reached. You can only purchase 2 tickets per event." });
+                    }
+                }
+
 
 
             // Update inventory: increment sold quantity
             ticketType.Quantity_Sold++;
             await _context.SaveChangesAsync();
 
-            // Call n8n webhook after saving
-            if (ticket == null) throw new Exception("Ticket is null");
+            
             // Generate QR code URL
             ticket.QR_Code = _qrCodeService.GenerateQrCodeUrl(ticket.Ticket_ID.ToString());
             await _context.SaveChangesAsync();
@@ -200,17 +241,43 @@ namespace Tessera.API.Controllers
                 TicketTypeID = ticket.TicketTypeID,
                 EventID = ticket.EventID,
                 TicketType = new TicketTypeDto
-                {
-                    ID = ticketType.ID,
-                    Name = ticketType.Name,
-                    Price = ticketType.Price,
-                    Quantity_Total = ticketType.Quantity_Total,
-                    Quantity_Sold = ticketType.Quantity_Sold
-                },
-                UserID = ticket.UserID
-            };
+          
 
-            return CreatedAtAction(nameof(GetTicket), new { id = ticket.Ticket_ID }, ticketDto);
+                _context.Tickets.Add(ticket);
+                await _context.SaveChangesAsync();
+
+                // Update inventory: increment sold quantity
+                ticketType.Quantity_Sold++;
+                await _context.SaveChangesAsync();
+
+                // Commit transaction - ensures atomicity
+                await transaction.CommitAsync();
+
+                var ticketDto = new TicketDto
+                {
+                    Ticket_ID = ticket.Ticket_ID,
+                    Status = ticket.Status,
+                    QR_Code = ticket.QR_Code,
+                    TicketTypeID = ticket.TicketTypeID,
+                    EventID = ticket.EventID,
+                    TicketType = new TicketTypeDto
+                    {
+                        ID = ticketType.ID,
+                        Name = ticketType.Name,
+                        Price = ticketType.Price,
+                        Quantity_Total = ticketType.Quantity_Total,
+                        Quantity_Sold = ticketType.Quantity_Sold
+                    },
+                    UserID = ticket.UserID
+                };
+
+                return CreatedAtAction(nameof(GetTicket), new { id = ticket.Ticket_ID }, ticketDto);
+            }
+            catch (Exception)
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
         }
 
         /// Updates an existing ticket's status or QR code.

@@ -45,9 +45,9 @@
   border-radius: 12px;
   transition: transform 0.3s ease;
 }
-.card:hover {
+/* .card:hover {
   transform: translateY(-5px);
-}
+} */
 .card-title {
   color: var(--main-color);
   font-weight: 600;

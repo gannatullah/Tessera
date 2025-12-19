@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface TicketDto {
+  event?: EventDto;
   ticket_ID: number;
   status: string;
   qr_Code?: string;
@@ -10,7 +11,6 @@ export interface TicketDto {
   eventID: number;
   userID?: number;
   ticketType?: TicketTypeDto;
-  event?: EventDto;
 }
 
 export interface TicketTypeDto {
@@ -24,6 +24,7 @@ export interface TicketTypeDto {
 
 export interface EventDto {
   event_ID: number;
+  name: string;
   category: string;
   date: string;
   st_Date: string;
@@ -40,7 +41,7 @@ export interface EventDto {
 export class TicketService {
   private apiUrl = 'http://localhost:5000/api/Tickets';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   /**
    * Get user tickets by user ID

@@ -4,8 +4,12 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Tessera.API.Data;
 using Tessera.API.Services;
+using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
+StripeConfiguration.ApiKey =
+    builder.Configuration["Stripe:SecretKey"];
+
 
 
 builder.Services.AddControllers();

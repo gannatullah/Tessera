@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { Router } from '@angular/router';
 import { EventService, CreateEventDto, CreateTicketTypeDto } from '../../../../Services/event.service';
+import { EVENT_CATEGORIES } from '../../../../Shared/constants/categories';
 
 @Component({
   selector: 'app-createevent',
@@ -16,6 +17,7 @@ export class CreateeventComponent {
   isSubmitting = false;
   successMessage: string = '';
   errorMessage: string = '';
+  categories = EVENT_CATEGORIES;
 
   constructor(
     private fb: FormBuilder,
@@ -24,6 +26,7 @@ export class CreateeventComponent {
   ) {
     this.eventForm = this.fb.group({
       // Basic Information
+      name: ['', [Validators.required, Validators.minLength(3)]],
       description: ['', [Validators.required, Validators.minLength(10)]],
       category: ['', Validators.required],
 
@@ -89,6 +92,7 @@ export class CreateeventComponent {
 
       const createEventDto: CreateEventDto = {
         category: formValue.category,
+        name: formValue.name,
         date: new Date(eventDate).toISOString(),
         st_Date: new Date(stDateTime).toISOString(),
         e_Date: new Date(eDateTime).toISOString(),

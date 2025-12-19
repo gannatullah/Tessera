@@ -4,7 +4,7 @@
     <div class="hero-overlay"></div>
     <img [src]="event.image" [alt]="event.title" class="hero-image" />
     <div class="hero-content">
-      <div class="container">
+      <div class="container"> 
         <div class="badge-container">
           <span class="badge bg-warning text-dark">{{ event.category }}</span>
         </div>
@@ -12,7 +12,7 @@
         <div class="event-meta d-flex flex-wrap gap-4 text-white">
           <div class="meta-item">
             <i class="bi bi-calendar-event me-2"></i>
-            <span>{{ event.date }}</span>
+            <span>{{ event.date | date:'mediumDate' }}</span>
           </div>
           <div class="meta-item">
             <i class="bi bi-clock me-2"></i>
@@ -77,13 +77,16 @@
               <i class="bi bi-person-circle me-2 text-warning"></i>
               Organized By
             </h3>
-            <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center organizer-profile" (click)="viewOrganizerProfile()" style="cursor: pointer;">
               <div class="organizer-avatar me-3">
                 <i class="bi bi-building display-6 text-warning"></i>
               </div>
               <div>
                 <h5 class="mb-1">{{ event.organizer }}</h5>
                 <p class="text-muted mb-0">Event Organizer</p>
+              </div>
+              <div class="ms-auto">
+                <i class="bi bi-chevron-right text-muted"></i>
               </div>
             </div>
           </div>
@@ -145,10 +148,21 @@
                   <i class="bi bi-ticket-perforated me-2"></i>
                   Book Now
                 </button>
-                <button class="btn btn-outline-secondary w-100" (click)="addToWishlist()">
-                  <i class="bi bi-heart me-2"></i>
-                  Add to Wishlist
+                <button 
+                  class="btn w-100" 
+                  [class.btn-outline-secondary]="!isInWishlist"
+                  [class.btn-danger]="isInWishlist"
+                  (click)="addToWishlist()"
+                  [disabled]="isAddingToWishlist"
+                >
+                  <i class="bi me-2" [class.bi-heart]="!isInWishlist" [class.bi-heart-fill]="isInWishlist"></i>
+                  <span *ngIf="!isAddingToWishlist">{{ isInWishlist ? 'Remove from Wishlist' : 'Add to Wishlist' }}</span>
+                  <span *ngIf="isAddingToWishlist">
+                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    Processing...
+                  </span>
                 </button>
+                
               </div>
 
               <!-- Event Info -->
@@ -171,16 +185,16 @@
               <h6 class="card-title mb-3">Share This Event</h6>
               <div class="d-flex gap-2">
                 <button class="btn btn-outline-primary btn-sm flex-fill">
-                  <i class="bi bi-facebook"></i>
+                  <i class="fa-brands fa-facebook"></i>
                 </button>
                 <button class="btn btn-outline-info btn-sm flex-fill">
-                  <i class="bi bi-twitter"></i>
+                  <i class="fa-brands fa-twitter"></i>
                 </button>
                 <button class="btn btn-outline-danger btn-sm flex-fill">
-                  <i class="bi bi-instagram"></i>
+                  <i class="fa-brands fa-instagram"></i>
                 </button>
                 <button class="btn btn-outline-success btn-sm flex-fill">
-                  <i class="bi bi-whatsapp"></i>
+                  <i class="fa-brands fa-whatsapp"></i>
                 </button>
               </div>
             </div>

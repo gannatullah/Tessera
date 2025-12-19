@@ -38,6 +38,7 @@ namespace Tessera.API.Controllers
             var eventDtos = trendingEvents.Select(item => new EventDto
             {
                 Event_ID = item.Event.Event_ID,
+                Name = item.Event.Name,
                 Category = item.Event.Category,
                 Date = item.Event.Date,
                 St_Date = item.Event.St_Date,
@@ -136,6 +137,7 @@ namespace Tessera.API.Controllers
             var eventItem = await _context.Events
                 .Include(e => e.Organizer)
                 .ThenInclude(o => o.User)
+                .Include(e => e.TicketTypes)
                 .FirstOrDefaultAsync(e => e.Event_ID == id);
 
             if (eventItem == null)
@@ -146,6 +148,7 @@ namespace Tessera.API.Controllers
             var eventDto = new EventDto
             {
                 Event_ID = eventItem.Event_ID,
+                Name = eventItem.Name,
                 Category = eventItem.Category,
                 Date = eventItem.Date,
                 St_Date = eventItem.St_Date,
@@ -171,7 +174,16 @@ namespace Tessera.API.Controllers
                         DOB = eventItem.Organizer.User.DOB,
                         ProfilePic = eventItem.Organizer.User.ProfilePic
                     }
-                }
+                },
+                TicketTypes = eventItem.TicketTypes.Select(tt => new TicketTypeDto
+                {
+                    ID = tt.ID,
+                    Name = tt.Name,
+                    Price = tt.Price,
+                    Quantity_Total = tt.Quantity_Total,
+                    Quantity_Sold = tt.Quantity_Sold,
+                    EventID = tt.Event_ID
+                }).ToList()
             };
 
             return Ok(eventDto);

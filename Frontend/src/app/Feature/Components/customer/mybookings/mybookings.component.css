@@ -46,56 +46,56 @@
   color: var(--main-color);
 }
 
-/* Booking cards */
-.booking-card {
+/* Ticket cards */
+.ticket-card {
   border: none;
   box-shadow: var(--shadow);
   border-radius: 1rem;
 }
 
-.booking-date {
+.ticket-date {
   border-radius: 0.75rem;
   background-color: var(--light-color);
   min-width: 80px;
 }
 
-.booking-day {
+.ticket-day {
   font-size: 1.6rem;
   font-weight: 700;
   color: var(--main-color);
 }
 
-.booking-month {
+.ticket-month {
   font-size: 0.9rem;
   text-transform: uppercase;
   color: #555;
 }
 
-.booking-time {
+.ticket-time {
   font-size: 0.8rem;
   color: #888;
 }
 
-.booking-event-name {
+.ticket-event-name {
   color: #222;
   font-weight: 600;
 }
 
-.booking-venue {
+.ticket-venue {
   font-size: 0.9rem;
 }
 
-.booking-ticket-info {
+.ticket-type-info {
   font-size: 0.9rem;
   color: #555;
 }
 
-.booking-code {
+.ticket-code {
   font-size: 0.8rem;
 }
 
 /* Status badges */
-.booking-status-badge {
+.ticket-status-badge {
   padding: 0.4rem 0.7rem;
   border-radius: 999px;
   font-size: 0.75rem;
@@ -118,14 +118,14 @@
 }
 
 /* Price */
-.booking-price .price-label {
+.ticket-price .price-label {
   font-size: 0.75rem;
   text-transform: uppercase;
   color: #888;
   margin-right: 0.25rem;
 }
 
-.booking-price .price-value {
+.ticket-price .price-value {
   font-weight: 700;
   color: var(--main-color);
 }

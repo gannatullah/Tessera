@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface CreateEventDto {
+  name: string;
   category: string;
   date: string;
   st_Date: string;
@@ -24,6 +25,7 @@ export interface CreateTicketTypeDto {
 
 export interface EventDto {
   event_ID: number;
+  name: string;
   category: string;
   date: string;
   st_Date: string;
@@ -34,6 +36,7 @@ export interface EventDto {
   description?: string;
   image?: string;
   organizerID: number;
+  organizer?: OrganizerDto;
   ticketTypes?: TicketTypeDto[];
 }
 
@@ -44,6 +47,23 @@ export interface TicketTypeDto {
   quantity_Total: number;
   quantity_Sold: number;
   eventID: number;
+}
+
+export interface UserDto {
+  id: number;
+  name: string;
+  first_Name: string;
+  last_Name: string;
+  email: string;
+  phone_No: string;
+  dob: string;
+  profilePic: string;
+}
+
+export interface OrganizerDto {
+  userID: number;
+  isVerified: boolean;
+  user: UserDto;
 }
 
 @Injectable({
@@ -76,5 +96,20 @@ export class EventService {
 
   getTrendingEvents(): Observable<EventDto[]> {
     return this.http.get<EventDto[]>(`${this.apiUrl}/trending`);
+  }
+
+  filterEvents(city?: string, category?: string): Observable<EventDto[]> {
+    let params = '';
+    if (city && city !== 'all') {
+      params += `?city=${encodeURIComponent(city)}`;
+    }
+    if (category && category !== 'all') {
+      params += params ? `&category=${encodeURIComponent(category)}` : `?category=${encodeURIComponent(category)}`;
+    }
+    return this.http.get<EventDto[]>(`${this.apiUrl}/filter${params}`);
+  }
+
+  getEventsByOrganizer(organizerId: number): Observable<EventDto[]> {
+    return this.http.get<EventDto[]>(`${this.apiUrl}/organizer/${organizerId}`);
   }
 }

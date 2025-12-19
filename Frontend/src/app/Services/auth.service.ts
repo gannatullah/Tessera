@@ -8,9 +8,12 @@ interface User {
   id: number;
   email: string;
   name: string;
-  firstName: string;
-  lastName: string;
+  first_Name: string;
+  last_Name: string;
   phoneNo: string;
+  location?: string;
+  bio?: string;
+  profilePic?: string;
 }
 
 interface LoginResponse {
@@ -21,6 +24,9 @@ interface LoginResponse {
   email: string;
   phone_No: string;
   dob: string;
+  location?: string;
+  bio?: string;
+  profilePic?: string;
   token: string;
 }
 
@@ -44,14 +50,20 @@ export class AuthService {
           // Store token
           localStorage.setItem('authToken', response.token);
           
+          // Store user ID
+          localStorage.setItem('userId', response.id.toString());
+          
           // Store user data
           const user: User = {
             id: response.id,
             email: response.email,
             name: response.name,
-            firstName: response.first_Name,
-            lastName: response.last_Name,
-            phoneNo: response.phone_No
+            first_Name: response.first_Name,
+            last_Name: response.last_Name,
+            phoneNo: response.phone_No,
+            location: response.location,
+            bio: response.bio,
+            profilePic: response.profilePic
           };
           
           localStorage.setItem('currentUser', JSON.stringify(user));
@@ -67,6 +79,7 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem('authToken');
     localStorage.removeItem('currentUser');
+    localStorage.removeItem('userId');
     this.currentUserSubject.next(null);
     this.router.navigate(['/login']);
   }

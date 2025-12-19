@@ -1,0 +1,72 @@
+<section class="profile-section">
+    <div class="container py-5">
+        <!-- Loading State -->
+        <div *ngIf="isLoading" class="text-center py-5">
+            <i class="fas fa-spinner fa-spin fa-3x text-muted"></i>
+            <p class="text-muted mt-3">Loading organizer profile...</p>
+        </div>
+
+        <!-- Profile Content -->
+        <div *ngIf="!isLoading && organizerProfile">
+            <!-- Profile Header -->
+            <div class="profile-header text-center mb-5">
+                <div class="profile-pic-wrapper">
+                    <img [src]="organizerProfile.profilePic || '/pp.jpg'" alt="Profile Picture" class="profile-pic" (error)="onImageError($event)">
+                </div>
+                <h1 class="profile-name mt-4">{{ organizerProfile.name }}</h1>
+                <p class="profile-tagline text-muted">Event Organizer</p>
+            </div>
+
+            <!-- Profile Content -->
+            <div class="row">
+                <!-- Profile Information -->
+                <div class="col-12">
+                    <div class="profile-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-user me-2"></i>About</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <label class="info-label">Email</label>
+                                        <p class="info-value">{{ organizerProfile.email }}</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <label class="info-label">Phone</label>
+                                        <p class="info-value">{{ organizerProfile.phone_No || 'Not provided' }}</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <label class="info-label">Location</label>
+                                        <p class="info-value">{{ organizerProfile.location || 'Not specified' }}</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" *ngIf="organizerProfile.dob">
+                                    <div class="info-item">
+                                        <label class="info-label">Birthday</label>
+                                        <p class="info-value">{{ organizerProfile.dob | date:'longDate' }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bio-section mt-4" *ngIf="organizerProfile.bio">
+                                <label class="info-label">Bio</label>
+                                <p class="bio-text">{{ organizerProfile.bio }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Error State -->
+        <div *ngIf="!isLoading && !organizerProfile" class="text-center py-5">
+            <i class="fas fa-exclamation-triangle fa-3x text-warning mb-3"></i>
+            <h3>Organizer Not Found</h3>
+            <p class="text-muted">The organizer profile you're looking for doesn't exist or has been removed.</p>
+        </div>
+    </div>
+</section>

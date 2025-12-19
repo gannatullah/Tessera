@@ -129,6 +129,18 @@
           }
         </div>
 
+        <!-- Bio -->
+        <div class="col-12">
+          @let bioControl = registerForm.get('bio');
+          <label class="form-label fw-semibold">Bio (Optional)</label>
+          <textarea formControlName="bio" class="form-control" rows="3" placeholder="Tell us about yourself... (max 1000 characters)"></textarea>
+          @if(bioControl?.errors && bioControl?.touched){
+            <small class="text-danger">
+              @if(bioControl?.getError('maxlength')){Bio cannot exceed 1000 characters}
+            </small>
+          }
+        </div>
+
         <!-- Terms and Submit -->
         <div class="col-12">
           <div class="form-check">
