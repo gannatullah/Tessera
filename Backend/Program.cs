@@ -85,6 +85,8 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod()
             .AllowAnyHeader());
 });
+builder.Services.AddHttpClient<N8nService>();
+builder.Services.AddScoped<QrCodeService>();
 
 var app = builder.Build();
 
