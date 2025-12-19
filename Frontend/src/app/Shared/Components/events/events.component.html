@@ -1,11 +1,14 @@
 <section class="events">
   <div class="container">
-    <form class="d-flex" role="search">
+    <form class="d-flex" role="search" (ngSubmit)="onSearch()">
       <input
         class="form-control me-2"
         type="search"
         placeholder="Search for events, concerts, festivals..."
         aria-label="Search events"
+        [(ngModel)]="searchTerm"
+        (input)="onSearchInput()"
+        name="searchTerm"
       />
       <button class="searchbtn" type="submit">
         <i class="fas fa-search"></i><span>Search</span>
@@ -70,7 +73,7 @@
               [src]="event.image"
               class="card-img"
               [alt]="event.description"
-              style="object-fit: cover; height: 100%; width: 100%"
+              style="object-fit: cover; height: 250px; width: 100%"
             />
             <!-- Overlay -->
             <div

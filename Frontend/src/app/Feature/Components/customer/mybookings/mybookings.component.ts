@@ -56,10 +56,29 @@ export class MybookingsComponent implements OnInit {
     if (this.activeFilter === 'All') {
       return this.tickets;
     }
+
+    const now = new Date();
+
     return this.tickets.filter(ticket => {
-      const status = ticket.status?.toLowerCase();
-      const filter = this.activeFilter.toLowerCase();
-      return status === filter;
+      if (!ticket.event?.date) {
+        return false;
+      }
+
+      const eventDate = new Date(ticket.event.date);
+
+      if (this.activeFilter === 'Upcoming') {
+        // Show events that are in the future
+        return eventDate > now;
+      } else if (this.activeFilter === 'Completed') {
+        // Show events that have already passed
+        return eventDate < now;
+      } else if (this.activeFilter === 'Cancelled') {
+        // Keep the original status-based filtering for cancelled
+        const status = ticket.status?.toLowerCase();
+        return status === 'cancelled';
+      }
+
+      return false;
     });
   }
 
@@ -68,7 +87,26 @@ export class MybookingsComponent implements OnInit {
   }
 
   getStatusCount(status: 'Upcoming' | 'Completed' | 'Cancelled'): number {
-    return this.tickets.filter(ticket => ticket.status?.toLowerCase() === status.toLowerCase()).length;
+    const now = new Date();
+
+    return this.tickets.filter(ticket => {
+      if (!ticket.event?.date) {
+        return false;
+      }
+
+      const eventDate = new Date(ticket.event.date);
+
+      if (status === 'Upcoming') {
+        return eventDate > now;
+      } else if (status === 'Completed') {
+        return eventDate < now;
+      } else if (status === 'Cancelled') {
+        const ticketStatus = ticket.status?.toLowerCase();
+        return ticketStatus === 'cancelled';
+      }
+
+      return false;
+    }).length;
   }
 
   getTicketStatus(ticket: TicketDto): string {

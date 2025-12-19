@@ -55,7 +55,7 @@ export class EventDetailsComponent implements OnInit {
   };
 
   eventId: number = 0;
-  userId = 1; // TODO: Get from auth service
+  userId: number | null = null;
   isInWishlist = false;
   isAddingToWishlist = false;
 
@@ -68,11 +68,19 @@ export class EventDetailsComponent implements OnInit {
   ) {}
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
+      // Get user ID from localStorage
+      const storedUserId = localStorage.getItem('userId');
+      if (storedUserId) {
+        this.userId = parseInt(storedUserId);
+      }
+
       const eventId = this.route.snapshot.paramMap.get('id');
       if (eventId) {
         this.eventId = +eventId;
         this.loadEventDetails(this.eventId);
-        this.checkWishlistStatus();
+        if (this.userId) {
+          this.checkWishlistStatus();
+        }
       }
     }
   }
@@ -104,6 +112,7 @@ export class EventDetailsComponent implements OnInit {
           price:0,
           availability: 'Available',
           ticketTypes: eventData.ticketTypes?.map((tt: any) => ({
+            id: tt.id,
             name: tt.name,
             price: tt.price,
             quantity: 0
@@ -150,7 +159,7 @@ export class EventDetailsComponent implements OnInit {
     });
   }
   addToWishlist(): void {
-    if (this.isAddingToWishlist) return;
+    if (this.isAddingToWishlist || !this.userId) return;
 
     this.isAddingToWishlist = true;
 
@@ -189,6 +198,8 @@ export class EventDetailsComponent implements OnInit {
   }
 
   checkWishlistStatus(): void {
+    if (!this.userId) return;
+
     this.wishlistService.checkWishlistItem(this.userId, this.eventId).subscribe({
       next: (response) => {
         this.isInWishlist = response.exists;

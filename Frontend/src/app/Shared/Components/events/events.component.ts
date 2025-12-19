@@ -19,6 +19,7 @@ export class EventsComponent implements OnInit {
   selectedCity: string = 'all';
   selectedCategory: string = 'all';
   categories = EVENT_CATEGORIES;
+  searchTerm: string = ''; // Add search term property
 
   // Pagination properties
   currentPage: number = 1;
@@ -46,7 +47,7 @@ export class EventsComponent implements OnInit {
         console.log('All events fetched successfully:', events);
         console.log('Total events:', events.length);
         this.allEvents = events;
-        this.updatePagination();
+        this.currentPage = 1; // Reset to first page when loading new data
         this.updateCurrentPageEvents();
       },
       error: (error: any) => {
@@ -63,9 +64,50 @@ export class EventsComponent implements OnInit {
   }
 
   updateCurrentPageEvents(): void {
+    // First apply search and filters, then paginate
+    let filteredEvents = this.allEvents;
+
+    // Apply search filter
+    if (this.searchTerm.trim()) {
+      filteredEvents = filteredEvents.filter(event =>
+        event.name?.toLowerCase().includes(this.searchTerm.toLowerCase())
+      );
+    }
+
+    // Apply category and city filters
+    if (this.selectedCategory !== 'all') {
+      filteredEvents = filteredEvents.filter(event =>
+        event.category === this.selectedCategory
+      );
+    }
+
+    if (this.selectedCity !== 'all') {
+      filteredEvents = filteredEvents.filter(event =>
+        event.city === this.selectedCity
+      );
+    }
+
+    // Update pagination based on filtered results
+    this.totalPages = Math.ceil(filteredEvents.length / this.itemsPerPage);
+    if (this.currentPage > this.totalPages && this.totalPages > 0) {
+      this.currentPage = this.totalPages;
+    }
+
+    // Get events for current page
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
-    this.events = this.allEvents.slice(startIndex, endIndex);
+    this.events = filteredEvents.slice(startIndex, endIndex);
+  }
+
+  onSearch(): void {
+    this.currentPage = 1; // Reset to first page when searching
+    this.updateCurrentPageEvents();
+  }
+
+  onSearchInput(): void {
+    // Debounce search - update results as user types
+    this.currentPage = 1;
+    this.updateCurrentPageEvents();
   }
 
   getPageNumbers(): number[] {
@@ -100,33 +142,8 @@ export class EventsComponent implements OnInit {
   applyFilters(): void {
     console.log('Applying filters:', { city: this.selectedCity, category: this.selectedCategory });
     
-    if (this.selectedCity === 'all' && this.selectedCategory === 'all') {
-      this.allEvents = [...this.allEvents]; // Reset to original events
-      this.currentPage = 1; // Reset to first page
-      this.updatePagination();
-      this.updateCurrentPageEvents();
-      return;
-    }
-
-    const city = this.selectedCity === 'all' ? undefined : this.selectedCity;
-    const category = this.selectedCategory === 'all' ? undefined : this.selectedCategory;
-
-    this.eventService.filterEvents(city, category).subscribe({
-      next: (events: EventDto[]) => {
-        console.log('Filtered events:', events);
-        this.allEvents = events;
-        this.currentPage = 1; // Reset to first page when filtering
-        this.updatePagination();
-        this.updateCurrentPageEvents();
-      },
-      error: (error: any) => {
-        console.error('Error filtering events:', error);
-        this.allEvents = [];
-        this.events = [];
-        this.totalPages = 1;
-        this.currentPage = 1;
-      }
-    });
+    this.currentPage = 1; // Reset to first page when filtering
+    this.updateCurrentPageEvents();
   }
 
   navigateToEventDetails(eventId: number): void {

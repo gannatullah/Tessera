@@ -140,6 +140,7 @@
 .btn-warning {
   background-color: var(--main-color);
   border-color: var(--main-color);
+  color: white !important;
   font-weight: 600;
   transition: all 0.3s ease;
 }
@@ -147,6 +148,7 @@
 .btn-warning:hover {
   background-color: var(--btn-hover);
   border-color: var(--btn-hover);
+  color: white !important;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
 }

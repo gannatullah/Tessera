@@ -13,7 +13,7 @@ import { WishlistService, WishlistDto } from '../../../../Services/wishlist.serv
 export class WishlistComponent implements OnInit {
   wishlistItems: WishlistDto[] = [];
   isLoading = true;
-  userId = 1; // TODO: Get from auth service
+  userId: number | null = null;
 
   constructor(
     private wishlistService: WishlistService,
@@ -25,7 +25,19 @@ export class WishlistComponent implements OnInit {
   }
 
   loadWishlist(): void {
+    const storedUserId = localStorage.getItem('userId');
+    
+    if (!storedUserId) {
+      console.log('No user ID found in localStorage');
+      this.isLoading = false;
+      return;
+    }
+
+    this.userId = parseInt(storedUserId);
     this.isLoading = true;
+
+    console.log(`Fetching user wishlist for user ID: ${this.userId}`);
+
     this.wishlistService.getUserWishlist(this.userId).subscribe({
       next: (data) => {
         this.wishlistItems = data;

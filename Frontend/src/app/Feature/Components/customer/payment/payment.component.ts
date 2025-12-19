@@ -1,5 +1,6 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { PaymentService } from '../../../../Services/payment.service';
+import { TicketService } from '../../../../Services/ticket.service';
 import { StripeCardElement } from '@stripe/stripe-js';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -23,6 +24,7 @@ export class PaymentComponent implements OnInit, AfterViewInit {
 
   constructor(
     private paymentService: PaymentService,
+    private ticketService: TicketService,
     private router: Router,
     private route: ActivatedRoute
   ) {
@@ -89,9 +91,8 @@ export class PaymentComponent implements OnInit, AfterViewInit {
           if (result.error) {
             this.errorMessage = result.error.message || 'Payment failed';
           } else if (result.paymentIntent?.status === 'succeeded') {
-            alert('Payment successful 🎉');
-            // Navigate back to home or success page
-            this.router.navigate(['/home']);
+            // Payment successful, now create tickets
+            await this.createTickets();
           }
         },
         error: (error) => {
@@ -100,5 +101,51 @@ export class PaymentComponent implements OnInit, AfterViewInit {
           this.isProcessing = false;
         }
       });
+  }
+
+  private async createTickets(): Promise<void> {
+    const userId = localStorage.getItem('userId');
+
+    if (!userId) {
+      this.errorMessage = 'User not logged in. Please log in and try again.';
+      this.isProcessing = false;
+      return;
+    }
+
+    const userIdNumber = parseInt(userId);
+    const ticketPromises: Promise<any>[] = [];
+
+    // Create tickets for each selected ticket type
+    for (const ticket of this.tickets) {
+      if (ticket.quantity > 0) {
+        for (let i = 0; i < ticket.quantity; i++) {
+          const ticketData = {
+            eventID: this.eventId,
+            ticketTypeID: ticket.id,
+            userID: userIdNumber,
+            quantity: 1 // Create individual tickets
+          };
+
+          ticketPromises.push(
+            this.ticketService.createTicket(ticketData).toPromise()
+          );
+        }
+      }
+    }
+
+    try {
+      await Promise.all(ticketPromises);
+      alert('Payment successful! 🎉 Your tickets have been added to your bookings.');
+      this.router.navigate(['/my-bookings']);
+    } catch (error) {
+      console.error('Error creating tickets:', error);
+      this.errorMessage = 'Payment was successful, but there was an error creating your tickets. Please contact support.';
+      // Still navigate to bookings in case some tickets were created
+      setTimeout(() => {
+        this.router.navigate(['/my-bookings']);
+      }, 3000);
+    } finally {
+      this.isProcessing = false;
+    }
   }
 }
