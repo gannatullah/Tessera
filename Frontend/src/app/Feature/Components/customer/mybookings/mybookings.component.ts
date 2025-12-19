@@ -1,6 +1,7 @@
 import { Component, OnInit, PLATFORM_ID, Inject } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { TicketService, TicketDto } from '../../../../Services/ticket.service';
+import { AuthService } from '../../../../Services/auth.service';
 
 @Component({
   selector: 'app-mybookings',
@@ -18,6 +19,7 @@ export class MybookingsComponent implements OnInit {
 
   constructor(
     private ticketService: TicketService,
+    private authService: AuthService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
@@ -29,10 +31,10 @@ export class MybookingsComponent implements OnInit {
   }
 
   fetchUserTickets(): void {
-    const userId = localStorage.getItem('userId');
+    const userId = this.authService.getCurrentUser()?.id?.toString();
 
     if (!userId) {
-      console.log('No user ID found in localStorage');
+      console.log('No user ID found');
       this.isLoading = false;
       return;
     }

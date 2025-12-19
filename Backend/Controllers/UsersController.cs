@@ -168,7 +168,23 @@ namespace Tessera.API.Controllers
 
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            // Return the updated user
+            var updatedUser = await _context.Users.FindAsync(id);
+            var updatedUserDto = new UserDto
+            {
+                ID = updatedUser.ID,
+                Name = updatedUser.Name,
+                First_Name = updatedUser.First_Name,
+                Last_Name = updatedUser.Last_Name,
+                Email = updatedUser.Email,
+                Phone_No = updatedUser.Phone_No,
+                DOB = updatedUser.DOB,
+                ProfilePic = updatedUser.ProfilePic,
+                Location = updatedUser.Location,
+                Bio = updatedUser.Bio
+            };
+
+            return Ok(updatedUserDto);
         }
 
         // DELETE: api/Users/5

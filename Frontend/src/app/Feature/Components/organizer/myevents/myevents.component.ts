@@ -109,7 +109,9 @@ export class MyeventsComponent implements OnInit {
       totalTickets: totalTickets,
       ticketsSold: ticketsSold,
       revenue: revenue,
-      image: dto.image,
+      image: dto.image && dto.image.trim() !== '' 
+        ? (dto.image.startsWith('http') ? dto.image : `http://localhost:5000${dto.image}`)
+        : undefined,
     };
   }
 

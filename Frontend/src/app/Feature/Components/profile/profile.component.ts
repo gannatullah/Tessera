@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../../Services/auth.service';
 import { Usersinterface } from '../../../Core/interfaces/usersinterface';
 import { UserService, UserProfile } from '../../../Services/user.service';
@@ -19,7 +20,8 @@ export class ProfileComponent implements OnInit {
     private router: Router, 
     private auth: AuthService,
     private userService: UserService,
-    private ticketService: TicketService
+    private ticketService: TicketService,
+    private http: HttpClient
   ) {}
   
   isEditing = false;
@@ -45,8 +47,9 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     // Check if user is logged in
-    const token = localStorage.getItem('authToken');
-    const userId = localStorage.getItem('userId');
+    const token = this.auth.getToken();
+    const userId = this.auth.getCurrentUser()?.id?.toString();
+
     
     if (token && userId) {
       this.isLoggedIn = true;
@@ -80,7 +83,9 @@ export class ProfileComponent implements OnInit {
           }) : 'May 11, 1999',
           interests: 'Music, Theater, Sports', // Not in backend, keep default
           bio: userData.bio || 'Passionate about events and connecting people through amazing experiences. Love discovering new events and meeting like-minded individuals.',
-          profilePic: userData.profilePic && userData.profilePic.trim() !== '' ? userData.profilePic : '/pp.jpg'
+          profilePic: userData.profilePic && userData.profilePic.trim() !== '' 
+            ? (userData.profilePic.startsWith('http') ? userData.profilePic : `http://localhost:5000${userData.profilePic}`)
+            : '/pp.jpg'
         };
         
         // Update edit profile as well
@@ -104,12 +109,33 @@ export class ProfileComponent implements OnInit {
   }
 
   saveProfile() {
-    const userId = localStorage.getItem('userId');
+    const userId = this.auth.getCurrentUser()?.id?.toString();
     if (!userId) {
       console.error('No user ID found');
       return;
     }
 
+    // If a file is selected, upload it first
+    if (this.selectedFile) {
+      this.uploadProfilePicture().subscribe({
+        next: (uploadResult) => {
+          // Update editProfile with the uploaded URL
+          this.editProfile.profilePic = uploadResult.url;
+          // Now update the user profile
+          this.updateUserProfile(userId);
+        },
+        error: (error) => {
+          console.error('Error uploading profile picture:', error);
+          alert('Failed to upload profile picture. Please try again.');
+        }
+      });
+    } else {
+      // No file selected, just update the profile
+      this.updateUserProfile(userId);
+    }
+  }
+
+  private updateUserProfile(userId: string) {
     // Prepare update data
     const updateData = {
       name: this.editProfile.name,
@@ -117,7 +143,7 @@ export class ProfileComponent implements OnInit {
       phone_No: this.editProfile.phone,
       location: this.editProfile.location,
       bio: this.editProfile.bio,
-      profilePic: this.selectedFile ? this.editProfile.profilePic : undefined
+      profilePic: this.editProfile.profilePic
     };
 
     console.log('Updating profile:', updateData);
@@ -129,7 +155,9 @@ export class ProfileComponent implements OnInit {
         // Update local profile with response
         this.profile = {
           ...this.editProfile,
-          profilePic: updatedUser.profilePic || this.editProfile.profilePic
+          profilePic: updatedUser.profilePic && updatedUser.profilePic.trim() !== '' 
+            ? (updatedUser.profilePic.startsWith('http') ? updatedUser.profilePic : `http://localhost:5000${updatedUser.profilePic}`)
+            : '/pp.jpg'
         };
 
         this.isEditing = false;
@@ -145,6 +173,13 @@ export class ProfileComponent implements OnInit {
         this.imagePreview = null;
       }
     });
+  }
+
+  private uploadProfilePicture() {
+    const formData = new FormData();
+    formData.append('file', this.selectedFile!);
+
+    return this.http.post<{ url: string }>('http://localhost:5000/api/FileUpload', formData);
   }
 
   cancelEdit() {
@@ -209,8 +244,11 @@ export class ProfileComponent implements OnInit {
   onImageError(event: any) {
     // If image fails to load, fallback to default profile picture
     const imgElement = event.target as HTMLImageElement;
-    if (imgElement.src !== '/pp.jpg') {
-      imgElement.src = '/pp.jpg';
+    const currentSrc = imgElement.src;
+    const defaultSrc = '/pp.jpg';
+    
+    if (!currentSrc.includes('pp.jpg')) {
+      imgElement.src = defaultSrc;
     }
   }
 

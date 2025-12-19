@@ -43,21 +43,49 @@ export class AuthService {
     private router: Router
   ) {}
 
+  /**
+   * Safely set item in localStorage
+   */
+  private setLocalStorageItem(key: string, value: string): void {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      localStorage.setItem(key, value);
+    }
+  }
+
+  /**
+   * Safely get item from localStorage
+   */
+  private getLocalStorageItem(key: string): string | null {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      return localStorage.getItem(key);
+    }
+    return null;
+  }
+
+  /**
+   * Safely remove item from localStorage
+   */
+  private removeLocalStorageItem(key: string): void {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      localStorage.removeItem(key);
+    }
+  }
+
   login(email: string, password: string): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/login`, { email, password })
       .pipe(
         tap(response => {
           // Store token
-          localStorage.setItem('authToken', response.token);
+          this.setLocalStorageItem('authToken', response.token);
           
           // Store user ID
-          localStorage.setItem('userId', response.id.toString());
+          this.setLocalStorageItem('userId', response.id.toString());
           
           // Store user email
-          localStorage.setItem('userEmail', response.email);
+          this.setLocalStorageItem('userEmail', response.email);
           
           // Store user name
-          localStorage.setItem('userName', response.name);
+          this.setLocalStorageItem('userName', response.name);
           
           // Store user data object for backward compatibility
           const user: User = {
@@ -82,26 +110,26 @@ export class AuthService {
   }
 
   logout(): void {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('userId');
-    localStorage.removeItem('userEmail');
-    localStorage.removeItem('userName');
+    this.removeLocalStorageItem('authToken');
+    this.removeLocalStorageItem('userId');
+    this.removeLocalStorageItem('userEmail');
+    this.removeLocalStorageItem('userName');
     this.currentUserSubject.next(null);
     this.router.navigate(['/login']);
   }
 
   isAuthenticated(): boolean {
-    return !!localStorage.getItem('authToken');
+    return !!this.getLocalStorageItem('authToken');
   }
 
   getToken(): string | null {
-    return localStorage.getItem('authToken');
+    return this.getLocalStorageItem('authToken');
   }
 
   getCurrentUser(): User | null {
-    const userId = localStorage.getItem('userId');
-    const userEmail = localStorage.getItem('userEmail');
-    const userName = localStorage.getItem('userName');
+    const userId = this.getLocalStorageItem('userId');
+    const userEmail = this.getLocalStorageItem('userEmail');
+    const userName = this.getLocalStorageItem('userName');
     
     if (!userId || !userEmail || !userName) {
       return null;

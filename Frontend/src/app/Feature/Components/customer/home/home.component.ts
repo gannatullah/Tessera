@@ -33,7 +33,13 @@ export class HomeComponent implements AfterViewInit, OnInit {
     
     this.eventService.getTrendingEvents().subscribe({
       next: (events) => {
-        this.trendingEvents = events;
+        // Process image URLs to include full backend URL
+        this.trendingEvents = events.map(event => ({
+          ...event,
+          image: event.image && event.image.trim() !== '' 
+            ? (event.image.startsWith('http') ? event.image : `http://localhost:5000${event.image}`)
+            : event.image
+        }));
         console.log('Top 5 trending events fetched:', events);
         console.log('Total trending events:', events.length);
         

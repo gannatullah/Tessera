@@ -14,7 +14,7 @@ import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { Country, City } from 'country-state-city';
 import countries from 'world-countries';
 import { FileUploadService } from '../../../Services/file-upload.service';
-import { environment } from '../../../../environments/environment';
+import { environment } from '../../../../environments/environment.example';
 
 @Component({
   selector: 'app-register',

@@ -45,7 +45,13 @@ export class EventsComponent implements OnInit {
       next: (events: EventDto[]) => {
         console.log('All events fetched successfully:', events);
         console.log('Total events:', events.length);
-        this.allEvents = events;
+        // Process image URLs to include full backend URL
+        this.allEvents = events.map(event => ({
+          ...event,
+          image: event.image && event.image.trim() !== '' 
+            ? (event.image.startsWith('http') ? event.image : `http://localhost:5000${event.image}`)
+            : event.image
+        }));
         this.currentPage = 1; // Reset to first page when loading new data
         this.updateCurrentPageEvents();
       },

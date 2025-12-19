@@ -40,7 +40,9 @@
               Events
             </a>
           </li>
-          <li class="nav-item">
+          
+          <!-- Buyer specific menu items -->
+          <li class="nav-item" *ngIf="isLoggedIn && isBuyer">
             <a
               class="nav-link"
               routerLink="/mybookings"
@@ -49,7 +51,7 @@
               >My Bookings</a
             >
           </li>
-          <li class="nav-item">
+          <li class="nav-item" *ngIf="isLoggedIn && isBuyer">
             <a
               class="nav-link"
               routerLink="/wishlist"
@@ -60,7 +62,9 @@
               Wishlist
             </a>
           </li>
-             <li class="nav-item">
+          
+          <!-- Organizer specific menu items -->
+          <li class="nav-item" *ngIf="isLoggedIn && isOrganizer">
             <a
               class="nav-link"
               routerLink="/myevents"
@@ -69,7 +73,9 @@
               >My Events</a
             >
           </li>
-          <li class="nav-item">
+          
+          <!-- Profile (for all logged in users) -->
+          <li class="nav-item" *ngIf="isLoggedIn">
             <a
               class="nav-link"
               routerLink="/profile"
@@ -79,19 +85,23 @@
             >
           </li>
 
-          <!-- <a
-            class="nav-link"
-            routerLink="/signout"
-            [routerLinkActiveOptions]="{ exact: true }"
-            routerLinkActive="active"
-            >SignOut</a
-          > -->
-          <button
-            class="btn nav-link-btn login-btn"
-            (click)="navigateToLogin()"
-          >
-            Login
-          </button>
+          <!-- Login/Logout buttons -->
+          <li class="nav-item" *ngIf="!isLoggedIn">
+            <button
+              class="btn nav-link-btn login-btn"
+              (click)="navigateToLogin()"
+            >
+              Login
+            </button>
+          </li>
+          <li class="nav-item" *ngIf="isLoggedIn">
+            <button
+              class="btn nav-link-btn logout-btn"
+              (click)="logout()"
+            >
+              Logout
+            </button>
+          </li>
           <!-- <a
             class="nav-link"
             routerLink="/register"

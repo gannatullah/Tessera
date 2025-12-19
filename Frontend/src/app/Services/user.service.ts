@@ -24,10 +24,20 @@ export class UserService {
   constructor(private http: HttpClient) {}
 
   /**
+   * Safely get item from localStorage
+   */
+  private getLocalStorageItem(key: string): string | null {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      return localStorage.getItem(key);
+    }
+    return null;
+  }
+
+  /**
    * Get user details by ID using the stored token
    */
   getUserById(userId: number): Observable<UserProfile> {
-    const token = localStorage.getItem('authToken');
+    const token = this.getLocalStorageItem('authToken');
     
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`,
@@ -41,7 +51,7 @@ export class UserService {
    * Get all users (admin only)
    */
   getAllUsers(): Observable<UserProfile[]> {
-    const token = localStorage.getItem('authToken');
+    const token = this.getLocalStorageItem('authToken');
     
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`,
@@ -55,7 +65,7 @@ export class UserService {
    * Update user profile
    */
   updateUser(userId: number, userData: Partial<UserProfile>): Observable<UserProfile> {
-    const token = localStorage.getItem('authToken');
+    const token = this.getLocalStorageItem('authToken');
     
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`,
@@ -63,5 +73,33 @@ export class UserService {
     });
 
     return this.http.put<UserProfile>(`${this.apiUrl}/${userId}`, userData, { headers });
+  }
+
+  /**
+   * Check if user is a buyer
+   */
+  isUserBuyer(userId: number): Observable<any> {
+    const token = this.getLocalStorageItem('authToken');
+    
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.get(`http://localhost:5000/api/Buyers/${userId}`, { headers });
+  }
+
+  /**
+   * Check if user is an organizer
+   */
+  isUserOrganizer(userId: number): Observable<any> {
+    const token = this.getLocalStorageItem('authToken');
+    
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.get(`http://localhost:5000/api/Organizers/${userId}`, { headers });
   }
 }
