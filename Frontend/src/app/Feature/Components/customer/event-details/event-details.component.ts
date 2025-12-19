@@ -128,6 +128,12 @@ export class EventDetailsComponent implements OnInit {
       return total + (ticket.price * ticket.quantity);
     }, 0);
   }
+
+  getDirectionsUrl(): string {
+    const address = this.event.venueAddress || this.event.location;
+    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
+  }
+
   bookNow(): void {
     const total = this.getTotalPrice();
     if (total === 0) {

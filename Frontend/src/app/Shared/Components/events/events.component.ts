@@ -15,9 +15,15 @@ import { EVENT_CATEGORIES } from '../../constants/categories';
 })
 export class EventsComponent implements OnInit {
   events: EventDto[] = [];
+  allEvents: EventDto[] = []; // Store all events for pagination
   selectedCity: string = 'all';
   selectedCategory: string = 'all';
   categories = EVENT_CATEGORIES;
+
+  // Pagination properties
+  currentPage: number = 1;
+  itemsPerPage: number = 12;
+  totalPages: number = 1;
 
   constructor(
     private eventService: EventService,
@@ -39,7 +45,9 @@ export class EventsComponent implements OnInit {
       next: (events: EventDto[]) => {
         console.log('All events fetched successfully:', events);
         console.log('Total events:', events.length);
-        this.events = events;
+        this.allEvents = events;
+        this.updatePagination();
+        this.updateCurrentPageEvents();
       },
       error: (error: any) => {
         console.error('Error fetching events:', error);
@@ -47,11 +55,56 @@ export class EventsComponent implements OnInit {
     });
   }
 
+  updatePagination(): void {
+    this.totalPages = Math.ceil(this.allEvents.length / this.itemsPerPage);
+    if (this.currentPage > this.totalPages && this.totalPages > 0) {
+      this.currentPage = this.totalPages;
+    }
+  }
+
+  updateCurrentPageEvents(): void {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.events = this.allEvents.slice(startIndex, endIndex);
+  }
+
+  getPageNumbers(): number[] {
+    const pages: number[] = [];
+    for (let i = 1; i <= this.totalPages; i++) {
+      pages.push(i);
+    }
+    return pages;
+  }
+
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updateCurrentPageEvents();
+    }
+  }
+
+  goToPreviousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.updateCurrentPageEvents();
+    }
+  }
+
+  goToNextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.updateCurrentPageEvents();
+    }
+  }
+
   applyFilters(): void {
     console.log('Applying filters:', { city: this.selectedCity, category: this.selectedCategory });
     
     if (this.selectedCity === 'all' && this.selectedCategory === 'all') {
-      this.fetchAllEvents();
+      this.allEvents = [...this.allEvents]; // Reset to original events
+      this.currentPage = 1; // Reset to first page
+      this.updatePagination();
+      this.updateCurrentPageEvents();
       return;
     }
 
@@ -61,11 +114,17 @@ export class EventsComponent implements OnInit {
     this.eventService.filterEvents(city, category).subscribe({
       next: (events: EventDto[]) => {
         console.log('Filtered events:', events);
-        this.events = events;
+        this.allEvents = events;
+        this.currentPage = 1; // Reset to first page when filtering
+        this.updatePagination();
+        this.updateCurrentPageEvents();
       },
       error: (error: any) => {
         console.error('Error filtering events:', error);
+        this.allEvents = [];
         this.events = [];
+        this.totalPages = 1;
+        this.currentPage = 1;
       }
     });
   }
