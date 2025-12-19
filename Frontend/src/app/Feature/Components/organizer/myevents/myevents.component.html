@@ -1,6 +1,8 @@
 <div class="my-events-page container py-4 my-5">
   <!-- Header -->
-  <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4 gap-3">
+  <div
+    class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4 gap-3"
+  >
     <div>
       <h2 class="mb-1 my-events-title">My Events</h2>
       <p class="mb-0 text-muted">
@@ -9,30 +11,52 @@
     </div>
 
     <!-- Create New Event Button -->
-    <button class="btn my-btn-primary create-event-btn" (click)="onCreateEvent()">
+    <button
+      class="btn my-btn-primary create-event-btn"
+      (click)="onCreateEvent()"
+    >
       <i class="bi bi-plus-circle me-2"></i>Create New Event
     </button>
   </div>
 
   <!-- Filter Pills -->
-  <div class="btn-group my-events-filters mb-4" role="group" aria-label="Event filters">
-    <button type="button" class="btn btn-sm" [class.my-filter-active]="activeFilter === 'All'"
-      (click)="setFilter('All')">
+  <div
+    class="btn-group my-events-filters mb-4"
+    role="group"
+    aria-label="Event filters"
+  >
+    <button
+      type="button"
+      class="btn btn-sm"
+      [class.my-filter-active]="activeFilter === 'All'"
+      (click)="setFilter('All')"
+    >
       All Events
     </button>
-    <button type="button" class="btn btn-sm" [class.my-filter-active]="activeFilter === 'Upcoming'"
-      (click)="setFilter('Upcoming')">
+    <button
+      type="button"
+      class="btn btn-sm"
+      [class.my-filter-active]="activeFilter === 'Upcoming'"
+      (click)="setFilter('Upcoming')"
+    >
       Upcoming
     </button>
-    <button type="button" class="btn btn-sm" [class.my-filter-active]="activeFilter === 'Ongoing'"
-      (click)="setFilter('Ongoing')">
+    <button
+      type="button"
+      class="btn btn-sm"
+      [class.my-filter-active]="activeFilter === 'Ongoing'"
+      (click)="setFilter('Ongoing')"
+    >
       Ongoing
     </button>
-    <button type="button" class="btn btn-sm" [class.my-filter-active]="activeFilter === 'Completed'"
-      (click)="setFilter('Completed')">
+    <button
+      type="button"
+      class="btn btn-sm"
+      [class.my-filter-active]="activeFilter === 'Completed'"
+      (click)="setFilter('Completed')"
+    >
       Completed
     </button>
-
   </div>
 
   <!-- Summary Cards -->
@@ -65,7 +89,9 @@
       <div class="summary-card card shadow-sm border-0">
         <div class="card-body d-flex flex-column">
           <span class="summary-label">Revenue</span>
-          <span class="summary-value">{{ getTotalRevenue() | currency : "EGP" : "symbol" : "1.0-0" }}</span>
+          <span class="summary-value">{{
+            getTotalRevenue() | currency : "EGP" : "symbol" : "1.0-0"
+          }}</span>
         </div>
       </div>
     </div>
@@ -80,7 +106,11 @@
   </div>
 
   <!-- Error State -->
-  <div *ngIf="errorMessage && !isLoading" class="alert alert-danger" role="alert">
+  <div
+    *ngIf="errorMessage && !isLoading"
+    class="alert alert-danger"
+    role="alert"
+  >
     <i class="bi bi-exclamation-triangle me-2"></i>
     {{ errorMessage }}
     <button class="btn btn-sm btn-outline-danger ms-2" (click)="loadEvents()">
@@ -93,39 +123,71 @@
     <div *ngIf="filteredEvents.length > 0; else noEvents">
       <div class="event-card card mb-3" *ngFor="let event of filteredEvents">
         <div class="card-body">
-          <div class="d-flex flex-column flex-lg-row justify-content-between gap-3">
+          <div
+            class="d-flex flex-column flex-lg-row justify-content-between gap-3"
+          >
+            <!-- Event Image -->
+            <div *ngIf="event.image" class="event-image-wrapper">
+              <img
+                [src]="event.image"
+                [alt]="event.name"
+                class="event-thumbnail"
+                style="
+                  width: 150px;
+                  height: 100px;
+                  object-fit: cover;
+                  border-radius: 8px;
+                "
+              />
+            </div>
+
             <!-- Left: Event details -->
             <div class="d-flex flex-column flex-md-row gap-3 flex-grow-1">
               <div class="event-date text-center px-3 py-2">
                 <div class="event-day">{{ event.eventDate | date : "dd" }}</div>
-                <div class="event-month">{{ event.eventDate | date : "MMM" }}</div>
-                <div class="event-year">{{ event.eventDate | date : "yyyy" }}</div>
+                <div class="event-month">
+                  {{ event.eventDate | date : "MMM" }}
+                </div>
+                <div class="event-year">
+                  {{ event.eventDate | date : "yyyy" }}
+                </div>
               </div>
 
               <div class="flex-grow-1">
                 <h5 class="mb-1 event-name">{{ event.name }}</h5>
-                <p class="mb-1 text-muted event-venue">{{ event.venue }} · {{ event.city }}</p>
-                <p class="mb-1 event-time">{{ event.startTime }} - {{ event.endTime }}</p>
+                <p class="mb-1 text-muted event-venue">
+                  {{ event.venue }} · {{ event.city }}
+                </p>
+                <p class="mb-1 event-time">
+                  {{ event.startTime }} - {{ event.endTime }}
+                </p>
                 <div class="event-stats mb-2">
                   <span class="badge bg-light text-dark me-2">
-                    <i class="bi bi-ticket-perforated me-1"></i>{{ event.ticketsSold }}/{{ event.totalTickets }} tickets
+                    <i class="bi bi-ticket-perforated me-1"></i
+                    >{{ event.ticketsSold }}/{{ event.totalTickets }} tickets
                   </span>
                   <span class="badge bg-success text-white">
-                    <i class="bi bi-cash me-1"></i>{{ event.revenue | currency : "EGP" : "symbol" : "1.0-0" }}
+                    <i class="bi bi-cash me-1"></i
+                    >{{ event.revenue | currency : "EGP" : "symbol" : "1.0-0" }}
                   </span>
                 </div>
               </div>
             </div>
 
             <!-- Right: Status + actions -->
-            <div class="d-flex flex-column align-items-lg-end justify-content-between flex-shrink-0">
+            <div
+              class="d-flex flex-column align-items-lg-end justify-content-between flex-shrink-0"
+            >
               <div class="mb-2">
-                <span class="badge event-status-badge" [ngClass]="{
-                  'status-upcoming': event.status === 'Upcoming',
-                  'status-ongoing': event.status === 'Ongoing',
-                  'status-completed': event.status === 'Completed',
-                  'status-cancelled': event.status === 'Cancelled'
-                }">
+                <span
+                  class="badge event-status-badge"
+                  [ngClass]="{
+                    'status-upcoming': event.status === 'Upcoming',
+                    'status-ongoing': event.status === 'Ongoing',
+                    'status-completed': event.status === 'Completed',
+                    'status-cancelled': event.status === 'Cancelled'
+                  }"
+                >
                   {{ event.status }}
                 </span>
               </div>
@@ -133,18 +195,25 @@
               <div class="text-lg-end">
                 <div class="event-price mb-2">
                   <span class="price-label">Ticket Price</span>
-                  <span class="price-value">{{ event.ticketPrice | currency : "EGP" : "symbol" : "1.0-0" }}</span>
+                  <span class="price-value">{{
+                    event.ticketPrice | currency : "EGP" : "symbol" : "1.0-0"
+                  }}</span>
                 </div>
 
                 <div class="btn-group">
-                  <button class="btn btn-sm my-btn-primary" (click)="onViewEvent(event)">
+                  <button
+                    class="btn btn-sm my-btn-primary"
+                    (click)="onViewEvent(event)"
+                  >
                     <i class="bi bi-eye me-1"></i>View
                   </button>
-                  <button *ngIf="event.status === 'Upcoming'" class="btn btn-sm my-btn-primary"
-                    (click)="onEditEvent(event)">
+                  <button
+                    *ngIf="event.status === 'Upcoming'"
+                    class="btn btn-sm my-btn-primary"
+                    (click)="onEditEvent(event)"
+                  >
                     <i class="bi bi-pencil me-1"></i>Edit
                   </button>
-
                 </div>
               </div>
             </div>

@@ -2,9 +2,16 @@
   <!-- Hero Section -->
   <section class="event-hero">
     <div class="hero-overlay"></div>
-    <img [src]="event.image" [alt]="event.title" class="hero-image" />
+    <img
+      [src]="
+        event.image || 'https://via.placeholder.com/1200x600?text=Event+Image'
+      "
+      [alt]="event.title"
+      class="hero-image"
+      (error)="onImageError($event)"
+    />
     <div class="hero-content">
-      <div class="container"> 
+      <div class="container">
         <div class="badge-container">
           <span class="badge bg-warning text-dark">{{ event.category }}</span>
         </div>
@@ -12,7 +19,7 @@
         <div class="event-meta d-flex flex-wrap gap-4 text-white">
           <div class="meta-item">
             <i class="bi bi-calendar-event me-2"></i>
-            <span>{{ event.date | date:'mediumDate' }}</span>
+            <span>{{ event.date | date : "mediumDate" }}</span>
           </div>
           <div class="meta-item">
             <i class="bi bi-clock me-2"></i>
@@ -37,7 +44,7 @@
           <div class="card-body">
             <h2 class="card-title mb-4">About This Event</h2>
             <p class="card-text">{{ event.description }}</p>
-            
+
             <div class="event-highlights mt-4">
               <h4 class="mb-3">Event Highlights</h4>
               <ul class="highlights-list">
@@ -59,17 +66,18 @@
             </h3>
             <h5>{{ event.venueName }}</h5>
             <p class="text-muted mb-3">{{ event.venueAddress }}</p>
-            
+
             <!-- Get Directions Button -->
             <div class="mb-3">
-              <a [href]="getDirectionsUrl()" 
-                 target="_blank" 
-                 class="btn btn-outline-primary btn-sm">
+              <a
+                [href]="getDirectionsUrl()"
+                target="_blank"
+                class="btn btn-outline-primary btn-sm"
+              >
                 <i class="bi bi-navigation me-1"></i>
                 Get Directions
               </a>
             </div>
-            
           </div>
         </div>
 
@@ -80,7 +88,11 @@
               <i class="bi bi-person-circle me-2 text-warning"></i>
               Organized By
             </h3>
-            <div class="d-flex align-items-center organizer-profile" (click)="viewOrganizerProfile()" style="cursor: pointer;">
+            <div
+              class="d-flex align-items-center organizer-profile"
+              (click)="viewOrganizerProfile()"
+              style="cursor: pointer"
+            >
               <div class="organizer-avatar me-3">
                 <i class="bi bi-building display-6 text-warning"></i>
               </div>
@@ -108,7 +120,9 @@
                     <h2 class="mb-0 fw-bold">${{ event.price }}</h2>
                   </div>
                   <div class="text-end">
-                    <span class="badge bg-success">{{ event.availability }}</span>
+                    <span class="badge bg-success">{{
+                      event.availability
+                    }}</span>
                   </div>
                 </div>
               </div>
@@ -117,18 +131,29 @@
               <div class="ticket-selection mb-4">
                 <label class="form-label fw-semibold">Select Tickets</label>
                 <div class="ticket-types">
-                  <div class="ticket-type" *ngFor="let ticket of event.ticketTypes">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
+                  <div
+                    class="ticket-type"
+                    *ngFor="let ticket of event.ticketTypes"
+                  >
+                    <div
+                      class="d-flex justify-content-between align-items-center mb-2"
+                    >
                       <div>
                         <h6 class="mb-0">{{ ticket.name }}</h6>
                         <small class="text-muted">${{ ticket.price }}</small>
                       </div>
                       <div class="quantity-selector">
-                        <button class="btn btn-sm btn-outline-secondary" (click)="decreaseQuantity(ticket)">
+                        <button
+                          class="btn btn-sm btn-outline-secondary"
+                          (click)="decreaseQuantity(ticket)"
+                        >
                           <i class="fa-solid fa-minus"></i>
                         </button>
                         <span class="quantity mx-2">{{ ticket.quantity }}</span>
-                        <button class="btn btn-sm btn-outline-secondary" (click)="increaseQuantity(ticket)">
+                        <button
+                          class="btn btn-sm btn-outline-secondary"
+                          (click)="increaseQuantity(ticket)"
+                        >
                           <i class="fa-solid fa-plus"></i>
                         </button>
                       </div>
@@ -141,7 +166,9 @@
               <div class="total-section mb-4">
                 <div class="d-flex justify-content-between align-items-center">
                   <h5 class="mb-0">Total:</h5>
-                  <h4 class="mb-0 fw-bold text-warning">${{ getTotalPrice() }}</h4>
+                  <h4 class="mb-0 fw-bold text-warning">
+                    ${{ getTotalPrice() }}
+                  </h4>
                 </div>
               </div>
 
@@ -151,21 +178,30 @@
                   <i class="bi bi-ticket-perforated me-2"></i>
                   Book Now
                 </button>
-                <button 
-                  class="btn w-100" 
+                <button
+                  class="btn w-100"
                   [class.btn-outline-secondary]="!isInWishlist"
                   [class.btn-danger]="isInWishlist"
                   (click)="addToWishlist()"
                   [disabled]="isAddingToWishlist"
                 >
-                  <i class="bi me-2" [class.bi-heart]="!isInWishlist" [class.bi-heart-fill]="isInWishlist"></i>
-                  <span *ngIf="!isAddingToWishlist">{{ isInWishlist ? 'Remove from Wishlist' : 'Add to Wishlist' }}</span>
+                  <i
+                    class="bi me-2"
+                    [class.bi-heart]="!isInWishlist"
+                    [class.bi-heart-fill]="isInWishlist"
+                  ></i>
+                  <span *ngIf="!isAddingToWishlist">{{
+                    isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"
+                  }}</span>
                   <span *ngIf="isAddingToWishlist">
-                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    <span
+                      class="spinner-border spinner-border-sm me-2"
+                      role="status"
+                      aria-hidden="true"
+                    ></span>
                     Processing...
                   </span>
                 </button>
-                
               </div>
 
               <!-- Event Info -->

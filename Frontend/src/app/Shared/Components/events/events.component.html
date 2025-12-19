@@ -37,14 +37,26 @@
           <label for="categoryFilter" class="form-label fw-bold"
             >Category</label
           >
-          <select class="form-select form-select-sm" id="categoryFilter" [(ngModel)]="selectedCategory" (change)="applyFilters()">
+          <select
+            class="form-select form-select-sm"
+            id="categoryFilter"
+            [(ngModel)]="selectedCategory"
+            (change)="applyFilters()"
+          >
             <option value="all">All Categories</option>
-            <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
+            <option *ngFor="let category of categories" [value]="category">
+              {{ category }}
+            </option>
           </select>
         </li>
         <li class="mt-3">
           <label for="cityFilter" class="form-label fw-bold">City</label>
-          <select class="form-select form-select-sm" id="cityFilter" [(ngModel)]="selectedCity" (change)="applyFilters()">
+          <select
+            class="form-select form-select-sm"
+            id="cityFilter"
+            [(ngModel)]="selectedCity"
+            (change)="applyFilters()"
+          >
             <option value="all">All Cities</option>
             <option value="Cairo">Cairo</option>
             <option value="Alexandria">Alexandria</option>
@@ -56,7 +68,7 @@
             <option value="Aswan">Aswan</option>
             <option value="Hurghada">Hurghada</option>
             <option value="Sharm El Sheikh">Sharm El Sheikh</option>
-            <option value="Mersa Matruh">Mersa Matruh</option>            
+            <option value="Mersa Matruh">Mersa Matruh</option>
           </select>
         </li>
       </ul>
@@ -67,56 +79,84 @@
   <section class="section2">
     <div class="row g-4">
       @for(event of events; track $index) {
-        <div class="col-sm-6 col-md-4 col-lg-3">
-          <div class="card h-100 position-relative overflow-hidden" (click)="navigateToEventDetails(event.event_ID)" style="cursor: pointer;">
-            <img
-              [src]="event.image"
-              class="card-img"
-              [alt]="event.description"
-              style="object-fit: cover; height: 250px; width: 100%"
-            />
-            <!-- Overlay -->
-            <div
-              class="card-overlay"
-              style="
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(42, 40, 40, 0.6);
-              "
-            ></div>
-            <!-- Text + Button -->
-            <div
-              class="card-body d-flex flex-column justify-content-end position-absolute bottom-0 w-100 text-white"
-            >
-              <h5 class="card-title">{{event.name || event.description || 'Unnamed Event'}}</h5>
-            </div>
+      <div class="col-sm-6 col-md-4 col-lg-3">
+        <div
+          class="card h-100 position-relative overflow-hidden"
+          (click)="navigateToEventDetails(event.event_ID)"
+          style="cursor: pointer"
+        >
+          <img
+            [src]="
+              event.image ||
+              'https://via.placeholder.com/400x250?text=Event+Image'
+            "
+            class="card-img"
+            [alt]="event.description"
+            style="object-fit: cover; height: 250px; width: 100%"
+            (error)="onImageError($event)"
+          />
+          <!-- Overlay -->
+          <div
+            class="card-overlay"
+            style="
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              background: rgba(42, 40, 40, 0.6);
+            "
+          ></div>
+          <!-- Text + Button -->
+          <div
+            class="card-body d-flex flex-column justify-content-end position-absolute bottom-0 w-100 text-white"
+          >
+            <h5 class="card-title">
+              {{ event.name || event.description || "Unnamed Event" }}
+            </h5>
           </div>
         </div>
+      </div>
       } @empty {
-        <div class="col-12">
-          <p class="text-center">No events available.</p>
-        </div>
+      <div class="col-12">
+        <p class="text-center">No events available.</p>
+      </div>
       }
     </div>
   </section>
-  
 </div>
 <div class="d-flex justify-content-center my-4">
   <nav aria-label="Page navigation" *ngIf="totalPages > 1">
     <ul class="pagination pagination-sm">
       <li class="page-item" [class.disabled]="currentPage === 1">
-        <a class="page-link" href="#" aria-label="Previous" (click)="goToPreviousPage(); $event.preventDefault()">
+        <a
+          class="page-link"
+          href="#"
+          aria-label="Previous"
+          (click)="goToPreviousPage(); $event.preventDefault()"
+        >
           <span aria-hidden="true">&laquo;</span>
         </a>
       </li>
-      <li class="page-item" *ngFor="let page of getPageNumbers()" [class.active]="page === currentPage">
-        <a class="page-link" href="#" (click)="goToPage(page); $event.preventDefault()">{{ page }}</a>
+      <li
+        class="page-item"
+        *ngFor="let page of getPageNumbers()"
+        [class.active]="page === currentPage"
+      >
+        <a
+          class="page-link"
+          href="#"
+          (click)="goToPage(page); $event.preventDefault()"
+          >{{ page }}</a
+        >
       </li>
       <li class="page-item" [class.disabled]="currentPage === totalPages">
-        <a class="page-link" href="#" aria-label="Next" (click)="goToNextPage(); $event.preventDefault()">
+        <a
+          class="page-link"
+          href="#"
+          aria-label="Next"
+          (click)="goToNextPage(); $event.preventDefault()"
+        >
           <span aria-hidden="true">&raquo;</span>
         </a>
       </li>

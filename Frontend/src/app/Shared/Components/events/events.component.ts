@@ -1,9 +1,8 @@
-import { Component, OnInit, PLATFORM_ID, Inject } from '@angular/core';
-import { isPlatformBrowser, CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { CommonModule, DatePipe, isPlatformBrowser } from '@angular/common';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { EventService, EventDto } from '../../../Services/event.service';
-import { DatePipe } from '@angular/common';
+import { Router } from '@angular/router';
+import { EventDto, EventService } from '../../../Services/event.service';
 import { EVENT_CATEGORIES } from '../../constants/categories';
 
 @Component({
@@ -11,7 +10,7 @@ import { EVENT_CATEGORIES } from '../../constants/categories';
   standalone: true,
   imports: [CommonModule, DatePipe, FormsModule],
   templateUrl: './events.component.html',
-  styleUrl: './events.component.css'
+  styleUrl: './events.component.css',
 })
 export class EventsComponent implements OnInit {
   events: EventDto[] = [];
@@ -52,7 +51,7 @@ export class EventsComponent implements OnInit {
       },
       error: (error: any) => {
         console.error('Error fetching events:', error);
-      }
+      },
     });
   }
 
@@ -69,21 +68,21 @@ export class EventsComponent implements OnInit {
 
     // Apply search filter
     if (this.searchTerm.trim()) {
-      filteredEvents = filteredEvents.filter(event =>
+      filteredEvents = filteredEvents.filter((event) =>
         event.name?.toLowerCase().includes(this.searchTerm.toLowerCase())
       );
     }
 
     // Apply category and city filters
     if (this.selectedCategory !== 'all') {
-      filteredEvents = filteredEvents.filter(event =>
-        event.category === this.selectedCategory
+      filteredEvents = filteredEvents.filter(
+        (event) => event.category === this.selectedCategory
       );
     }
 
     if (this.selectedCity !== 'all') {
-      filteredEvents = filteredEvents.filter(event =>
-        event.city === this.selectedCity
+      filteredEvents = filteredEvents.filter(
+        (event) => event.city === this.selectedCity
       );
     }
 
@@ -140,13 +139,21 @@ export class EventsComponent implements OnInit {
   }
 
   applyFilters(): void {
-    console.log('Applying filters:', { city: this.selectedCity, category: this.selectedCategory });
-    
+    console.log('Applying filters:', {
+      city: this.selectedCity,
+      category: this.selectedCategory,
+    });
+
     this.currentPage = 1; // Reset to first page when filtering
     this.updateCurrentPageEvents();
   }
 
   navigateToEventDetails(eventId: number): void {
     this.router.navigate(['/event-details', eventId]);
+  }
+
+  onImageError(event: any): void {
+    const imgElement = event.target as HTMLImageElement;
+    imgElement.src = 'https://via.placeholder.com/400x250?text=Event+Image';
   }
 }

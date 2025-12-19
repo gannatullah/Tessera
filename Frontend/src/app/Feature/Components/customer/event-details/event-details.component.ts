@@ -1,11 +1,8 @@
-
-import { Component, OnInit, PLATFORM_ID, Inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe, isPlatformBrowser } from '@angular/common';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { isPlatformBrowser } from '@angular/common';
-import { EventService, EventDto } from '../../../../Services/event.service';
+import { EventDto, EventService } from '../../../../Services/event.service';
 import { WishlistService } from '../../../../Services/wishlist.service';
-import { DatePipe } from '@angular/common';
 interface TicketType {
   name: string;
   price: number;
@@ -33,7 +30,7 @@ interface Event {
   standalone: true,
   imports: [CommonModule, DatePipe],
   templateUrl: './event-details.component.html',
-  styleUrl: './event-details.component.css'
+  styleUrl: './event-details.component.css',
 })
 export class EventDetailsComponent implements OnInit {
   event: Event = {
@@ -51,7 +48,7 @@ export class EventDetailsComponent implements OnInit {
     organizerId: 0,
     price: 0,
     availability: 'Available',
-    ticketTypes: []
+    ticketTypes: [],
   };
 
   eventId: number = 0;
@@ -102,26 +99,27 @@ export class EventDetailsComponent implements OnInit {
             `Capacity: ${eventData.capacity}`,
             `Location: ${eventData.location}`,
             'Professional organization',
-            'Exciting atmosphere'
+            'Exciting atmosphere',
           ],
           venueName: eventData.location || 'Event Venue',
           venueAddress: `${eventData.location}, ${eventData.city}`,
           organizer: eventData.organizer?.user?.name || 'Event Organizer',
           organizerId: eventData.organizerID || 0,
           // price: eventData.ticketTypes?.length > 0 ? Math.min(...eventData.ticketTypes.map((t: any) => t.price)) : 0,
-          price:0,
+          price: 0,
           availability: 'Available',
-          ticketTypes: eventData.ticketTypes?.map((tt: any) => ({
-            id: tt.id,
-            name: tt.name,
-            price: tt.price,
-            quantity: 0
-          })) || []
+          ticketTypes:
+            eventData.ticketTypes?.map((tt: any) => ({
+              id: tt.id,
+              name: tt.name,
+              price: tt.price,
+              quantity: 0,
+            })) || [],
         };
       },
       error: (error: any) => {
         console.error('Error fetching event details:', error);
-      }
+      },
     });
   }
   increaseQuantity(ticket: TicketType): void {
@@ -134,13 +132,15 @@ export class EventDetailsComponent implements OnInit {
   }
   getTotalPrice(): number {
     return this.event.ticketTypes.reduce((total, ticket) => {
-      return total + (ticket.price * ticket.quantity);
+      return total + ticket.price * ticket.quantity;
     }, 0);
   }
 
   getDirectionsUrl(): string {
     const address = this.event.venueAddress || this.event.location;
-    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
+    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+      address
+    )}`;
   }
 
   bookNow(): void {
@@ -152,10 +152,10 @@ export class EventDetailsComponent implements OnInit {
     // Navigate to payment page with event and ticket data
     this.router.navigate(['/payment', this.eventId], {
       state: {
-        tickets: this.event.ticketTypes.filter(t => t.quantity > 0),
+        tickets: this.event.ticketTypes.filter((t) => t.quantity > 0),
         totalAmount: total,
-        eventTitle: this.event.title
-      }
+        eventTitle: this.event.title,
+      },
     });
   }
   addToWishlist(): void {
@@ -165,54 +165,65 @@ export class EventDetailsComponent implements OnInit {
 
     if (this.isInWishlist) {
       // Remove from wishlist
-      this.wishlistService.deleteWishlistItemByUserAndEvent(this.userId, this.eventId).subscribe({
-        next: () => {
-          this.isInWishlist = false;
-          this.isAddingToWishlist = false;
-          alert('Event removed from wishlist!');
-        },
-        error: (error) => {
-          console.error('Error removing from wishlist:', error);
-          this.isAddingToWishlist = false;
-          alert('Failed to remove from wishlist');
-        }
-      });
+      this.wishlistService
+        .deleteWishlistItemByUserAndEvent(this.userId, this.eventId)
+        .subscribe({
+          next: () => {
+            this.isInWishlist = false;
+            this.isAddingToWishlist = false;
+            alert('Event removed from wishlist!');
+          },
+          error: (error) => {
+            console.error('Error removing from wishlist:', error);
+            this.isAddingToWishlist = false;
+            alert('Failed to remove from wishlist');
+          },
+        });
     } else {
       // Add to wishlist
-      this.wishlistService.addToWishlist({
-        userID: this.userId,
-        eventID: this.eventId
-      }).subscribe({
-        next: () => {
-          this.isInWishlist = true;
-          this.isAddingToWishlist = false;
-          alert('Event added to wishlist!');
-        },
-        error: (error) => {
-          console.error('Error adding to wishlist:', error);
-          this.isAddingToWishlist = false;
-          alert('Failed to add to wishlist');
-        }
-      });
+      this.wishlistService
+        .addToWishlist({
+          userID: this.userId,
+          eventID: this.eventId,
+        })
+        .subscribe({
+          next: () => {
+            this.isInWishlist = true;
+            this.isAddingToWishlist = false;
+            alert('Event added to wishlist!');
+          },
+          error: (error) => {
+            console.error('Error adding to wishlist:', error);
+            this.isAddingToWishlist = false;
+            alert('Failed to add to wishlist');
+          },
+        });
     }
   }
 
   checkWishlistStatus(): void {
     if (!this.userId) return;
 
-    this.wishlistService.checkWishlistItem(this.userId, this.eventId).subscribe({
-      next: (response) => {
-        this.isInWishlist = response.exists;
-      },
-      error: (error) => {
-        console.error('Error checking wishlist status:', error);
-      }
-    });
+    this.wishlistService
+      .checkWishlistItem(this.userId, this.eventId)
+      .subscribe({
+        next: (response) => {
+          this.isInWishlist = response.exists;
+        },
+        error: (error) => {
+          console.error('Error checking wishlist status:', error);
+        },
+      });
   }
 
   viewOrganizerProfile(): void {
     if (this.event.organizerId > 0) {
       this.router.navigate(['/organizer-profile', this.event.organizerId]);
     }
+  }
+
+  onImageError(event: any): void {
+    const imgElement = event.target as HTMLImageElement;
+    imgElement.src = 'https://via.placeholder.com/1200x600?text=Event+Image';
   }
 }
