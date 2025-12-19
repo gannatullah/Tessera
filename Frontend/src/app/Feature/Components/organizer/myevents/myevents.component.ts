@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { EventService, EventDto } from '../../../../Services/event.service';
 import { AuthService } from '../../../../Services/auth.service';
+import { EventDto, EventService } from '../../../../Services/event.service';
 
 interface Event {
   id: number;
@@ -25,10 +25,11 @@ interface Event {
   standalone: true,
   imports: [CommonModule],
   templateUrl: './myevents.component.html',
-  styleUrls: ['./myevents.component.css']
+  styleUrls: ['./myevents.component.css'],
 })
 export class MyeventsComponent implements OnInit {
-  activeFilter: 'All' | 'Upcoming' | 'Ongoing' | 'Completed' | 'Cancelled' = 'All';
+  activeFilter: 'All' | 'Upcoming' | 'Ongoing' | 'Completed' | 'Cancelled' =
+    'All';
   events: Event[] = [];
   isLoading = false;
   errorMessage = '';
@@ -55,14 +56,14 @@ export class MyeventsComponent implements OnInit {
 
     this.eventService.getEventsByOrganizer(currentUser.id).subscribe({
       next: (eventDtos: EventDto[]) => {
-        this.events = eventDtos.map(dto => this.mapEventDtoToEvent(dto));
+        this.events = eventDtos.map((dto) => this.mapEventDtoToEvent(dto));
         this.isLoading = false;
       },
       error: (error) => {
         console.error('Error loading events:', error);
         this.errorMessage = 'Failed to load events. Please try again.';
         this.isLoading = false;
-      }
+      },
     });
   }
 
@@ -81,10 +82,19 @@ export class MyeventsComponent implements OnInit {
     }
 
     // Calculate total tickets and revenue
-    const totalTickets = dto.ticketTypes?.reduce((sum, tt) => sum + tt.quantity_Total, 0) || 0;
-    const ticketsSold = dto.ticketTypes?.reduce((sum, tt) => sum + tt.quantity_Sold, 0) || 0;
-    const revenue = dto.ticketTypes?.reduce((sum, tt) => sum + (tt.quantity_Sold * tt.price), 0) || 0;
-    const avgPrice = dto.ticketTypes?.length ? dto.ticketTypes.reduce((sum, tt) => sum + tt.price, 0) / dto.ticketTypes.length : 0;
+    const totalTickets =
+      dto.ticketTypes?.reduce((sum, tt) => sum + tt.quantity_Total, 0) || 0;
+    const ticketsSold =
+      dto.ticketTypes?.reduce((sum, tt) => sum + tt.quantity_Sold, 0) || 0;
+    const revenue =
+      dto.ticketTypes?.reduce(
+        (sum, tt) => sum + tt.quantity_Sold * tt.price,
+        0
+      ) || 0;
+    const avgPrice = dto.ticketTypes?.length
+      ? dto.ticketTypes.reduce((sum, tt) => sum + tt.price, 0) /
+        dto.ticketTypes.length
+      : 0;
 
     return {
       id: dto.event_ID,
@@ -99,7 +109,7 @@ export class MyeventsComponent implements OnInit {
       totalTickets: totalTickets,
       ticketsSold: ticketsSold,
       revenue: revenue,
-      image: dto.image
+      image: dto.image,
     };
   }
 
@@ -107,15 +117,19 @@ export class MyeventsComponent implements OnInit {
     if (this.activeFilter === 'All') {
       return this.events;
     }
-    return this.events.filter(event => event.status === this.activeFilter);
+    return this.events.filter((event) => event.status === this.activeFilter);
   }
 
-  setFilter(filter: 'All' | 'Upcoming' | 'Ongoing' | 'Completed' | 'Cancelled') {
+  setFilter(
+    filter: 'All' | 'Upcoming' | 'Ongoing' | 'Completed' | 'Cancelled'
+  ) {
     this.activeFilter = filter;
   }
 
-  getStatusCount(status: 'Upcoming' | 'Ongoing' | 'Completed' | 'Cancelled'): number {
-    return this.events.filter(event => event.status === status).length;
+  getStatusCount(
+    status: 'Upcoming' | 'Ongoing' | 'Completed' | 'Cancelled'
+  ): number {
+    return this.events.filter((event) => event.status === status).length;
   }
 
   getTotalTicketsSold(): number {
