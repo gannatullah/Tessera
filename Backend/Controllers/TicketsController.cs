@@ -4,6 +4,7 @@ using Tessera.API.Data;
 using Tessera.API.Models;
 using Tessera.API.DTOs;
 using Tessera.API.Controllers;
+using Tessera.API.Services;
 
 namespace Tessera.API.Controllers
 {
@@ -13,10 +14,15 @@ namespace Tessera.API.Controllers
     public class TicketsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-        public TicketsController(ApplicationDbContext context)
+        private readonly N8nService _n8nService;
+        private readonly QrCodeService _qrCodeService;
+        public TicketsController(ApplicationDbContext context, N8nService n8nService, QrCodeService qrCodeService)
         {
             _context = context;
+            _n8nService = n8nService;
+            _qrCodeService = qrCodeService;
         }
+
 
         // GET: api/Tickets
         [HttpGet]
@@ -155,7 +161,7 @@ namespace Tessera.API.Controllers
             // Create the ticket with default status if not provided
             var ticket = new Ticket
             {
-                Status = createTicketDto.Status ?? "Available",
+                Status = createTicketDto.Status ?? "Unused",
                 TicketTypeID = createTicketDto.TicketTypeID,
                 EventID = createTicketDto.EventID,
                 UserID = createTicketDto.UserID
@@ -164,9 +170,27 @@ namespace Tessera.API.Controllers
             _context.Tickets.Add(ticket);
             await _context.SaveChangesAsync();
 
+
             // Update inventory: increment sold quantity
             ticketType.Quantity_Sold++;
             await _context.SaveChangesAsync();
+
+            // Call n8n webhook after saving
+            if (ticket == null) throw new Exception("Ticket is null");
+            // Generate QR code URL
+            ticket.QR_Code = _qrCodeService.GenerateQrCodeUrl(ticket.Ticket_ID.ToString());
+            await _context.SaveChangesAsync();
+
+
+            // Fetch related objects
+            await _context.Entry(ticket).Reference(t => t.Buyer).LoadAsync();
+            await _context.Entry(ticket.Buyer!).Reference(b => b.User).LoadAsync();
+            await _context.Entry(ticket).Reference(t => t.Event).LoadAsync();
+
+
+
+            // Call the service to send webhook
+            await _n8nService.SendTicketConfirmationAsync(ticket);
 
             var ticketDto = new TicketDto
             {
@@ -212,6 +236,8 @@ namespace Tessera.API.Controllers
 
             return NoContent();
         }
+
+
 
         // DELETE: api/Tickets/5
         [HttpDelete("{id}")]
