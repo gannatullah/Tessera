@@ -78,5 +78,12 @@ export const routes: Routes = [
       import('./Feature/Components/customer/wishlist/wishlist.component').then(
         (c) => c.WishlistComponent
       ),
+  },
+  {
+    path: 'payment/:eventId',
+    loadComponent: () =>
+      import('./Feature/Components/customer/payment/payment.component').then(
+        (c) => c.PaymentComponent
+      ),
   }
 ];

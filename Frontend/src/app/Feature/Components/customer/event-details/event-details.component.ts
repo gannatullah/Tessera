@@ -1,7 +1,7 @@
 
 import { Component, OnInit, PLATFORM_ID, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 import { EventService, EventDto } from '../../../../Services/event.service';
 import { WishlistService } from '../../../../Services/wishlist.service';
@@ -59,6 +59,7 @@ export class EventDetailsComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private eventService: EventService,
     private wishlistService: WishlistService,
     @Inject(PLATFORM_ID) private platformId: Object
@@ -130,8 +131,14 @@ export class EventDetailsComponent implements OnInit {
       alert('Please select at least one ticket');
       return;
     }
-    alert(`Booking confirmed! Total: $${total}`);
-    // Implement booking logic here
+    // Navigate to payment page with event and ticket data
+    this.router.navigate(['/payment', this.eventId], {
+      state: {
+        tickets: this.event.ticketTypes.filter(t => t.quantity > 0),
+        totalAmount: total,
+        eventTitle: this.event.title
+      }
+    });
   }
   addToWishlist(): void {
     if (this.isAddingToWishlist) return;
