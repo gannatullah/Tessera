@@ -32,6 +32,9 @@ namespace Tessera.API.DTOs
         public string? Location { get; set; }
 
         public string? Bio { get; set; }
+
+        [Required]
+        public string UserType { get; set; } = string.Empty; // "Client" or "Organizer"
     }
 
     // For updating user

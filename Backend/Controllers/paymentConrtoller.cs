@@ -5,13 +5,18 @@ using Stripe;
 [Route("api/payments")]
 public class PaymentsController : ControllerBase
 {
+    public class PaymentIntentRequest
+    {
+        public long Amount { get; set; }
+        public string? Currency { get; set; }
+    }
     [HttpPost("create-intent")]
-    public async Task<IActionResult> CreatePaymentIntent()
+    public async Task<IActionResult> CreatePaymentIntent([FromBody] PaymentIntentRequest request)
     {
         var options = new PaymentIntentCreateOptions
         {
-            Amount = 10000, // 100 EGP (Stripe uses smallest unit)
-            Currency = "egp",
+            Amount = request.Amount, // Amount in smallest currency unit (e.g., cents for USD, piastres for EGP)
+            Currency = request.Currency ?? "egp",
             AutomaticPaymentMethods = new PaymentIntentAutomaticPaymentMethodsOptions
             {
                 Enabled = true

@@ -14,10 +14,10 @@ export class PaymentService {
 
   constructor(private http: HttpClient) {}
 
-  createPaymentIntent(): Observable<any> {
+  createPaymentIntent(amount: number, currency: string = 'egp'): Observable<any> {
     return this.http.post<any>(
       `${this.apiUrl}/create-intent`,
-      {}
+      { amount: Math.round(amount * 100), currency } // Convert to smallest currency unit
     );
   }
 }

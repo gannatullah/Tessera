@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment.example';
 
 export interface TicketDto {
   event?: EventDto;
   ticket_ID: number;
   status: string;
-  qr_Code?: string;
+  qR_Code?: string;
   ticketTypeID: number;
   eventID: number;
   userID?: number;
@@ -39,7 +40,7 @@ export interface EventDto {
   providedIn: 'root'
 })
 export class TicketService {
-  private apiUrl = 'http://localhost:5000/api/Tickets';
+  private apiUrl = environment.apiUrl + '/Tickets';
 
   constructor(private http: HttpClient) { }
 
@@ -67,7 +68,7 @@ export class TicketService {
   /**
    * Create a new ticket
    */
-  createTicket(ticketData: { eventID: number; ticketTypeID: number; userID: number; quantity: number }): Observable<TicketDto> {
+  createTicket(ticketData: { TicketTypeID: number; EventID: number; UserID: number; Status?: string }): Observable<TicketDto> {
     return this.http.post<TicketDto>(this.apiUrl, ticketData);
   }
 }

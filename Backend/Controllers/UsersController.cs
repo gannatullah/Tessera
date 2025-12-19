@@ -96,6 +96,26 @@ namespace Tessera.API.Controllers
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
+            // Create Buyer or Organizer based on UserType
+            // All users get a Buyer record so they can purchase tickets
+            var buyer = new Buyer
+            {
+                UserID = user.ID
+            };
+            _context.Buyers.Add(buyer);
+
+            if (createUserDto.UserType.ToLower() == "organizer")
+            {
+                var organizer = new Organizer
+                {
+                    UserID = user.ID,
+                    IsVerified = false // Default to not verified
+                };
+                _context.Organizers.Add(organizer);
+            }
+
+            await _context.SaveChangesAsync();
+
             var userDto = new UserDto
             {
                 ID = user.ID,

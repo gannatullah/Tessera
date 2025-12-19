@@ -15,26 +15,23 @@ public class N8nService
 
     public async Task SendTicketConfirmationAsync(Ticket ticket)
     {
-            var payload = new
-            {
-                ticketId = ticket.Ticket_ID,
-                userEmail = ticket.Buyer.User.Email,
-                userName = ticket.Buyer.User.Name,
-                eventName = ticket.Event.Name,
+        var payload = new
+        {
+            ticketId = ticket.Ticket_ID,
+            userEmail = ticket.Buyer?.User?.Email ?? "N/A",
+            userName = ticket.Buyer?.User?.Name ?? "N/A",
+            eventName = ticket.Event?.Name ?? "N/A",
+            date = ticket.Event?.Date.ToString("yyyy-MM-dd") ?? "N/A",
+            verifyUrl = $"http://localhost:5000/api/tickets/{ticket.Ticket_ID}",
+            QRCodeUrl = ticket.QR_Code
+        };
 
-                date = ticket.Event.Date.ToString("yyyy-MM-dd"),
-                verifyUrl = $"http://localhost:5000/api/tickets/{ticket.Ticket_ID}",
-                QRCodeUrl = ticket.QR_Code
+        _logger?.LogInformation("SendTicketConfirmationAsync CALLED");
 
-            };
-        _logger.LogInformation("SendTicketConfirmationAsync CALLED");
-       
-
-        await _http.PostAsJsonAsync(url, payload);
         var response = await _http.PostAsJsonAsync(url, payload);
 
         var body = await response.Content.ReadAsStringAsync();
-        _logger.LogInformation("n8n Status: {Status}", response.StatusCode);
-        _logger.LogInformation("n8n Body: {Body}", body);
+        _logger?.LogInformation("n8n Status: {Status}", response.StatusCode);
+        _logger?.LogInformation("n8n Body: {Body}", body);
     }
 }

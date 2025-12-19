@@ -38,6 +38,13 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'edit-event/:id',
+    loadComponent: () =>
+      import('./Feature/Components/organizer/editevent/editevent.component').then(
+        (c) => c.EditeventComponent
+      ),
+  },
+  {
     path: 'profile',
     loadComponent: () =>
       import('./Feature/Components/profile/profile.component').then(

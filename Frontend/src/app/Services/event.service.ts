@@ -23,6 +23,19 @@ export interface CreateTicketTypeDto {
   quantity_Total: number;
 }
 
+export interface UpdateEventDto {
+  name?: string;
+  category?: string;
+  date?: string;
+  st_Date?: string;
+  e_Date?: string;
+  city?: string;
+  location?: string;
+  capacity?: number;
+  description?: string;
+  image?: string;
+}
+
 export interface EventDto {
   event_ID: number;
   name: string;
@@ -86,7 +99,7 @@ export class EventService {
     return this.http.get<EventDto>(`${this.apiUrl}/${id}`);
   }
 
-  updateEvent(id: number, eventData: Partial<CreateEventDto>): Observable<void> {
+  updateEvent(id: number, eventData: UpdateEventDto): Observable<void> {
     return this.http.put<void>(`${this.apiUrl}/${id}`, eventData);
   }
 

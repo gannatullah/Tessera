@@ -68,7 +68,7 @@ export class PaymentComponent implements OnInit, AfterViewInit {
 
     const stripe = await this.paymentService.stripePromise;
 
-    this.paymentService.createPaymentIntent()
+    this.paymentService.createPaymentIntent(this.totalAmount)
       .subscribe({
         next: async (res) => {
           if (!stripe) {
@@ -120,10 +120,10 @@ export class PaymentComponent implements OnInit, AfterViewInit {
       if (ticket.quantity > 0) {
         for (let i = 0; i < ticket.quantity; i++) {
           const ticketData = {
-            eventID: this.eventId,
-            ticketTypeID: ticket.id,
-            userID: userIdNumber,
-            quantity: 1 // Create individual tickets
+            TicketTypeID: ticket.id,
+            EventID: this.eventId,
+            UserID: userIdNumber,
+            Status: 'Unused'
           };
 
           ticketPromises.push(
@@ -136,13 +136,13 @@ export class PaymentComponent implements OnInit, AfterViewInit {
     try {
       await Promise.all(ticketPromises);
       alert('Payment successful! 🎉 Your tickets have been added to your bookings.');
-      this.router.navigate(['/my-bookings']);
+      this.router.navigate(['/mybookings']);
     } catch (error) {
       console.error('Error creating tickets:', error);
       this.errorMessage = 'Payment was successful, but there was an error creating your tickets. Please contact support.';
       // Still navigate to bookings in case some tickets were created
       setTimeout(() => {
-        this.router.navigate(['/my-bookings']);
+        this.router.navigate(['/mybookings']);
       }, 3000);
     } finally {
       this.isProcessing = false;

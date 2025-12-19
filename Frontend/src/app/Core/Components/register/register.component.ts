@@ -2,14 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { Country, City } from 'country-state-city';
 import countries from 'world-countries';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ReactiveFormsModule, HttpClientModule, CommonModule],
+  imports: [ReactiveFormsModule, HttpClientModule, CommonModule, RouterModule],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
@@ -32,6 +32,7 @@ export class RegisterComponent implements OnInit {
   isLoading = false;
   errorMessage = '';
   successMessage = '';
+  userType: string = 'client'; // Default to client
 
   registerForm: FormGroup = new FormGroup({
     firstName: new FormControl(null, [Validators.required]),
@@ -49,11 +50,17 @@ export class RegisterComponent implements OnInit {
 
   constructor(
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
     this.countries = Country.getAllCountries();
+    
+    // Read the user type from query parameters
+    this.route.queryParams.subscribe(params => {
+      this.userType = params['type'] || 'client';
+    });
   }
 
   onCountryChange(countryCode: string) {
@@ -82,7 +89,8 @@ export class RegisterComponent implements OnInit {
       password: this.registerForm.value.password,
       dob: this.registerForm.value.dateOfBirth,
       location: this.registerForm.value.country, // Send country as location
-      bio: this.registerForm.value.bio
+      bio: this.registerForm.value.bio,
+      userType: this.userType // Include the user type
     };
 
     console.log('Sending registration data:', registerData);

@@ -2,12 +2,12 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, HttpClientModule, CommonModule],
+  imports: [ReactiveFormsModule, HttpClientModule, CommonModule, RouterModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -58,8 +58,8 @@ export class LoginComponent {
 
         // Navigate after short delay
         setTimeout(() => {
-          this.router.navigate(['/dashboard']).catch(() => {
-            console.log('Navigation attempted - no dashboard route configured');
+          this.router.navigate(['/home']).catch(() => {
+            console.log('Navigation attempted - home route');
           });
         }, 1500);
         

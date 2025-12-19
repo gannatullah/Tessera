@@ -13,6 +13,8 @@ export class MybookingsComponent implements OnInit {
   activeFilter: 'All' | 'Upcoming' | 'Completed' | 'Cancelled' = 'All';
   tickets: TicketDto[] = [];
   isLoading = true;
+  showTicketModal = false;
+  selectedTicket: TicketDto | null = null;
 
   constructor(
     private ticketService: TicketService,
@@ -114,8 +116,13 @@ export class MybookingsComponent implements OnInit {
   }
 
   onViewTicket(ticket: TicketDto) {
-    // TODO: implement navigation / modal
-    console.log('View ticket:', ticket);
+    this.selectedTicket = ticket;
+    this.showTicketModal = true;
+  }
+
+  closeTicketModal() {
+    this.showTicketModal = false;
+    this.selectedTicket = null;
   }
 
   onCancelTicket(ticket: TicketDto) {

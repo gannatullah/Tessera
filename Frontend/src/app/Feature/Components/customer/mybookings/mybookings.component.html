@@ -179,8 +179,62 @@
         <p class="text-muted mb-3">
           You don't have any {{ activeFilter | lowercase }} tickets right now.
         </p>
-        <a routerLink="/events" class="btn my-btn-primary"> Browse Events </a>
       </div>
     </div>
   </ng-template>
 </div>
+
+<!-- Ticket Modal -->
+<div class="modal fade" [class.show]="showTicketModal" [style.display]="showTicketModal ? 'block' : 'none'" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Ticket Details</h5>
+        <button type="button" class="btn-close" (click)="closeTicketModal()" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center" *ngIf="selectedTicket">
+        <div class="mb-3">
+          <h6>{{ selectedTicket.event?.name }}</h6>
+          <p class="text-muted mb-2">{{ selectedTicket.event?.date | date:'mediumDate' }}</p>
+          <p class="mb-3">
+            <strong>{{ selectedTicket.ticketType?.name }}</strong> -
+            {{ selectedTicket.ticketType?.price | currency:'EGP':'symbol':'1.0-0' }}
+          </p>
+        </div>
+
+        <div class="qr-code-container mb-3">
+          <h6 class="mb-3">Scan QR Code for Entry</h6>
+          <div *ngIf="selectedTicket.qR_Code; else noQrCode">
+            <img [src]="selectedTicket.qR_Code" alt="Ticket QR Code" class="img-fluid qr-code-image" style="max-width: 200px; max-height: 200px;">
+            <p class="text-muted small mt-2">
+              Contains: Ticket #{{ selectedTicket.ticket_ID }} - {{ selectedTicket.ticketType?.name }}
+            </p>
+          </div>
+          <ng-template #noQrCode>
+            <div class="alert alert-warning">
+              <i class="fas fa-exclamation-triangle me-2"></i>
+              QR Code not available for this ticket.
+            </div>
+          </ng-template>
+        </div>
+
+        <div class="ticket-info">
+          <p><strong>Ticket ID:</strong> {{ selectedTicket.ticket_ID }}</p>
+          <p><strong>Status:</strong>
+            <span class="badge"
+                  [class]="getTicketStatus(selectedTicket).toLowerCase() === 'unused' ? 'bg-success' :
+                           getTicketStatus(selectedTicket).toLowerCase() === 'used' ? 'bg-secondary' : 'bg-warning'">
+              {{ getTicketStatus(selectedTicket) }}
+            </span>
+          </p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeTicketModal()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Backdrop -->
+<div class="modal-backdrop fade show" *ngIf="showTicketModal" (click)="closeTicketModal()"></div>

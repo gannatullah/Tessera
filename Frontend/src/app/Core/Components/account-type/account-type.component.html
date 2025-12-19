@@ -18,7 +18,7 @@
           <p class="card-description">
             Discover, book, and manage tickets for amazing events near you.
           </p>
-          <button routerLink="/register" class="btn account-btn client-btn w-100">
+          <button routerLink="/register" [queryParams]="{ type: 'client' }" class="btn account-btn client-btn w-100">
             Register as Client
           </button>
         </div>
@@ -34,7 +34,7 @@
           <p class="card-description">
             Create, promote, and manage your events and ticket sales with ease.
           </p>
-          <button routerLink="/register" class="btn account-btn organizer-btn w-100">
+          <button routerLink="/register" [queryParams]="{ type: 'organizer' }" class="btn account-btn organizer-btn w-100">
             Register as Organizer
           </button>
         </div>

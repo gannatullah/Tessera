@@ -1,0 +1,348 @@
+/* Back Button */
+.btn-link {
+  color: var(--main-color) !important;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.btn-link:hover {
+  color: var(--button) !important;
+  text-decoration: underline !important;
+}
+
+.btn-link i {
+  transition: transform 0.3s ease;
+}
+
+.btn-link:hover i {
+  transform: translateX(-3px);
+}
+
+/* Page Title */
+.create-event-title {
+  color: var(--main-color);
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.create-event-subtitle {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Form Card */
+.form-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border: none;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* Section Titles */
+.section-title {
+  color: var(--main-color);
+  font-size: 1.3rem;
+  font-weight: 600;
+  border-bottom: 2px solid rgba(164, 22, 26, 0.1);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.section-title i {
+  color: var(--main-color);
+}
+
+/* Form Styling */
+form {
+  margin: 0;
+}
+
+/* Form Labels */
+.form-label {
+  color: #333;
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Form Controls */
+.form-control, .form-select {
+  border: 2px solid rgba(255, 201, 8, 0.3);
+  border-radius: 10px;
+  padding: 0.7rem 0.9rem;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.9);
+  color: #333;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: var(--main-color);
+  box-shadow: 0 0 0 0.15rem rgba(255, 201, 8, 0.25);
+  background: #fff;
+  transform: translateY(-1px);
+}
+
+.form-control::placeholder {
+  color: #999;
+  font-weight: 400;
+}
+
+/* Textarea specific styling */
+.form-control[rows] {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* Select Styling */
+.form-select {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 0.75rem center;
+  background-repeat: no-repeat;
+  background-size: 1rem;
+  padding-right: 2.5rem;
+}
+
+/* Date and Time inputs */
+.form-control[type="date"],
+.form-control[type="time"] {
+  cursor: pointer;
+}
+
+/* File input styling */
+.form-control[type="file"] {
+  padding: 0.5rem 0.9rem;
+}
+
+.form-control[type="file"]::file-selector-button {
+  background-color: var(--main-color);
+  color: white;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-right: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.form-control[type="file"]::file-selector-button:hover {
+  background-color: var(--btn-hover);
+}
+
+/* Error Messages */
+.text-danger {
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+  display: block;
+}
+
+/* Checkbox Styling */
+.form-check {
+  margin: 1.5rem 0;
+}
+
+.form-check-input {
+  width: 1.1rem;
+  height: 1.1rem;
+  border: 2px solid var(--main-color);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.form-check-input:checked {
+  background-color: var(--main-color);
+  border-color: var(--main-color);
+}
+
+.form-check-input:focus {
+  box-shadow: 0 0 0 0.15rem rgba(255, 201, 8, 0.25);
+}
+
+.form-check-label {
+  color: #555;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin-left: 0.5rem;
+  line-height: 1.4;
+}
+
+.form-check-label a {
+  color: var(--main-color);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.form-check-label a:hover {
+  text-decoration: underline;
+}
+
+/* Buttons */
+.create-event-btn {
+  background: linear-gradient(135deg, var(--button) 0%, var(--btn-hover) 100%);
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.create-event-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.6s;
+}
+
+.create-event-btn:hover::before {
+  left: 100%;
+}
+
+.create-event-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.create-event-btn:active {
+  transform: translateY(0);
+}
+
+.create-event-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-outline-secondary {
+  border-color: #6c757d;
+  color: #6c757d;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #6c757d;
+  border-color: #6c757d;
+  transform: translateY(-1px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .create-event-container {
+    padding: 1rem 0;
+  }
+
+  .form-card {
+    margin: 0 1rem;
+  }
+
+  .create-event-title {
+    font-size: 2rem;
+  }
+
+  .section-title {
+    font-size: 1.2rem;
+  }
+
+  .form-control, .form-select {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.9rem;
+  }
+
+  .create-event-btn {
+    padding: 0.7rem 1.2rem;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .create-event-title {
+    font-size: 1.8rem;
+  }
+
+  .create-event-subtitle {
+    font-size: 1rem;
+  }
+
+  .section-title {
+    font-size: 1.1rem;
+  }
+
+  .form-control, .form-select {
+    padding: 0.5rem 0.7rem;
+    font-size: 0.85rem;
+  }
+
+  .create-event-btn {
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .d-flex.gap-3 {
+    flex-direction: column;
+    gap: 0.5rem !important;
+  }
+
+  .d-flex.gap-3 .btn {
+    width: 100%;
+  }
+}
+
+/* Form validation states */
+.form-control.ng-invalid.ng-touched {
+  border-color: #dc3545;
+}
+
+.form-control.ng-invalid.ng-touched:focus {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 0.15rem rgba(220, 53, 69, 0.25);
+}
+
+.form-select.ng-invalid.ng-touched {
+  border-color: #dc3545;
+}
+
+/* Success states */
+.form-control.ng-valid.ng-touched {
+  border-color: #28a745;
+}
+
+/* Loading state for submit button */
+.create-event-btn.submitting {
+  pointer-events: none;
+}
+
+.create-event-btn.submitting::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  margin: auto;
+  border: 2px solid transparent;
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

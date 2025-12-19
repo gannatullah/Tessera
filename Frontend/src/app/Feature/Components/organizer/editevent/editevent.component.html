@@ -1,0 +1,178 @@
+<div class="create-event-container">
+  <div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="mb-4">
+      <div class="d-flex justify-content-start mb-3">
+        <button class="btn btn-link text-decoration-none p-0" (click)="onCancel()">
+          <i class="bi bi-arrow-left me-2"></i>Back to My Events
+        </button>
+      </div>
+      <div class="text-center">
+        <h1 class="create-event-title mb-2">Edit Event</h1>
+        <p class="create-event-subtitle text-muted mb-0">Update your event details</p>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    @if(isLoading) {
+      <div class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="mt-2 text-muted">Loading event data...</p>
+      </div>
+    } @else {
+
+    <!-- Success/Error Messages -->
+    @if(successMessage) {
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle me-2"></i>{{ successMessage }}
+        <button type="button" class="btn-close" (click)="successMessage = ''"></button>
+      </div>
+    }
+    @if(errorMessage) {
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-triangle me-2"></i>{{ errorMessage }}
+        <button type="button" class="btn-close" (click)="errorMessage = ''"></button>
+      </div>
+    }
+
+    <!-- Form Card -->
+    <div class="form-card card shadow-lg border-0">
+      <div class="card-body p-4 p-md-5">
+        <form [formGroup]="eventForm" (ngSubmit)="onSubmit()" class="row g-4">
+          <!-- Event Basic Information -->
+          <div class="col-12">
+            <h4 class="section-title mb-3">
+              <i class="bi bi-info-circle me-2"></i>Event Information
+            </h4>
+          </div>
+
+          <!-- Event Name -->
+          <div class="col-12">
+            <label class="form-label fw-semibold">Event Name *</label>
+            <input formControlName="name" type="text" class="form-control" placeholder="Enter event name">
+            @if(eventForm.get('name')?.errors && eventForm.get('name')?.touched){
+              <small class="text-danger">Event name is required (minimum 3 characters)</small>
+            }
+          </div>
+
+          <!-- Event Description -->
+          <div class="col-12">
+            <label class="form-label fw-semibold">Event Description *</label>
+            <textarea formControlName="description" class="form-control" rows="4" placeholder="Describe your event"></textarea>
+            @if(eventForm.get('description')?.errors && eventForm.get('description')?.touched){
+              <small class="text-danger">Event description is required (minimum 10 characters)</small>
+            }
+          </div>
+
+          <!-- Event Category -->
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Event Category *</label>
+            <select formControlName="category" class="form-select">
+              <option value="">Select a category</option>
+              @for(category of categories; track category) {
+                <option [value]="category">{{ category }}</option>
+              }
+            </select>
+            @if(eventForm.get('category')?.errors && eventForm.get('category')?.touched){
+              <small class="text-danger">Event category is required</small>
+            }
+          </div>
+
+          <!-- Event Date -->
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Event Date *</label>
+            <input formControlName="eventDate" type="date" class="form-control">
+            @if(eventForm.get('eventDate')?.errors && eventForm.get('eventDate')?.touched){
+              <small class="text-danger">Event date is required</small>
+            }
+          </div>
+
+          <!-- Start Time -->
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Start Time *</label>
+            <input formControlName="startTime" type="time" class="form-control">
+            @if(eventForm.get('startTime')?.errors && eventForm.get('startTime')?.touched){
+              <small class="text-danger">Start time is required</small>
+            }
+          </div>
+
+          <!-- End Time -->
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">End Time *</label>
+            <input formControlName="endTime" type="time" class="form-control">
+            @if(eventForm.get('endTime')?.errors && eventForm.get('endTime')?.touched){
+              <small class="text-danger">End time is required</small>
+            }
+          </div>
+
+          <!-- Location Section -->
+          <div class="col-12 mt-4">
+            <h4 class="section-title mb-3">
+              <i class="bi bi-geo-alt me-2"></i>Location & Venue
+            </h4>
+          </div>
+
+          <!-- Venue/Location -->
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Venue/Location *</label>
+            <input formControlName="location" type="text" class="form-control" placeholder="Enter venue name">
+            @if(eventForm.get('location')?.errors && eventForm.get('location')?.touched){
+              <small class="text-danger">Venue/Location is required</small>
+            }
+          </div>
+
+          <!-- City -->
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">City *</label>
+            <input formControlName="city" type="text" class="form-control" placeholder="Enter city">
+            @if(eventForm.get('city')?.errors && eventForm.get('city')?.touched){
+              <small class="text-danger">City is required</small>
+            }
+          </div>
+
+          <!-- Capacity Section -->
+          <div class="col-12 mt-4">
+            <h4 class="section-title mb-3">
+              <i class="bi bi-people me-2"></i>Capacity & Media
+            </h4>
+          </div>
+
+          <!-- Capacity -->
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Maximum Capacity</label>
+            <input formControlName="capacity" type="number" class="form-control" min="1">
+            @if(eventForm.get('capacity')?.errors && eventForm.get('capacity')?.touched){
+              <small class="text-danger">Capacity must be at least 1</small>
+            }
+          </div>
+
+          <!-- Image URL -->
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Event Image URL</label>
+            <input formControlName="image" type="url" class="form-control" placeholder="https://example.com/image.jpg">
+          </div>
+
+          <!-- Form Actions -->
+          <div class="col-12 mt-4">
+            <div class="d-flex gap-3 justify-content-end">
+              <button type="button" class="btn btn-outline-secondary px-4" (click)="onCancel()">
+                <i class="bi bi-x-circle me-2"></i>Cancel
+              </button>
+              <button type="submit" class="btn btn-primary px-4" [disabled]="isSubmitting">
+                @if(isSubmitting) {
+                  <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                  Updating Event...
+                } @else {
+                  <i class="bi bi-check-circle me-2"></i>Update Event
+                }
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    }
+  </div>
+</div>

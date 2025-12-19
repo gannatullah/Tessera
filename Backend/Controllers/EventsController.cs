@@ -130,6 +130,72 @@ namespace Tessera.API.Controllers
             return Ok(events);
         }
 
+        // GET: api/Events/organizer/5
+        [HttpGet("organizer/{organizerId:int}")]
+        public async Task<ActionResult<IEnumerable<EventDto>>> GetEventsByOrganizer(int organizerId)
+        {
+            // Validate that organizer exists
+            if (!await _context.Organizers.AnyAsync(o => o.UserID == organizerId))
+            {
+                return NotFound(new { message = "Organizer not found" });
+            }
+
+            var events = await _context.Events
+                .Include(e => e.Organizer)
+                    .ThenInclude(o => o.User)
+                .Include(e => e.TicketTypes)
+                .Where(e => e.OrganizerID == organizerId)
+                .ToListAsync();
+
+            if (events.Count == 0)
+            {
+                return Ok(new List<EventDto>()); // Return empty list instead of NotFound
+            }
+
+            var eventDtos = events.Select(e => new EventDto
+            {
+                Event_ID = e.Event_ID,
+                Name = e.Name,
+                Category = e.Category,
+                Date = e.Date,
+                St_Date = e.St_Date,
+                E_Date = e.E_Date,
+                City = e.City,
+                Location = e.Location,
+                Capacity = e.Capacity,
+                Description = e.Description,
+                Image = e.Image,
+                OrganizerID = e.OrganizerID,
+                Organizer = new OrganizerDto
+                {
+                    UserID = e.Organizer.UserID,
+                    IsVerified = e.Organizer.IsVerified,
+                    User = new UserDto
+                    {
+                        ID = e.Organizer.User.ID,
+                        Name = e.Organizer.User.Name,
+                        First_Name = e.Organizer.User.First_Name,
+                        Last_Name = e.Organizer.User.Last_Name,
+                        Email = e.Organizer.User.Email,
+                        Phone_No = e.Organizer.User.Phone_No,
+                        DOB = e.Organizer.User.DOB,
+                        ProfilePic = e.Organizer.User.ProfilePic
+                    }
+                },
+                TicketTypes = e.TicketTypes.Select(tt => new TicketTypeDto
+                {
+                    ID = tt.ID,
+                    Name = tt.Name,
+                    Price = tt.Price,
+                    Quantity_Total = tt.Quantity_Total,
+                    Quantity_Sold = tt.Quantity_Sold,
+                    EventID = tt.Event_ID
+                }).ToList()
+            }).ToList();
+
+            return Ok(eventDtos);
+        }
+
         // GET: api/Events/5
         [HttpGet("{id:int}")]
         public async Task<ActionResult<EventDto>> GetEvent(int id)

@@ -53,7 +53,13 @@ export class AuthService {
           // Store user ID
           localStorage.setItem('userId', response.id.toString());
           
-          // Store user data
+          // Store user email
+          localStorage.setItem('userEmail', response.email);
+          
+          // Store user name
+          localStorage.setItem('userName', response.name);
+          
+          // Store user data object for backward compatibility
           const user: User = {
             id: response.id,
             email: response.email,
@@ -66,7 +72,6 @@ export class AuthService {
             profilePic: response.profilePic
           };
           
-          localStorage.setItem('currentUser', JSON.stringify(user));
           this.currentUserSubject.next(user);
         })
       );
@@ -78,8 +83,9 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem('authToken');
-    localStorage.removeItem('currentUser');
     localStorage.removeItem('userId');
+    localStorage.removeItem('userEmail');
+    localStorage.removeItem('userName');
     this.currentUserSubject.next(null);
     this.router.navigate(['/login']);
   }
@@ -93,8 +99,22 @@ export class AuthService {
   }
 
   getCurrentUser(): User | null {
-    const userJson = localStorage.getItem('currentUser');
-    return userJson ? JSON.parse(userJson) : null;
+    const userId = localStorage.getItem('userId');
+    const userEmail = localStorage.getItem('userEmail');
+    const userName = localStorage.getItem('userName');
+    
+    if (!userId || !userEmail || !userName) {
+      return null;
+    }
+    
+    return {
+      id: parseInt(userId),
+      email: userEmail,
+      name: userName,
+      first_Name: '',
+      last_Name: '',
+      phoneNo: ''
+    };
   }
 
   get currentUserValue(): User | null {

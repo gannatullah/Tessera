@@ -159,6 +159,23 @@ namespace Tessera.API.Controllers
         [HttpPost]
         public async Task<ActionResult<TicketDto>> CreateTicket(CreateTicketDto createTicketDto)
         {
+            // Ensure user has a Buyer record (create one if it doesn't exist) - do this before transaction
+            if (createTicketDto.UserID.HasValue)
+            {
+                var existingBuyer = await _context.Buyers
+                    .FirstOrDefaultAsync(b => b.UserID == createTicketDto.UserID.Value);
+                
+                if (existingBuyer == null)
+                {
+                    var buyer = new Buyer
+                    {
+                        UserID = createTicketDto.UserID.Value
+                    };
+                    _context.Buyers.Add(buyer);
+                    await _context.SaveChangesAsync();
+                }
+            }
+
             // Use database transaction to handle concurrent ticket purchases efficiently
             using var transaction = await _context.Database.BeginTransactionAsync();
             
@@ -210,6 +227,8 @@ namespace Tessera.API.Controllers
                         return BadRequest(new { message = "Maximum ticket limit reached. You can only purchase 2 tickets per event." });
                     }
                 }
+                 _context.Tickets.Add(ticket);
+            await _context.SaveChangesAsync();
 
 
 
@@ -219,7 +238,7 @@ namespace Tessera.API.Controllers
 
             
             // Generate QR code URL
-            ticket.QR_Code = _qrCodeService.GenerateQrCodeUrl(ticket.Ticket_ID.ToString());
+            ticket.QR_Code = _qrCodeService.GenerateQrCodeUrl(ticket.Ticket_ID.ToString(), ticketType.Name);
             await _context.SaveChangesAsync();
 
 
@@ -230,8 +249,16 @@ namespace Tessera.API.Controllers
 
 
 
-            // Call the service to send webhook
-            await _n8nService.SendTicketConfirmationAsync(ticket);
+            // Call the service to send webhook (non-blocking)
+            try
+            {
+                await _n8nService.SendTicketConfirmationAsync(ticket);
+            }
+            catch (Exception ex)
+            {
+                // Log the error but don't fail the ticket creation
+                Console.WriteLine($"Failed to send webhook: {ex.Message}");
+            }
 
             var ticketDto = new TicketDto
             {
@@ -240,38 +267,26 @@ namespace Tessera.API.Controllers
                 QR_Code = ticket.QR_Code,
                 TicketTypeID = ticket.TicketTypeID,
                 EventID = ticket.EventID,
+                UserID = ticket.UserID,
                 TicketType = new TicketTypeDto
-          
-
-                _context.Tickets.Add(ticket);
-                await _context.SaveChangesAsync();
-
-                // Update inventory: increment sold quantity
-                ticketType.Quantity_Sold++;
-                await _context.SaveChangesAsync();
-
-                // Commit transaction - ensures atomicity
-                await transaction.CommitAsync();
-
-                var ticketDto = new TicketDto
                 {
-                    Ticket_ID = ticket.Ticket_ID,
-                    Status = ticket.Status,
-                    QR_Code = ticket.QR_Code,
-                    TicketTypeID = ticket.TicketTypeID,
-                    EventID = ticket.EventID,
-                    TicketType = new TicketTypeDto
-                    {
-                        ID = ticketType.ID,
-                        Name = ticketType.Name,
-                        Price = ticketType.Price,
-                        Quantity_Total = ticketType.Quantity_Total,
-                        Quantity_Sold = ticketType.Quantity_Sold
-                    },
-                    UserID = ticket.UserID
-                };
+                    ID = ticketType.ID,
+                    Name = ticketType.Name,
+                    Price = ticketType.Price,
+                    Quantity_Total = ticketType.Quantity_Total,
+                    Quantity_Sold = ticketType.Quantity_Sold,
+                    EventID = ticketType.Event_ID
+                }
+            };
 
-                return CreatedAtAction(nameof(GetTicket), new { id = ticket.Ticket_ID }, ticketDto);
+           
+
+
+            // Commit transaction - ensures atomicity
+            await transaction.CommitAsync();
+
+
+            return CreatedAtAction(nameof(GetTicket), new { id = ticket.Ticket_ID }, ticketDto);
             }
             catch (Exception)
             {

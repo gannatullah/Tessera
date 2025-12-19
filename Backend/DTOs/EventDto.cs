@@ -57,6 +57,7 @@ namespace Tessera.API.DTOs
         public int? Capacity { get; set; }
         public string? Description { get; set; }
         public string? Image { get; set; }
+        public TicketTypeDto? TicketType { get; set; }
     }
 
     public class EventDto
