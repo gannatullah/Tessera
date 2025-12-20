@@ -3,6 +3,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../../../Services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -12,8 +13,6 @@ import { Router, RouterModule } from '@angular/router';
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
-  private apiUrl = 'http://localhost:5000/api/Users';
-  
   loginForm: FormGroup = new FormGroup({
     email: new FormControl(null, [Validators.required, Validators.email]),
     password: new FormControl(null, [Validators.required])
@@ -25,7 +24,8 @@ export class LoginComponent {
 
   constructor(
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {}
 
   login() {
@@ -39,23 +39,17 @@ export class LoginComponent {
 
     this.isLoading = true;
 
-    // Use the login endpoint
+    // Use the AuthService login method
     const loginData = {
       email: this.loginForm.value.email,
       password: this.loginForm.value.password
     };
 
-    this.http.post<any>(`${this.apiUrl}/login`, loginData).subscribe({
+    this.authService.login(loginData.email, loginData.password).subscribe({
       next: (response) => {
         console.log('Login successful:', response);
         this.successMessage = 'Login successful! Redirecting...';
         
-        // Store JWT token and user ID
-        localStorage.setItem('authToken', response.token);
-        localStorage.setItem('userId', response.id.toString());
-        localStorage.setItem('userName', response.name);
-        localStorage.setItem('userEmail', response.email);
-
         // Navigate after short delay
         setTimeout(() => {
           this.router.navigate(['/home']).catch(() => {

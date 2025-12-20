@@ -311,8 +311,7 @@ namespace Tessera.API.Controllers
             // Update only the fields that were provided
             if (!string.IsNullOrEmpty(updateTicketDto.Status))
                 ticket.Status = updateTicketDto.Status;
-            if (updateTicketDto.QR_Code != null)
-                ticket.QR_Code = updateTicketDto.QR_Code;
+
 
             await _context.SaveChangesAsync();
 

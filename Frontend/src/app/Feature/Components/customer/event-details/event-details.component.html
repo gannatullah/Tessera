@@ -2,12 +2,7 @@
   <!-- Hero Section -->
   <section class="event-hero">
     <div class="hero-overlay"></div>
-    <img
-      [src]="event.image"
-      [alt]="event.title"
-      class="hero-image"
-      (error)="onImageError($event)"
-    />
+    <img [src]="event.image" [alt]="event.title" class="hero-image" (error)="onImageError($event)" />
     <div class="hero-content">
       <div class="container">
         <div class="badge-container">
@@ -67,11 +62,7 @@
 
             <!-- Get Directions Button -->
             <div class="mb-3">
-              <a
-                [href]="getDirectionsUrl()"
-                target="_blank"
-                class="btn btn-outline-primary btn-sm"
-              >
+              <a [href]="getDirectionsUrl()" target="_blank" class="btn btn-outline-primary btn-sm">
                 <i class="fas fa-directions me-1"></i>
                 Get Directions
               </a>
@@ -86,11 +77,8 @@
               <i class="fas fa-user-circle me-2 text-warning"></i>
               Organized By
             </h3>
-            <div
-              class="d-flex align-items-center organizer-profile"
-              (click)="viewOrganizerProfile()"
-              style="cursor: pointer"
-            >
+            <div class="d-flex align-items-center organizer-profile" (click)="viewOrganizerProfile()"
+              style="cursor: pointer">
               <div class="organizer-avatar me-3">
                 <i class="fas fa-building display-6 text-warning"></i>
               </div>
@@ -117,29 +105,18 @@
               <div class="ticket-selection mb-4">
                 <label class="form-label fw-semibold">Select Tickets</label>
                 <div class="ticket-types">
-                  <div
-                    class="ticket-type"
-                    *ngFor="let ticket of event.ticketTypes"
-                  >
-                    <div
-                      class="d-flex justify-content-between align-items-center mb-2"
-                    >
+                  <div class="ticket-type" *ngFor="let ticket of event.ticketTypes">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
                       <div>
                         <h6 class="mb-0">{{ ticket.name }}</h6>
                         <small class="text-muted">${{ ticket.price }}</small>
                       </div>
                       <div class="quantity-selector">
-                        <button
-                          class="btn btn-sm btn-outline-secondary"
-                          (click)="decreaseQuantity(ticket)"
-                        >
+                        <button class="btn btn-sm btn-outline-secondary" (click)="decreaseQuantity(ticket)">
                           <i class="fa-solid fa-minus"></i>
                         </button>
                         <span class="quantity mx-2">{{ ticket.quantity }}</span>
-                        <button
-                          class="btn btn-sm btn-outline-secondary"
-                          (click)="increaseQuantity(ticket)"
-                        >
+                        <button class="btn btn-sm btn-outline-secondary" (click)="increaseQuantity(ticket)">
                           <i class="fa-solid fa-plus"></i>
                         </button>
                       </div>
@@ -159,36 +136,26 @@
               </div>
 
               <!-- Action Buttons -->
+              @if(!isOrganizer){
               <div class="action-buttons">
                 <button class="btn btn-warning w-100 mb-2" (click)="bookNow()">
                   <i class="fas fa-ticket-alt me-2"></i>
                   Book Now
                 </button>
-                <button
-                  class="btn w-100"
-                  [class.btn-outline-secondary]="!isInWishlist"
-                  [class.btn-danger]="isInWishlist"
-                  (click)="addToWishlist()"
-                  [disabled]="isAddingToWishlist"
-                >
-                  <i
-                    class="bi me-2"
-                    [class.bi-heart]="!isInWishlist"
-                    [class.bi-heart-fill]="isInWishlist"
-                  ></i>
+
+                <button class="btn w-100" [class.btn-outline-secondary]="!isInWishlist"
+                  [class.btn-danger]="isInWishlist" (click)="addToWishlist()" [disabled]="isAddingToWishlist">
+                  <i class="fas fa-heart me-2" [class.fas]="!isInWishlist" [class.far]="isInWishlist"></i>
                   <span *ngIf="!isAddingToWishlist">{{
                     isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"
-                  }}</span>
+                    }}</span>
                   <span *ngIf="isAddingToWishlist">
-                    <span
-                      class="spinner-border spinner-border-sm me-2"
-                      role="status"
-                      aria-hidden="true"
-                    ></span>
+                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
                     Processing...
                   </span>
                 </button>
               </div>
+              }
 
               <!-- Event Info -->
               <div class="event-info mt-4">
@@ -196,10 +163,7 @@
                   <i class="fas fa-shield-alt text-success me-2"></i>
                   <small>Secure booking guaranteed</small>
                 </div>
-                <div class="info-item">
-                  <i class="fas fa-redo text-primary me-2"></i>
-                  <small>Free cancellation available</small>
-                </div>
+
               </div>
             </div>
           </div>

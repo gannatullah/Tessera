@@ -1,10 +1,13 @@
 import { CommonModule, DatePipe, isPlatformBrowser } from '@angular/common';
-import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { Component, Inject, OnInit, OnDestroy, PLATFORM_ID } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EventDto, EventService } from '../../../../Services/event.service';
 import { WishlistService } from '../../../../Services/wishlist.service';
 import { AuthService } from '../../../../Services/auth.service';
+import { UserService } from '../../../../Services/user.service';
 import { environment } from '../../../../../environments/environment.example';
+import { Subscription } from 'rxjs';
+
 interface TicketType {
   name: string;
   price: number;
@@ -34,7 +37,7 @@ interface Event {
   templateUrl: './event-details.component.html',
   styleUrl: './event-details.component.css',
 })
-export class EventDetailsComponent implements OnInit {
+export class EventDetailsComponent implements OnInit, OnDestroy {
   event: Event = {
     title: '',
     category: '',
@@ -57,6 +60,8 @@ export class EventDetailsComponent implements OnInit {
   userId: number | null = null;
   isInWishlist = false;
   isAddingToWishlist = false;
+  isOrganizer = false;
+  private authSubscription?: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -64,8 +69,10 @@ export class EventDetailsComponent implements OnInit {
     private eventService: EventService,
     private wishlistService: WishlistService,
     private authService: AuthService,
+    private userService: UserService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
+
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       // Get user ID from localStorage
@@ -82,6 +89,23 @@ export class EventDetailsComponent implements OnInit {
           this.checkWishlistStatus();
         }
       }
+
+      // Subscribe to auth changes to update organizer status
+      this.authSubscription = this.authService.currentUser$.subscribe(user => {
+        if (user) {
+          this.userService.isUserOrganizer(user.id).subscribe(isOrganizer => {
+            this.isOrganizer = isOrganizer;
+          });
+        } else {
+          this.isOrganizer = false;
+        }
+      });
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.authSubscription) {
+      this.authSubscription.unsubscribe();
     }
   }
 

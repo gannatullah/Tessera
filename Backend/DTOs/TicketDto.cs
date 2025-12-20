@@ -17,7 +17,7 @@ namespace Tessera.API.DTOs
     public class UpdateTicketDto
     {
         public string? Status { get; set; }
-        public string? QR_Code { get; set; }
+
     }
 
     public class TicketDto
