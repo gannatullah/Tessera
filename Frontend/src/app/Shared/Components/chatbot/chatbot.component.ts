@@ -8,7 +8,7 @@ import { ChatbotService, ChatMessage } from '../../../Services/chatbot.service';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './chatbot.component.html',
-  styleUrl: './chatbot.component.css'
+  styleUrl: './chatbot.component.css',
 })
 export class ChatbotComponent {
   isOpen = false;
@@ -21,7 +21,8 @@ export class ChatbotComponent {
     // Add welcome message
     this.messages.push({
       role: 'assistant',
-      content: 'Hi! I\'m your Tessera assistant. I can help you find events, answer questions about tickets, or provide event recommendations. How can I help you today?'
+      content:
+        "👋 Welcome to Tessera! I'm your personal assistant for everything event-related.\n\nI can help you with:\n• Finding events by category, location, or date\n• Understanding ticket types and pricing\n• Account and booking management\n• Event creation (for organizers)\n• Platform features and navigation\n\nWhat would you like to know about Tessera today?",
     });
   }
 
@@ -42,7 +43,7 @@ export class ChatbotComponent {
     const userMessage = this.userInput.trim();
     this.messages.push({
       role: 'user',
-      content: userMessage
+      content: userMessage,
     });
 
     this.userInput = '';
@@ -51,21 +52,22 @@ export class ChatbotComponent {
     // Prepare messages for API (exclude the initial welcome message from history)
     const apiMessages: ChatMessage[] = this.messages
       .slice(1) // Skip the welcome message
-      .map(msg => ({
+      .map((msg) => ({
         role: msg.role as 'user' | 'assistant',
-        content: msg.content
+        content: msg.content,
       }));
 
     this.chatbotService.sendMessage(apiMessages).subscribe({
       next: (response) => {
         this.isLoading = false;
-        
-        // Extract the text from the response
-        const assistantMessage = response.content?.[0]?.text || 'I apologize, but I couldn\'t process that request.';
-        
+
+        const assistantMessage =
+          response.content?.[0]?.text ||
+          "I apologize, but I couldn't process that request.";
+
         this.messages.push({
           role: 'assistant',
-          content: assistantMessage
+          content: assistantMessage,
         });
 
         // Auto-scroll to bottom
@@ -76,18 +78,21 @@ export class ChatbotComponent {
         console.error('Chat error:', error);
         this.messages.push({
           role: 'assistant',
-          content: 'Sorry, I encountered an error. Please try again later.'
+          content: 'Sorry, I encountered an error. Please try again later.',
         });
         setTimeout(() => this.scrollToBottom(), 100);
-      }
+      },
     });
   }
 
   clearChat() {
-    this.messages = [{
-      role: 'assistant',
-      content: 'Hi! I\'m your Tessera assistant. How can I help you today?'
-    }];
+    this.messages = [
+      {
+        role: 'assistant',
+        content:
+          "👋 Welcome to Tessera! I'm your personal assistant for everything event-related.\n\nI can help you with:\n• Finding events by category, location, or date\n• Understanding ticket types and pricing\n• Account and booking management\n• Event creation (for organizers)\n• Platform features and navigation\n\nWhat would you like to know about Tessera today?",
+      },
+    ];
   }
 
   private scrollToBottom() {

@@ -10,7 +10,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   // Only access localStorage if we're in the browser
   const authToken = isPlatformBrowser(platformId) ? localStorage.getItem('authToken') : null;
 
-  const skipUrls = ['/login', '/register'];
+  const skipUrls = ['/login', '/register', 'api.z.ai'];
   const shouldSkip = skipUrls.some(url => req.url.includes(url));
 
 
